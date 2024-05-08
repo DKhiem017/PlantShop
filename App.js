@@ -8,13 +8,17 @@ import Register from "./fe/pages/register";
 import Login from "./fe/pages/login";
 import MyAccount from "./fe/pages/user/MyAccount/Myaccount";
 import UserInformation from "./fe/pages/user/UserInformation/Userinfo";
+import PromotionDetail from "./fe/pages/admin/Promotion Detail/PromotionDetail";
+import ProductList from "./fe/pages/admin/ProductList/ProductList";
+import ProductInfo from "./fe/pages/ProductInfo/ProductInfo";
+PromotionDetail;
 const Stack = createStackNavigator();
 
 const App = () => (
   // <NavigationContainer>
   //   <MyTabs></MyTabs>
   // </NavigationContainer>
-  <MyAccount></MyAccount>
+  <ProductInfo></ProductInfo>
 );
 
 const styles = StyleSheet.create({
