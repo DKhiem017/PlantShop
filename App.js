@@ -11,14 +11,15 @@ import UserInformation from "./fe/pages/user/UserInformation/Userinfo";
 import PromotionDetail from "./fe/pages/admin/Promotion Detail/PromotionDetail";
 import ProductList from "./fe/pages/admin/ProductList/ProductList";
 import ProductInfo from "./fe/pages/ProductInfo/ProductInfo";
-PromotionDetail;
+import PromotionList from "./fe/pages/PromotionList/PromotionList";
+
 const Stack = createStackNavigator();
 
 const App = () => (
   // <NavigationContainer>
   //   <MyTabs></MyTabs>
   // </NavigationContainer>
-  <ProductInfo></ProductInfo>
+  <Home></Home>
 );
 
 const styles = StyleSheet.create({

@@ -229,7 +229,7 @@ const ProductList = () => {
               marginLeft: 15,
             }}
           >
-            <Text style={{ fontSize: 15, fontWeight: 500 }}>Monstera</Text>
+            <Text style={{ fontSize: 15, fontWeight: 500, }}>Monstera</Text>
             <Text style={{ fontSize: 14, fontWeight: 500, color: "#498553" }}>
               $ 30.55
             </Text>
