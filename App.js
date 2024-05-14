@@ -15,6 +15,7 @@ import PromotionList from "./fe/pages/PromotionList/PromotionList";
 import Cart from "./fe/pages/user/Cart/Cart";
 import Wishlist from "./fe/pages/user/WishList/Wishlist";
 import Checkout from "./fe/pages/user/Checkout/Checkout";
+import ProductDetail from "./fe/pages/user/ProductDetail/ProductDetail";
 
 const Stack = createStackNavigator();
 
@@ -22,7 +23,7 @@ const App = () => (
   // <NavigationContainer>
   //   <MyTabs></MyTabs>
   // </NavigationContainer>
-  <Checkout></Checkout>
+  <ProductDetail></ProductDetail>
 );
 
 const styles = StyleSheet.create({
