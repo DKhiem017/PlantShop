@@ -1,31 +1,22 @@
 import { TouchableOpacity, View, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-const Pagetitle = ({title}) => {
+const Pagetitle = ({ title }) => {
   return (
-    <View>
-      <TouchableOpacity>
-        <View
-          style={{
-            marginLeft: 10,
-            position: "absolute",
-          }}
-        >
-          <AntDesign name="arrowleft" size={28} color="#498553" />
-        </View>
-      </TouchableOpacity>
-      <View
+    <View
+      style={{ justifyContent: "center", flexDirection: "row", width: "100%" }}
+    >
+      <TouchableOpacity
         style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
+          position: "absolute",
+          left: 10,
         }}
       >
-        <Text style={{ fontSize: 18, fontWeight: 700, color: "#498553" }}>
-          {title}
-        </Text>
-      </View>
+        <AntDesign name="arrowleft" size={28} color="#498553" />
+      </TouchableOpacity>
+      <Text style={{ fontSize: 18, fontWeight: 700, color: "#498553" }}>
+        {title}
+      </Text>
     </View>
   );
 };

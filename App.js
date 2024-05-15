@@ -18,6 +18,7 @@ import Checkout from "./fe/pages/user/Checkout/Checkout";
 import ProductDetail from "./fe/pages/user/ProductDetail/ProductDetail";
 import Order from "./fe/pages/user/Order/Order";
 import OrderDetail from "./fe/pages/user/OrderDetail/OrderDetail";
+import MyAddress from "./fe/pages/user/MyAddress/MyAddress";
 
 const Stack = createStackNavigator();
 
@@ -25,7 +26,7 @@ const App = () => (
   // <NavigationContainer>
   //   <MyTabs></MyTabs>
   // </NavigationContainer>
-  <OrderDetail></OrderDetail>
+  <MyAddress></MyAddress>
 );
 
 const styles = StyleSheet.create({
