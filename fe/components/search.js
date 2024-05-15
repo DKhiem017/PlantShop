@@ -1,5 +1,4 @@
 import { TouchableOpacity, View, Text, TextInput } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
 const Searchbar = () => {
