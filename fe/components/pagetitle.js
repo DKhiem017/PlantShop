@@ -7,9 +7,8 @@ const Pagetitle = ({title}) => {
       <TouchableOpacity>
         <View
           style={{
-            marginLeft: 5,
+            marginLeft: 10,
             position: "absolute",
-            marginTop: 25,
           }}
         >
           <AntDesign name="arrowleft" size={28} color="#498553" />
@@ -21,7 +20,6 @@ const Pagetitle = ({title}) => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          marginTop: 28,
         }}
       >
         <Text style={{ fontSize: 18, fontWeight: 700, color: "#498553" }}>
