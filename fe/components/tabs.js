@@ -9,10 +9,29 @@ import { TouchableOpacity, View } from "react-native";
 import Imagesearch from "../pages/user/ImageSearch/Imagesearch";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+import {
+  HomeNavigator,
+  WishListNavigator,
+  CartNavigator,
+  MyAccountNavigator,
+  LoginNavigator,
+} from "../navigation/Navigator";
+
 const Tab = createBottomTabNavigator();
 
 const screenOptions = {
   headerShown: false,
+  tabBarStyle: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.53,
+    shadowRadius: 13.97,
+
+    elevation: 21,
+  },
 };
 
 function MyTabs() {
@@ -20,7 +39,7 @@ function MyTabs() {
     <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen
         name="Home"
-        component={Home}
+        component={HomeNavigator}
         options={{
           tabBarLabel: () => null,
           tabBarIcon: ({ focused, color, size }) => (
@@ -36,7 +55,7 @@ function MyTabs() {
       />
       <Tab.Screen
         name="Wishlist"
-        component={Wishlist}
+        component={WishListNavigator}
         options={{
           tabBarLabel: () => null,
           tabBarIcon: ({ focused, color, size }) => (
@@ -64,15 +83,24 @@ function MyTabs() {
                   backgroundColor: "#498553",
                   borderRadius: 50,
                   position: "absolute",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  bottom: 5,
                 }}
-              ></View>
+              >
+                <MaterialCommunityIcons
+                  name="image-filter-center-focus"
+                  size={24}
+                  color="white"
+                />
+              </View>
             );
           },
         }}
       />
       <Tab.Screen
         name="Cart"
-        component={Cart}
+        component={CartNavigator}
         options={{
           tabBarLabel: () => null,
           tabBarIcon: ({ focused, color, size }) => (
@@ -88,7 +116,7 @@ function MyTabs() {
       />
       <Tab.Screen
         name="Profilemanage"
-        component={Profilemanage}
+        component={MyAccountNavigator}
         options={{
           tabBarLabel: () => null,
           tabBarIcon: ({ focused, color, size }) => (

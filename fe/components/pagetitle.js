@@ -1,7 +1,10 @@
 import { TouchableOpacity, View, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-const Pagetitle = ({ title }) => {
+const Pagetitle = ({ title, navigation }) => {
+  const handleGoback = () => {
+    navigation.goBack();
+  };
   return (
     <View
       style={{ justifyContent: "center", flexDirection: "row", width: "100%" }}
@@ -9,8 +12,9 @@ const Pagetitle = ({ title }) => {
       <TouchableOpacity
         style={{
           position: "absolute",
-          left: 10,
+          left: 15,
         }}
+        onPress={handleGoback}
       >
         <AntDesign name="arrowleft" size={28} color="#498553" />
       </TouchableOpacity>

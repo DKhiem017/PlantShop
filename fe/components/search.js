@@ -22,6 +22,8 @@ const Searchbar = () => {
           color: "#000000",
           fontWeight: "600",
           paddingRight: 30,
+          borderWidth:0.5,
+          borderColor:'#6F6A61'
         }}
       ></TextInput>
       <Feather

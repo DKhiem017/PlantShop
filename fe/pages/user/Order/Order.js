@@ -11,6 +11,7 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Entypo } from "@expo/vector-icons";
+import Pagetitle from "../../../components/pagetitle";
 
 const adjust = require("../../../../assets/images/Adjust.png");
 const plantImg = require("../../../../assets/images/Monstera_tran.png");
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Order = () => {
+const Order = ({ navigation }) => {
   return (
     <SafeAreaView
       style={{
@@ -74,17 +75,7 @@ const Order = () => {
     >
       <View style={{ width: "100%" }}>
         <StatusBar></StatusBar>
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ fontSize: 18, fontWeight: 700, color: "#498553" }}>
-            My Order
-          </Text>
-        </View>
+        <Pagetitle title={"My Order"} navigation={navigation}></Pagetitle>
         {/* search và lọc */}
         <View
           style={{
@@ -188,7 +179,11 @@ const Order = () => {
                 }}
               >
                 <Text style={styles.greyText}>ID Order</Text>
-                <Text style={{fontSize:13,fontWeight:600,color:'#498553'}}>HK001</Text>
+                <Text
+                  style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}
+                >
+                  HK001
+                </Text>
               </View>
               <View
                 style={{
@@ -197,7 +192,9 @@ const Order = () => {
                 }}
               >
                 <Text style={styles.greyText}>Total Price</Text>
-                <Text style={{fontSize:13,fontWeight:600,color:'#000'}}>$50.55</Text>
+                <Text style={{ fontSize: 13, fontWeight: 600, color: "#000" }}>
+                  $50.55
+                </Text>
               </View>
               <View
                 style={{
@@ -206,7 +203,11 @@ const Order = () => {
                 }}
               >
                 <Text style={styles.greyText}>Status</Text>
-                <Text style={{fontSize:13,fontWeight:600,color:'#F4CE14'}}>Pending</Text>
+                <Text
+                  style={{ fontSize: 13, fontWeight: 600, color: "#F4CE14" }}
+                >
+                  Pending
+                </Text>
               </View>
             </View>
           </View>

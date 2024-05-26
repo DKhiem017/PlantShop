@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
     height: "100%",
-    resizeMode: "cover",
+    resizeMode: "contain",
   },
   plant_item: {
     width: 130,
@@ -56,9 +56,21 @@ const styles = StyleSheet.create({
     right: 5,
     top: 5,
   },
+  textContainer: {
+    position: "absolute",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    width: "100%",
+    bottom: 15,
+    paddingLeft: 10,
+  },
 });
 
-const Wishlist = () => {
+const Wishlist = ({ navigation }) => {
+  const HandleDetailProduct = () => {
+    navigation.navigate("Product Info");
+  };
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -78,7 +90,10 @@ const Wishlist = () => {
       <Searchbar></Searchbar>
       <View style={styles.gridContainer}>
         <View style={styles.gridItem}>
-          <TouchableOpacity style={styles.plant_item}>
+          <TouchableOpacity
+            style={styles.plant_item}
+            onPress={HandleDetailProduct}
+          >
             {/* Ảnh nền */}
             <Image
               source={product_background}
@@ -98,17 +113,7 @@ const Wishlist = () => {
               <Image source={plant_img} style={styles.backgroundImage}></Image>
             </View>
             {/* Text Container */}
-            <View
-              style={{
-                position: "absolute",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                width: "100%",
-                bottom: 10,
-                paddingLeft: 5,
-              }}
-            >
+            <View style={styles.textContainer}>
               <Text style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}>
                 Monstera
               </Text>
@@ -156,17 +161,7 @@ const Wishlist = () => {
               <Image source={plant_img} style={styles.backgroundImage}></Image>
             </View>
             {/* Text Container */}
-            <View
-              style={{
-                position: "absolute",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                width: "100%",
-                bottom: 10,
-                paddingLeft: 5,
-              }}
-            >
+            <View style={styles.textContainer}>
               <Text style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}>
                 Monstera
               </Text>
@@ -215,17 +210,7 @@ const Wishlist = () => {
               <Image source={plant_img} style={styles.backgroundImage}></Image>
             </View>
             {/* Text Container */}
-            <View
-              style={{
-                position: "absolute",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                width: "100%",
-                bottom: 10,
-                paddingLeft: 5,
-              }}
-            >
+            <View style={styles.textContainer}>
               <Text style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}>
                 Monstera
               </Text>
@@ -273,17 +258,7 @@ const Wishlist = () => {
               <Image source={plant_img} style={styles.backgroundImage}></Image>
             </View>
             {/* Text Container */}
-            <View
-              style={{
-                position: "absolute",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                width: "100%",
-                bottom: 10,
-                paddingLeft: 5,
-              }}
-            >
+            <View style={styles.textContainer}>
               <Text style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}>
                 Monstera
               </Text>

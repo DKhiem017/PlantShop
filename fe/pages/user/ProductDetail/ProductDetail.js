@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   plantImgContainer: {
-    height: 290,
+    height: 270,
     width: 200,
     top: 35,
     left: 0,
@@ -73,7 +73,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const ProductDetail = () => {
+const ProductDetail = ({ navigation }) => {
+  const HandleCheckout = () => {
+    navigation.navigate("AddtoCart");
+  };
   return (
     <View
       style={{
@@ -97,7 +100,7 @@ const ProductDetail = () => {
           top: 25,
         }}
       >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <View
             style={{
               left: 5,
@@ -300,7 +303,7 @@ const ProductDetail = () => {
         >
           <TouchableOpacity
             style={{
-              width: 220,
+              width: 300,
               height: 40,
               backgroundColor: "#498553",
               borderRadius: 10,
@@ -309,6 +312,7 @@ const ProductDetail = () => {
               alignItems: "center",
               flexDirection: "row",
             }}
+            onPress={HandleCheckout}
           >
             <Text style={{ color: "#fff", fontWeight: 500, marginRight: 10 }}>
               Add to Cart
@@ -325,7 +329,7 @@ const ProductDetail = () => {
       <View
         style={{
           width: 140,
-          height: 300,
+          height: 210,
           position: "absolute",
           right: 0,
           display: "flex",

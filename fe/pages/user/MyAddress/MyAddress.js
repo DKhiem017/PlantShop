@@ -18,9 +18,14 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 9,
   },
+  text: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#498553",
+  },
 });
 
-const MyAddress = () => {
+const MyAddress = ({navigation}) => {
   return (
     <SafeAreaView
       style={{
@@ -32,12 +37,12 @@ const MyAddress = () => {
     >
       <View>
         <StatusBar></StatusBar>
-        <Pagetitle title={"My Address"}></Pagetitle>
+        <Pagetitle title={"My Address"} navigation={navigation}></Pagetitle>
         {/* add address */}
         <View style={{ marginTop: 15, width: "100%", alignItems: "flex-end" }}>
           <TouchableOpacity
             style={{
-              height: 25,
+              padding: 5,
               width: 110,
               backgroundColor: "#498553",
               borderRadius: 5,
@@ -47,7 +52,7 @@ const MyAddress = () => {
               //   right: 0,
             }}
           >
-            <Text style={{ color: "#fff", fontSize: 11, fontWeight: 500 }}>
+            <Text style={{ color: "#fff", fontSize: 12, fontWeight: 500 }}>
               Add new Address
             </Text>
           </TouchableOpacity>
@@ -62,16 +67,12 @@ const MyAddress = () => {
               {/* Text Container */}
               <View style={{ gap: 5 }}>
                 <View style={{ flexDirection: "row", gap: 3 }}>
-                  <Text style={{ fontSize: 12, color: "#498553" }}>
-                    Hoàng Phúc
-                  </Text>
-                  <Text style={{ fontSize: 12, color: "#498553" }}>|</Text>
-                  <Text style={{ fontSize: 12, color: "#498553" }}>
-                    0961826917
-                  </Text>
+                  <Text style={styles.text}>Hoàng Phúc</Text>
+                  <Text style={styles.text}>|</Text>
+                  <Text style={styles.text}>0961826917</Text>
                 </View>
                 <View style={{ flexDirection: "row", gap: 3 }}>
-                  <Text style={{ fontSize: 12, color: "#498553" }}>
+                  <Text style={styles.text}>
                     Tân Lập, Đông Hoà, Dĩ An, Bình Dương
                   </Text>
                 </View>
@@ -85,7 +86,7 @@ const MyAddress = () => {
                     height: 20,
                   }}
                 >
-                  <Text style={{ color: "#EAC100", fontSize: 10 }}>
+                  <Text style={{ color: "#EAC100", fontSize: 11 }}>
                     Default
                   </Text>
                 </View>
@@ -93,7 +94,7 @@ const MyAddress = () => {
               {/* edit button */}
               <TouchableOpacity>
                 <Text
-                  style={{ fontSize: 12, fontWeight: 500, color: "#627FE7" }}
+                  style={{ fontSize: 13, fontWeight: 500, color: "#627FE7" }}
                 >
                   Edit
                 </Text>
@@ -112,16 +113,12 @@ const MyAddress = () => {
                 {/* Text Container */}
                 <View style={{ gap: 5 }}>
                   <View style={{ flexDirection: "row", gap: 3 }}>
-                    <Text style={{ fontSize: 12, color: "#498553" }}>
-                      Hoàng Phúc
-                    </Text>
-                    <Text style={{ fontSize: 12, color: "#498553" }}>|</Text>
-                    <Text style={{ fontSize: 12, color: "#498553" }}>
-                      0961826917
-                    </Text>
+                    <Text style={styles.text}>Hoàng Phúc</Text>
+                    <Text style={styles.text}>|</Text>
+                    <Text style={styles.text}>0961826917</Text>
                   </View>
                   <View style={{ flexDirection: "row", gap: 3 }}>
-                    <Text style={{ fontSize: 12, color: "#498553" }}>
+                    <Text style={styles.text}>
                       45b, đường số 8, Linh Trung, Thủ Đức
                     </Text>
                   </View>
@@ -129,7 +126,7 @@ const MyAddress = () => {
                 {/* edit button */}
                 <TouchableOpacity>
                   <Text
-                    style={{ fontSize: 12, fontWeight: 500, color: "#627FE7" }}
+                    style={{ fontSize: 13, fontWeight: 500, color: "#627FE7" }}
                   >
                     Edit
                   </Text>
@@ -139,7 +136,7 @@ const MyAddress = () => {
                 <TouchableOpacity
                   style={{
                     width: 96,
-                    height: 20,
+                    paddingVertical: 5,
                     borderRadius: 5,
                     backgroundColor: "#498553",
                     justifyContent: "center",
@@ -147,7 +144,7 @@ const MyAddress = () => {
                   }}
                 >
                   <Text
-                    style={{ color: "#fff", fontSize: 11, fontWeight: 500 }}
+                    style={{ color: "#fff", fontSize: 12, fontWeight: 500 }}
                   >
                     Set as default
                   </Text>
