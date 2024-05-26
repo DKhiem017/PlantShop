@@ -1,33 +1,7 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import MyTabs from "./fe/components/tabs";
-import Home from "./fe/pages/user/Home/Home";
-import Register from "./fe/pages/register";
-import Login from "./fe/pages/login";
-import MyAccount from "./fe/pages/user/MyAccount/Myaccount";
-import UserInformation from "./fe/pages/user/UserInformation/Userinfo";
-import PromotionDetail from "./fe/pages/admin/Promotion Detail/PromotionDetail";
-import ProductList from "./fe/pages/admin/ProductList/ProductList";
-import ProductInfo from "./fe/pages/ProductInfo/ProductInfo";
-import PromotionList from "./fe/pages/admin/PromotionList/PromotionList";
-import Cart from "./fe/pages/user/Cart/Cart";
-import Wishlist from "./fe/pages/user/WishList/Wishlist";
-import Checkout from "./fe/pages/user/Checkout/Checkout";
-import ProductDetail from "./fe/pages/user/ProductDetail/ProductDetail";
-import Order from "./fe/pages/user/Order/Order";
-import OrderDetail from "./fe/pages/user/OrderDetail/OrderDetail";
-import MyAddress from "./fe/pages/user/MyAddress/MyAddress";
-import MyFeedback from "./fe/pages/user/MyFeedback/MyFeedback";
-import VoucherWallet from "./fe/pages/user/VoucherWallet/VoucherWallet";
-import ChatRoom from "./fe/pages/user/ChatRoom/ChatRoom";
-import ChatRoomAdmin from "./fe/pages/admin/ChatRoomAdmin/ChatRoomAdmin";
-import BillList from "./fe/pages/admin/BillList/BillList";
-import Report from "./fe/pages/admin/Report/Report";
-import DetailProduct from "./fe/pages/admin/DetailProduct/DetailProduct";
 
-const Stack = createStackNavigator();
 
 const App = () => (
   <NavigationContainer>
