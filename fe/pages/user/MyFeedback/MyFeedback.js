@@ -59,7 +59,9 @@ const MyFeedback = ({ navigation }) => {
             </Text>
             <Text style={{ fontSize: 12 }}>{date}</Text>
           </View>
-          <Text style={{ color: "#498553", fontWeight: 400, fontSize:11 }}>{comment}</Text>
+          <Text style={{ color: "#498553", fontWeight: 400, fontSize: 11 }}>
+            {comment}
+          </Text>
         </View>
       </View>
     </View>
@@ -326,6 +328,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#498553",
     borderRadius: 10,
+    paddingLeft: 10,
+    textAlignVertical: "top",
+    paddingTop: 15,
   },
   cancelButtonStyle: {
     height: 30,
