@@ -10,10 +10,11 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Pagetitle from "../../../components/pagetitle";
 import { FontAwesome } from "@expo/vector-icons";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import "react-native-gesture-handler";
 import { TextInput } from "react-native-gesture-handler";
 import feedbackApi from "../../../../Api/FeedbackApi";
+import { Rating } from "react-native-ratings";
 
 const plant_img = require("../../../../assets/images/Monstera_tran.png");
 
@@ -35,6 +36,17 @@ const plantReviewed = [
 ];
 
 const MyFeedback = ({ navigation }) => {
+  //format Date
+  const formatDate = (date) => {
+    const inputDate = new Date(date);
+
+    const year = inputDate.getUTCFullYear();
+    const month = (inputDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = inputDate.getDate().toString().padStart(2, "0");
+
+    const formattedDate = `${day}/${month}/${year}`;
+    return formattedDate;
+  };
   //fetch Api
   const [loading, setLoading] = useState(true);
   const [unreviewed, setUnreviewed] = useState([]);
@@ -43,7 +55,7 @@ const MyFeedback = ({ navigation }) => {
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const reviewedList = await feedbackApi.getAll('PD0001');
+        const reviewedList = await feedbackApi.getReviewedFeedback("CS0001");
         console.log("success", reviewedList);
         setPlantReviewed(reviewedList);
         setLoading(false);
@@ -109,10 +121,10 @@ const MyFeedback = ({ navigation }) => {
 
   const renderItemReviewed = ({ item }) => (
     <ItemReviewed
-      name={item.name}
+      name={item.product.productName}
       comment={item.comment}
-      rating={item.rating}
-      date={item.date}
+      rating={item.point}
+      date={item.formatDate(feebackTime)}
     />
   );
 

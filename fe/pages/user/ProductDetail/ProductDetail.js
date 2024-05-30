@@ -17,6 +17,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { Rating } from "react-native-ratings";
 import feedbackApi from "../../../../Api/FeedbackApi";
+import { LogBox } from "react-native";
+LogBox.ignoreAllLogs();
 
 const backgroundImage = require("../../../../assets/images/DetailProductBackground.png");
 
@@ -47,8 +49,8 @@ const ProductDetail = ({ navigation, route }) => {
   useEffect(() => {
     const fetchApi = async () => {
       try {
+        const feedbackapi =await feedbackApi.getAll(id);
         const response = await productApi.getItem(id);
-        const feedbackapi = await feedbackApi.getAll(product.productID);
         console.log("success", response);
         console.log("success", feedbackapi);
         setProduct(response);
@@ -287,54 +289,46 @@ const ProductDetail = ({ navigation, route }) => {
                 ></Rating>
               </View>
             </View>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View style={{ paddingBottom: 25 }}>
-                {/* Comment */}
-                <View
-                  style={styles.flatlistContainer}
-                >
-                  <FlatList
-                    horizontal={false}
-                    data={feedback}
-                    ListHeaderComponent={
-                      <>
-                        <Text
-                          style={{
-                            fontSize: 15,
-                            fontWeight: "bold",
-                            width: "100%",
-                          }}
-                        >
-                          Description
-                        </Text>
-                        <View style={{ width: "100%" }}>
-                          <Text style={{ color: "#6F6A61", fontSize: 14 }}>
-                            {product.description}
-                          </Text>
-                        </View>
-                        <Text
-                          style={{
-                            width: "100%",
-                            fontSize: 15,
-                            fontWeight: 600,
-                            marginTop: 6,
-                          }}
-                        >
-                          Reviews
-                        </Text>
-                      </>
-                    }
-                    renderItem={({ item }) => (
-                      <FeedbackItem
-                        avt={item.customer.avatar}
-                        name={item.customer.name}
-                        rating={item.point}
-                        comment={item.comment}
-                        date={item.feedbackTime}
-                      />
-                    )}
-                  ></FlatList>
-                </View>
+            <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
+              {/* Comment */}
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  width: "100%",
+                }}
+              >
+                Description
+              </Text>
+              <View style={{ width: "100%" }}>
+                <Text style={{ color: "#6F6A61", fontSize: 14 }}>
+                  {product.description}
+                </Text>
+              </View>
+              <Text
+                style={{
+                  width: "100%",
+                  fontSize: 15,
+                  fontWeight: 600,
+                  marginTop: 6,
+                }}
+              >
+                Reviews
+              </Text>
+              <View style={styles.flatlistContainer}>
+                <FlatList
+                  data={feedback}
+                  horizontal={true}
+                  renderItem={({ item }) => (
+                    <FeedbackItem
+                      avt={item.customer.avatar}
+                      name={item.customer.name}
+                      rating={item.point}
+                      comment={item.comment}
+                      date={item.feedbackTime}
+                    />
+                  )}
+                ></FlatList>
               </View>
             </ScrollView>
             <View style={styles.addtoCartButContainer}>
