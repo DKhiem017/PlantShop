@@ -6,21 +6,45 @@ import {
   TouchableOpacity,
   View,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import productApi from "../../../../Api/ProductApi";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView } from "react-native-gesture-handler";
 
 const backgroundImage = require("../../../../assets/images/DetailProductBackground.png");
 const plant_img = require("../../../../assets/images/Monstera_tran.png");
 const avt_girl = require("../../../../assets/images/avt_girl.jpg");
 
-const ProductDetail = ({ navigation }) => {
+const ProductDetail = ({ navigation, route }) => {
+  const { id } = route.params;
+
   const HandleCheckout = () => {
     navigation.navigate("AddtoCart");
   };
+
+  const [product, setProduct] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  //fetchAPI
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const response = await productApi.getItem(id);
+        console.log("success", response);
+        setProduct(response);
+        setLoading(false);
+      } catch (error) {
+        console.log("Error", error);
+      }
+    };
+    fetchApi();
+  }, []);
 
   //thêm vào wishList
 
@@ -79,229 +103,287 @@ const ProductDetail = ({ navigation }) => {
   };
 
   return (
-    <View
+    <SafeAreaView
       style={{
         display: "flex",
         flexDirection: "column",
         flex: 1,
       }}
     >
-      <StatusBar></StatusBar>
-      <Image style={styles.backgroundImage} source={backgroundImage}></Image>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <View
-            style={{
-              left: 5,
-            }}
-          >
-            <AntDesign name="arrowleft" size={28} color="#498553" />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.wishButton} onPress={toggleFavourite}>
-          <AntDesign
-            name={!isFavourite ? "hearto" : "heart"}
-            size={12}
-            color="#498553"
-          />
-        </TouchableOpacity>
-      </View>
-      {/* Thông tin chi tiết của sản phẩm */}
-      <View style={styles.inforContainer}>
-        <TouchableOpacity onPress={toggleSidebar} style={styles.toggleButton}>
-          <Ionicons
-            name={isCollapsed ? "information" : "close"}
-            size={17}
-            color="#498553"
-          />
-        </TouchableOpacity>
-        <Animated.View style={[styles.sidebar, { width: sidebarWidth }]}>
-          {!isCollapsed && (
-            <View style={styles.menuItems}>
-              <Text style={{ fontSize: 12, color: "#6F6A61" }}>Size</Text>
-              <Text
-                style={{ fontWeight: "500", color: "#498533", marginTop: 10 }}
+      {loading ? (
+        <ActivityIndicator size="small" color="#00ff00"></ActivityIndicator>
+      ) : (
+        <>
+          <StatusBar></StatusBar>
+          <Image
+            style={styles.backgroundImage}
+            source={backgroundImage}
+          ></Image>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <View
+                style={{
+                  left: 15,
+                }}
               >
-                Small
-              </Text>
-              <Text style={{ fontSize: 12, color: "#6F6A61", marginTop: 10 }}>
-                Weight
-              </Text>
-              <Text
-                style={{ fontWeight: "500", color: "#498533", marginTop: 10 }}
-              >
-                4kg
-              </Text>
-              <Text style={{ fontSize: 12, color: "#6F6A61", marginTop: 10 }}>
-                Height
-              </Text>
-              <Text
-                style={{ fontWeight: "500", color: "#498533", marginTop: 10 }}
-              >
-                60cm
-              </Text>
-              <Text style={{ fontSize: 12, color: "#6F6A61", marginTop: 10 }}>
-                Temperature
-              </Text>
-              <Text
-                style={{ fontWeight: "500", color: "#498533", marginTop: 10 }}
-              >
-                18-24 C
-              </Text>
-            </View>
-          )}
-        </Animated.View>
-      </View>
-      {/* thông tin */}
-      <View style={styles.DetailContainer}>
-        <View
-          style={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "row",
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 19,
-              fontWeight: 500,
-            }}
-          >
-            Monstera
-          </Text>
-          <View style={styles.addOrMinus}>
-            <TouchableOpacity style={styles.minusBut} onPress={handleMinus}>
-              <AntDesign name="minus" size={12} color="#fff" />
+                <AntDesign name="arrowleft" size={28} color="#498553" />
+              </View>
             </TouchableOpacity>
-            <Text style={{ fontSize: 15, fontWeight: 500, marginRight: 5 }}>
-              {value}
-            </Text>
-            <TouchableOpacity style={styles.plusBut} onPress={handlePlus}>
-              <AntDesign name="plus" size={10} color="#fff" />
+            <TouchableOpacity
+              style={styles.wishButton}
+              onPress={toggleFavourite}
+            >
+              <AntDesign
+                name={!isFavourite ? "hearto" : "heart"}
+                size={12}
+                color="#498553"
+              />
             </TouchableOpacity>
           </View>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            width: "100%",
-          }}
-        >
-          <Text
-            style={{
-              color: "#498553",
-              fontWeight: 500,
-              fontSize: 16,
-            }}
-          >
-            $ 30.55
-          </Text>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginLeft: 10,
-              gap: 5,
-            }}
-          >
-            <AntDesign name="star" size={15} color="yellow" />
-            <AntDesign name="star" size={15} color="yellow" />
-            <AntDesign name="star" size={15} color="yellow" />
-            <AntDesign name="star" size={15} color="yellow" />
+          {/* Thông tin chi tiết của sản phẩm */}
+          <View style={styles.inforContainer}>
+            <TouchableOpacity
+              onPress={toggleSidebar}
+              style={styles.toggleButton}
+            >
+              <Ionicons
+                name={isCollapsed ? "information" : "close"}
+                size={17}
+                color="#498553"
+              />
+            </TouchableOpacity>
+            <Animated.View style={[styles.sidebar, { width: sidebarWidth }]}>
+              {!isCollapsed && (
+                <View style={styles.menuItems}>
+                  <Text style={{ fontSize: 12, color: "#6F6A61" }}>Size</Text>
+                  <Text
+                    style={{
+                      fontWeight: "500",
+                      color: "#498533",
+                      marginTop: 10,
+                    }}
+                  >
+                    {product.size}
+                  </Text>
+                  <Text
+                    style={{ fontSize: 12, color: "#6F6A61", marginTop: 10 }}
+                  >
+                    Height
+                  </Text>
+                  <Text
+                    style={{
+                      fontWeight: "500",
+                      color: "#498533",
+                      marginTop: 10,
+                    }}
+                  >
+                    {product.height}
+                  </Text>
+                  <Text
+                    style={{ fontSize: 12, color: "#6F6A61", marginTop: 10 }}
+                  >
+                    Temperature
+                  </Text>
+                  <Text
+                    style={{
+                      fontWeight: "500",
+                      color: "#498533",
+                      marginTop: 10,
+                    }}
+                  >
+                    {product.temperature} C
+                  </Text>
+                </View>
+              )}
+            </Animated.View>
           </View>
-        </View>
-        <Text
-          style={{
-            fontWeight: 600,
-            fontSize: 15,
-            marginTop: 6,
-            width: "100%",
-          }}
-        >
-          Description
-        </Text>
-        <Text style={{ color: "#6F6A61", fontSize: 14 }}>
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas
-          porttitor congue massa. Fusce posuere, magna sed
-        </Text>
-        <Text
-          style={{
-            width: "100%",
-            fontSize: 15,
-            fontWeight: 600,
-            marginTop: 6,
-          }}
-        >
-          Reviews
-        </Text>
-        {/* Comment */}
-        <View
-          style={{
-            height: 55,
-            width: "100%",
-            marginTop: 10,
-            display: "flex",
-            flexDirection: "row",
-          }}
-        >
-          {/* khung avt */}
-          <View
-            style={{
-              height: 35,
-              width: 35,
-              borderRadius: 35,
-            }}
-          >
-            <Image source={avt_girl} style={styles.avt_girl}></Image>
-          </View>
-          {/* khung đánh giá */}
-          <View
-            style={{
-              width: 200,
-              height: 55,
-              // backgroundColor: "#000",
-              marginLeft: 10,
-              display: "flex",
-              flexDirection: "column",
-              // justifyContent: "center",
-            }}
-          >
-            <Text style={{ fontSize: 12, fontWeight: 500 }}>Kratos</Text>
+          {/* thông tin */}
+          <View style={styles.DetailContainer}>
             <View
               style={{
+                width: "100%",
                 display: "flex",
                 flexDirection: "row",
-                alignItems: "center",
               }}
             >
-              <Entypo marginRight={2} name="star" size={11} color="yellow" />
-              <Entypo marginRight={2} name="star" size={11} color="yellow" />
-              <Entypo marginRight={2} name="star" size={11} color="yellow" />
-              <Entypo marginRight={2} name="star" size={11} color="yellow" />
-              <Entypo marginRight={2} name="star" size={11} color="yellow" />
-              <Text style={{ fontSize: 12, marginLeft: 5 }}>04/04/2024</Text>
+              <Text
+                style={{
+                  fontSize: 19,
+                  fontWeight: 500,
+                }}
+              >
+                {product.productName}
+              </Text>
+              <View style={styles.addOrMinus}>
+                <TouchableOpacity style={styles.minusBut} onPress={handleMinus}>
+                  <AntDesign name="minus" size={12} color="#fff" />
+                </TouchableOpacity>
+                <Text style={{ fontSize: 15, fontWeight: 500, marginRight: 8 }}>
+                  {value}
+                </Text>
+                <TouchableOpacity style={styles.plusBut} onPress={handlePlus}>
+                  <AntDesign name="plus" size={10} color="#fff" />
+                </TouchableOpacity>
+              </View>
             </View>
-            <Text style={{ fontSize: 12, color: "#6F6A61" }}>Very Good</Text>
-          </View>
-        </View>
-        <View style={styles.addtoCartButContainer}>
-          <TouchableOpacity
-            style={styles.addtoCartBut}
-            onPress={HandleCheckout}
-          >
-            <Text style={{ color: "#fff", fontWeight: 500, marginRight: 10 }}>
-              Add to Cart
+            <View
+              style={{
+                flexDirection: "row",
+                width: "100%",
+              }}
+            >
+              <Text
+                style={{
+                  color: "#498553",
+                  fontWeight: 500,
+                  fontSize: 16,
+                }}
+              >
+                $ {product.price}
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginLeft: 10,
+                  gap: 5,
+                }}
+              >
+                <AntDesign name="star" size={15} color="yellow" />
+                <AntDesign name="star" size={15} color="yellow" />
+                <AntDesign name="star" size={15} color="yellow" />
+                <AntDesign name="star" size={15} color="yellow" />
+              </View>
+            </View>
+            <Text
+              style={{
+                fontWeight: 600,
+                fontSize: 15,
+                marginTop: 6,
+                fontWeight: "bold",
+                width: "100%",
+              }}
+            >
+              Description
             </Text>
-            <FontAwesome name="opencart" size={15} color="#fff" />
-          </TouchableOpacity>
-        </View>
-      </View>
-      {/* Ảnh sản phẩm */}
-      <View style={styles.plantImgContainer}>
-        <Image source={plant_img} style={styles.plantImg}></Image>
-      </View>
+            <View style={{ width: "100%" }}>
+              <Text style={{ color: "#6F6A61", fontSize: 14 }}>
+                {product.description}
+              </Text>
+            </View>
+            <Text
+              style={{
+                width: "100%",
+                fontSize: 15,
+                fontWeight: 600,
+                marginTop: 6,
+              }}
+            >
+              Reviews
+            </Text>
+            {/* Comment */}
+            <View
+              style={{
+                height: 55,
+                width: "100%",
+                marginTop: 10,
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              {/* khung avt */}
+              <View
+                style={{
+                  height: 35,
+                  width: 35,
+                  borderRadius: 35,
+                }}
+              >
+                <Image source={avt_girl} style={styles.avt_girl}></Image>
+              </View>
+              {/* khung đánh giá */}
+              <View
+                style={{
+                  width: 200,
+                  height: 55,
+                  // backgroundColor: "#000",
+                  marginLeft: 10,
+                  display: "flex",
+                  flexDirection: "column",
+                  // justifyContent: "center",
+                }}
+              >
+                <Text style={{ fontSize: 12, fontWeight: 500 }}>Kratos</Text>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Entypo
+                    marginRight={2}
+                    name="star"
+                    size={11}
+                    color="yellow"
+                  />
+                  <Entypo
+                    marginRight={2}
+                    name="star"
+                    size={11}
+                    color="yellow"
+                  />
+                  <Entypo
+                    marginRight={2}
+                    name="star"
+                    size={11}
+                    color="yellow"
+                  />
+                  <Entypo
+                    marginRight={2}
+                    name="star"
+                    size={11}
+                    color="yellow"
+                  />
+                  <Entypo
+                    marginRight={2}
+                    name="star"
+                    size={11}
+                    color="yellow"
+                  />
+                  <Text style={{ fontSize: 12, marginLeft: 5 }}>
+                    04/04/2024
+                  </Text>
+                </View>
+                <Text style={{ fontSize: 12, color: "#6F6A61" }}>
+                  Very Good
+                </Text>
+              </View>
+            </View>
+            <View style={styles.addtoCartButContainer}>
+              <TouchableOpacity
+                style={styles.addtoCartBut}
+                onPress={HandleCheckout}
+              >
+                <Text
+                  style={{ color: "#fff", fontWeight: 500, marginRight: 10 }}
+                >
+                  Add to Cart
+                </Text>
+                <FontAwesome name="opencart" size={15} color="#fff" />
+              </TouchableOpacity>
+            </View>
+          </View>
+          
+          {/* Ảnh sản phẩm */}
+          <View style={styles.plantImgContainer}>
+            <Image source={{uri: `${product.images[0].imageURL}`}} style={styles.plantImg}></Image>
+          </View>
+        </>
+      )}
+
       {/* Thông tin cơ bản của sản phẩm */}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -366,7 +448,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    top: 25,
   },
   addOrMinus: {
     display: "flex",
@@ -383,7 +464,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 5,
+    marginRight: 8,
   },
   plusBut: {
     height: 15,
@@ -419,7 +500,7 @@ const styles = StyleSheet.create({
   },
   toggleButton: {
     position: "absolute",
-    top: 20,
+    top: 5,
     right: 10,
     backgroundColor: "#fff",
     height: 26,

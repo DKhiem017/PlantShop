@@ -12,7 +12,7 @@ const Pagetitle = ({ title, navigation }) => {
       <TouchableOpacity
         style={{
           position: "absolute",
-          left: 15,
+          left: 0,
         }}
         onPress={handleGoback}
       >

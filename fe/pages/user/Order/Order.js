@@ -88,7 +88,7 @@ const Order = ({ navigation }) => {
           }}
         >
           <View
-            style={{ display: "flex", justifyContent: "center", width: 330 }}
+            style={{ display: "flex", justifyContent: "center", width: "85%" }}
           >
             <TextInput
               placeholder="Search for plants..."

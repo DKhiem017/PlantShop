@@ -130,8 +130,10 @@ const styles = StyleSheet.create({
 });
 
 const Home = ({ navigation }) => {
-  const DetailProductNavigation = () => {
-    navigation.navigate("Product Info");
+  const DetailProductNavigation = (productID) => {
+    navigation.navigate("Product Info", {
+      id: productID,
+    });
   };
 
   //get product data
@@ -167,14 +169,14 @@ const Home = ({ navigation }) => {
     setActiveIndex(index);
   };
 
-  const Item = ({ name, rating, price }) => (
+  const Item = ({ name, rating, price, id }) => (
     <TouchableOpacity
       style={{
         width: 130,
         height: 170,
         marginRight: 15,
       }}
-      onPress={DetailProductNavigation}
+      onPress={() => DetailProductNavigation(id)}
     >
       {/* Ảnh nền */}
       <Image source={product_background} style={styles.backgroundImage}></Image>
@@ -328,6 +330,7 @@ const Home = ({ navigation }) => {
                   name={item.productName}
                   price={item.price}
                   rating={item.reviewPoint}
+                  id={item.productID}
                 />
               )}
               keyExtractor={(item) => item.id}
@@ -352,6 +355,7 @@ const Home = ({ navigation }) => {
                   name={item.productName}
                   price={item.price}
                   rating={item.reviewPoint}
+                  id={item.productID}
                 />
               )}
               keyExtractor={(item) => item.id}

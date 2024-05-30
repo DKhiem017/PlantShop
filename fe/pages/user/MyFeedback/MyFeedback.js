@@ -10,16 +10,12 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Pagetitle from "../../../components/pagetitle";
 import { FontAwesome } from "@expo/vector-icons";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import "react-native-gesture-handler";
 import { TextInput } from "react-native-gesture-handler";
+import feedbackApi from "../../../../Api/FeedbackApi";
 
 const plant_img = require("../../../../assets/images/Monstera_tran.png");
-
-const plantData = [
-  { id: 1, name: "Monstera", price: 30.55 },
-  { id: 2, name: "Fiddle Leaf Fig", price: 25.99 },
-];
 
 const plantReviewed = [
   {
@@ -39,6 +35,24 @@ const plantReviewed = [
 ];
 
 const MyFeedback = ({ navigation }) => {
+  //fetch Api
+  const [loading, setLoading] = useState(true);
+  const [unreviewed, setUnreviewed] = useState([]);
+  const [plantReviewed, setPlantReviewed] = useState([]);
+
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const reviewedList = await feedbackApi.getAll('PD0001');
+        console.log("success", reviewedList);
+        setPlantReviewed(reviewedList);
+        setLoading(false);
+      } catch (error) {
+        console.log("Error", error);
+      }
+    };
+    fetchApi();
+  }, []);
   //rating function
   const [defaultRating, setdefaultRating] = useState(0);
   const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
@@ -167,7 +181,7 @@ const MyFeedback = ({ navigation }) => {
             }}
           >
             <FlatList
-              data={plantData}
+              data={unreviewed}
               renderItem={renderItemUnreviewed}
               keyExtractor={(item) => item.id}
               style={{ width: "100%" }}
