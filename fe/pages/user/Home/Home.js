@@ -1,5 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import {
+  ActivityIndicator,
+  FlatList,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,7 +14,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Searchbar from "../../../components/search";
 import Carousel from "../../../components/carousel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import productApi from "../../../../Api/ProductApi";
 
 const avt = require("../../../../assets/images/Monstera.jpg");
 const plant_img = require("../../../../assets/images/Monstera_tran.png");
@@ -84,7 +87,6 @@ const styles = StyleSheet.create({
     height: 35,
     width: "100%",
     marginTop: 15,
-    backgroundColor: "#fff",
     display: "flex",
     flexDirection: "row",
   },
@@ -96,6 +98,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 10,
+    borderWidth: 0.5,
+    borderColor: "#DCE1D2",
   },
   tagsText: {
     fontWeight: 600,
@@ -130,31 +134,31 @@ const Home = ({ navigation }) => {
     navigation.navigate("Product Info");
   };
 
+  //get product data
+  const [loading, setLoading] = useState(true);
+  const [products, setProduct] = useState([]);
+  const [recommend, setRecommend] = useState([]);
+
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const response = await productApi.getAll();
+        const recommend = await productApi.getRecommend("CS0001");
+        console.log("success", recommend);
+        setProduct(response);
+        setRecommend(recommend);
+        setLoading(false);
+      } catch (error) {
+        console.log("Error", error);
+      }
+    };
+    fetchApi();
+  }, []);
+
   const items = [
     { image: require("../../../../assets/images/Voucher1.png") },
     { image: require("../../../../assets/images/Voucher2.jpg") },
     { image: require("../../../../assets/images/Voucher3.jpg") },
-  ];
-
-  const products = [
-    {
-      id: "01",
-      name: "Monstera",
-      rating: "4.5",
-      price: "$30.55",
-    },
-    {
-      id: "02",
-      name: "Monstera",
-      rating: "4.5",
-      price: "$30.55",
-    },
-    {
-      id: "02",
-      name: "Monstera",
-      rating: "4.5",
-      price: "$30.55",
-    },
   ];
 
   const [activeIndex, setActiveIndex] = useState(null);
@@ -162,6 +166,46 @@ const Home = ({ navigation }) => {
   const handlePress = (index) => {
     setActiveIndex(index);
   };
+
+  const Item = ({ name, rating, price }) => (
+    <TouchableOpacity
+      style={{
+        width: 130,
+        height: 170,
+        marginRight: 15,
+      }}
+      onPress={DetailProductNavigation}
+    >
+      {/* Ảnh nền */}
+      <Image source={product_background} style={styles.backgroundImage}></Image>
+      <View
+        style={{
+          height: 127,
+          position: "absolute",
+          top: 0,
+          width: "100%",
+        }}
+      >
+        <TouchableOpacity style={styles.addtoWishListButton}>
+          <AntDesign name="hearto" size={12} color="#498553" />
+        </TouchableOpacity>
+        <Image source={plant_img} style={styles.backgroundImage}></Image>
+      </View>
+      {/* Text Container */}
+      <View style={styles.textContainer}>
+        <Text style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}>
+          {name}
+        </Text>
+        <Text style={{ fontSize: 12, fontWeight: 600, color: "#000" }}>
+          $ {price}
+        </Text>
+        <View style={styles.productRating}>
+          <FontAwesome marginRight={3} name="star" size={12} color="#498553" />
+          <Text style={{ fontSize: 12, color: "#498553" }}>{rating}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView
@@ -272,139 +316,48 @@ const Home = ({ navigation }) => {
         </View>
         {/* danh sách sản phẩm */}
         <View>
-          <ScrollView
-            horizontal
-            style={{ paddingVertical: 10 }}
-            showsHorizontalScrollIndicator={false}
-          >
-            {/* item sản phẩm */}
-            {products.map((product, index) => (
-              <TouchableOpacity
-                style={{
-                  width: 130,
-                  height: 170,
-                  marginRight: 15,
-                }}
-                onPress={DetailProductNavigation}
-              >
-                {/* Ảnh nền */}
-                <Image
-                  source={product_background}
-                  style={styles.backgroundImage}
-                ></Image>
-                <View
-                  style={{
-                    height: 127,
-                    position: "absolute",
-                    top: 0,
-                    width: "100%",
-                  }}
-                >
-                  <TouchableOpacity style={styles.addtoWishListButton}>
-                    <AntDesign name="hearto" size={12} color="#498553" />
-                  </TouchableOpacity>
-                  <Image
-                    source={plant_img}
-                    style={styles.backgroundImage}
-                  ></Image>
-                </View>
-                {/* Text Container */}
-                <View style={styles.textContainer}>
-                  <Text
-                    style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}
-                  >
-                    {product.name}
-                  </Text>
-                  <Text
-                    style={{ fontSize: 12, fontWeight: 600, color: "#000" }}
-                  >
-                    {product.price}
-                  </Text>
-                  <View style={styles.productRating}>
-                    <FontAwesome
-                      marginRight={3}
-                      name="star"
-                      size={12}
-                      color="#498553"
-                    />
-                    <Text style={{ fontSize: 12, color: "#498553" }}>
-                      {product.rating}
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+          {loading ? (
+            <ActivityIndicator size="small" color="#00ff00" />
+          ) : (
+            <FlatList
+              horizontal={true}
+              style={{ paddingVertical: 10 }}
+              data={products}
+              renderItem={({ item }) => (
+                <Item
+                  name={item.productName}
+                  price={item.price}
+                  rating={item.reviewPoint}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+              showsHorizontalScrollIndicator={false}
+            ></FlatList>
+          )}
         </View>
-
         {/* Recommend */}
         <Text style={{ fontSize: 15, color: "#498553", fontWeight: 600 }}>
           Recommend for you
         </Text>
         <View>
-          <ScrollView
-            horizontal
-            style={{ paddingVertical: 10 }}
-            showsHorizontalScrollIndicator={false}
-          >
-            {/* item sản phẩm */}
-            {products.map((product, index) => (
-              <TouchableOpacity
-                style={{
-                  width: 130,
-                  height: 170,
-                  marginRight: 15,
-                }}
-                onPress={DetailProductNavigation}
-              >
-                {/* Ảnh nền */}
-                <Image
-                  source={product_background}
-                  style={styles.backgroundImage}
-                ></Image>
-                <View
-                  style={{
-                    height: 127,
-                    position: "absolute",
-                    top: 0,
-                    width: "100%",
-                  }}
-                >
-                  <TouchableOpacity style={styles.addtoWishListButton}>
-                    <AntDesign name="hearto" size={12} color="#498553" />
-                  </TouchableOpacity>
-                  <Image
-                    source={plant_img}
-                    style={styles.backgroundImage}
-                  ></Image>
-                </View>
-                {/* Text Container */}
-                <View style={styles.textContainer}>
-                  <Text
-                    style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}
-                  >
-                    {product.name}
-                  </Text>
-                  <Text
-                    style={{ fontSize: 12, fontWeight: 600, color: "#000" }}
-                  >
-                    {product.price}
-                  </Text>
-                  <View style={styles.productRating}>
-                    <FontAwesome
-                      marginRight={3}
-                      name="star"
-                      size={12}
-                      color="#498553"
-                    />
-                    <Text style={{ fontSize: 12, color: "#498553" }}>
-                      {product.rating}
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+          {loading ? (
+            <ActivityIndicator size="small" color="#00ff00" />
+          ) : (
+            <FlatList
+              horizontal={true}
+              style={{ paddingVertical: 10 }}
+              data={products}
+              renderItem={({ item }) => (
+                <Item
+                  name={item.productName}
+                  price={item.price}
+                  rating={item.reviewPoint}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+              showsHorizontalScrollIndicator={false}
+            ></FlatList>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
