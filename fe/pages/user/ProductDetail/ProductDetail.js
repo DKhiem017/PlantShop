@@ -10,18 +10,29 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import productApi from "../../../../Api/ProductApi";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView } from "react-native-gesture-handler";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { Rating } from "react-native-ratings";
+import feedbackApi from "../../../../Api/FeedbackApi";
 
 const backgroundImage = require("../../../../assets/images/DetailProductBackground.png");
-const plant_img = require("../../../../assets/images/Monstera_tran.png");
-const avt_girl = require("../../../../assets/images/avt_girl.jpg");
 
 const ProductDetail = ({ navigation, route }) => {
+  //format Date
+  const formatDate = (date) => {
+    const inputDate = new Date(date);
+
+    const year = inputDate.getUTCFullYear();
+    const month = (inputDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = inputDate.getDate().toString().padStart(2, "0");
+
+    const formattedDate = `${day}/${month}/${year}`;
+    return formattedDate;
+  };
+
   const { id } = route.params;
 
   const HandleCheckout = () => {
@@ -30,14 +41,18 @@ const ProductDetail = ({ navigation, route }) => {
 
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
+  const [feedback, setFeedback] = useState([]);
 
   //fetchAPI
   useEffect(() => {
     const fetchApi = async () => {
       try {
         const response = await productApi.getItem(id);
+        const feedbackapi = await feedbackApi.getAll(product.productID);
         console.log("success", response);
+        console.log("success", feedbackapi);
         setProduct(response);
+        setFeedback(feedbackapi);
         setLoading(false);
       } catch (error) {
         console.log("Error", error);
@@ -101,6 +116,34 @@ const ProductDetail = ({ navigation, route }) => {
     }
     setIsCollapsed(!isCollapsed);
   };
+
+  const FeedbackItem = ({ avt, name, date, rating, comment, id }) => (
+    <View style={{ flexDirection: "row", marginTop: 5 }}>
+      <View style={styles.avtContainer}>
+        <Image source={{ uri: `${avt}` }} style={styles.avt_girl}></Image>
+      </View>
+      <View style={styles.commentContainer}>
+        <Text style={{ fontSize: 12, fontWeight: 500 }}>{name}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Rating
+            startingValue={rating}
+            ratingCount={5}
+            readonly
+            imageSize={12}
+          ></Rating>
+          <Text style={{ fontSize: 12, marginLeft: 5 }}>
+            {formatDate(date)}
+          </Text>
+        </View>
+        <Text style={{ fontSize: 12, color: "#6F6A61" }}>{comment}</Text>
+      </View>
+    </View>
+  );
 
   return (
     <SafeAreaView
@@ -199,13 +242,7 @@ const ProductDetail = ({ navigation, route }) => {
           </View>
           {/* thông tin */}
           <View style={styles.DetailContainer}>
-            <View
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
+            <View style={styles.con1}>
               <Text
                 style={{
                   fontSize: 19,
@@ -241,125 +278,65 @@ const ProductDetail = ({ navigation, route }) => {
               >
                 $ {product.price}
               </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginLeft: 10,
-                  gap: 5,
-                }}
-              >
-                <AntDesign name="star" size={15} color="yellow" />
-                <AntDesign name="star" size={15} color="yellow" />
-                <AntDesign name="star" size={15} color="yellow" />
-                <AntDesign name="star" size={15} color="yellow" />
+              <View style={styles.ratingContainer}>
+                <Rating
+                  ratingCount={5}
+                  startingValue={product.reviewPoint}
+                  imageSize={15}
+                  readonly
+                ></Rating>
               </View>
             </View>
-            <Text
-              style={{
-                fontWeight: 600,
-                fontSize: 15,
-                marginTop: 6,
-                fontWeight: "bold",
-                width: "100%",
-              }}
-            >
-              Description
-            </Text>
-            <View style={{ width: "100%" }}>
-              <Text style={{ color: "#6F6A61", fontSize: 14 }}>
-                {product.description}
-              </Text>
-            </View>
-            <Text
-              style={{
-                width: "100%",
-                fontSize: 15,
-                fontWeight: 600,
-                marginTop: 6,
-              }}
-            >
-              Reviews
-            </Text>
-            {/* Comment */}
-            <View
-              style={{
-                height: 55,
-                width: "100%",
-                marginTop: 10,
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
-              {/* khung avt */}
-              <View
-                style={{
-                  height: 35,
-                  width: 35,
-                  borderRadius: 35,
-                }}
-              >
-                <Image source={avt_girl} style={styles.avt_girl}></Image>
-              </View>
-              {/* khung đánh giá */}
-              <View
-                style={{
-                  width: 200,
-                  height: 55,
-                  // backgroundColor: "#000",
-                  marginLeft: 10,
-                  display: "flex",
-                  flexDirection: "column",
-                  // justifyContent: "center",
-                }}
-              >
-                <Text style={{ fontSize: 12, fontWeight: 500 }}>Kratos</Text>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <View style={{ paddingBottom: 25 }}>
+                {/* Comment */}
                 <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
+                  style={styles.flatlistContainer}
                 >
-                  <Entypo
-                    marginRight={2}
-                    name="star"
-                    size={11}
-                    color="yellow"
-                  />
-                  <Entypo
-                    marginRight={2}
-                    name="star"
-                    size={11}
-                    color="yellow"
-                  />
-                  <Entypo
-                    marginRight={2}
-                    name="star"
-                    size={11}
-                    color="yellow"
-                  />
-                  <Entypo
-                    marginRight={2}
-                    name="star"
-                    size={11}
-                    color="yellow"
-                  />
-                  <Entypo
-                    marginRight={2}
-                    name="star"
-                    size={11}
-                    color="yellow"
-                  />
-                  <Text style={{ fontSize: 12, marginLeft: 5 }}>
-                    04/04/2024
-                  </Text>
+                  <FlatList
+                    horizontal={false}
+                    data={feedback}
+                    ListHeaderComponent={
+                      <>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            fontWeight: "bold",
+                            width: "100%",
+                          }}
+                        >
+                          Description
+                        </Text>
+                        <View style={{ width: "100%" }}>
+                          <Text style={{ color: "#6F6A61", fontSize: 14 }}>
+                            {product.description}
+                          </Text>
+                        </View>
+                        <Text
+                          style={{
+                            width: "100%",
+                            fontSize: 15,
+                            fontWeight: 600,
+                            marginTop: 6,
+                          }}
+                        >
+                          Reviews
+                        </Text>
+                      </>
+                    }
+                    renderItem={({ item }) => (
+                      <FeedbackItem
+                        avt={item.customer.avatar}
+                        name={item.customer.name}
+                        rating={item.point}
+                        comment={item.comment}
+                        date={item.feedbackTime}
+                      />
+                    )}
+                  ></FlatList>
                 </View>
-                <Text style={{ fontSize: 12, color: "#6F6A61" }}>
-                  Very Good
-                </Text>
               </View>
-            </View>
+            </ScrollView>
             <View style={styles.addtoCartButContainer}>
               <TouchableOpacity
                 style={styles.addtoCartBut}
@@ -374,14 +351,15 @@ const ProductDetail = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           </View>
-          
           {/* Ảnh sản phẩm */}
           <View style={styles.plantImgContainer}>
-            <Image source={{uri: `${product.images[0].imageURL}`}} style={styles.plantImg}></Image>
+            <Image
+              source={{ uri: `${product.images[0].imageURL}` }}
+              style={styles.plantImg}
+            ></Image>
           </View>
         </>
       )}
-
       {/* Thông tin cơ bản của sản phẩm */}
     </SafeAreaView>
   );
@@ -490,7 +468,7 @@ const styles = StyleSheet.create({
     bottom: 20,
     justifyContent: "center",
     alignItems: "center",
-    position: "absolute",
+    position: "relative",
   },
   inforContainer: {
     flexDirection: "row",
@@ -520,6 +498,35 @@ const styles = StyleSheet.create({
   menuItems: {
     marginTop: 10,
     paddingLeft: 10,
+  },
+  con1: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+  },
+  ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: 10,
+    gap: 5,
+  },
+  avtContainer: {
+    height: 35,
+    width: 35,
+    borderRadius: 35,
+  },
+  commentContainer: {
+    width: 200,
+    height: 55,
+    marginLeft: 10,
+    display: "flex",
+    flexDirection: "column",
+  },
+  flatlistContainer: {
+    width: "100%",
+    marginTop: 10,
+    display: "flex",
+    flexDirection: "row",
   },
 });
 
