@@ -44,7 +44,12 @@ const MyFeedback = ({ navigation }) => {
     const month = (inputDate.getMonth() + 1).toString().padStart(2, "0");
     const day = inputDate.getDate().toString().padStart(2, "0");
 
-    const formattedDate = `${day}/${month}/${year}`;
+    const time =
+      inputDate.getHours().toString().padStart(2, "0") +
+      ":" +
+      inputDate.getMinutes().toString().padStart(2, "0");
+
+    const formattedDate = `${day}/${month}/${year}  ${time}  `;
     return formattedDate;
   };
   //fetch Api
@@ -78,11 +83,13 @@ const MyFeedback = ({ navigation }) => {
         </View>
         <View style={{ justifyContent: "space-between", marginLeft: 10 }}>
           <Text style={{ color: "#000", fontWeight: 600 }}>{name}</Text>
-          <View style={{ flexDirection: "row", gap: 2, alignItems: "center" }}>
-            <FontAwesome name="star" size={12} color="#498553" />
-            <Text style={{ color: "#498553", marginRight: 5, fontSize: 12 }}>
-              {rating}
-            </Text>
+          <View style={{ flexDirection: "row", gap: 7, alignItems: "center" }}>
+            <Rating
+              ratingCount={5}
+              readonly
+              startingValue={rating}
+              imageSize={14}
+            />
             <Text style={{ fontSize: 12 }}>{date}</Text>
           </View>
           <Text style={{ color: "#498553", fontWeight: 400, fontSize: 11 }}>
@@ -124,7 +131,7 @@ const MyFeedback = ({ navigation }) => {
       name={item.product.productName}
       comment={item.comment}
       rating={item.point}
-      date={item.formatDate(feebackTime)}
+      date={formatDate(item.feedbackTime)}
     />
   );
 
@@ -146,11 +153,11 @@ const MyFeedback = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
-      <View>
+      <View style={{paddingHorizontal:15}}>
         <StatusBar></StatusBar>
         <Pagetitle title={"My Feedback"} navigation={navigation}></Pagetitle>
         <View
-          style={{ flexDirection: "row", marginTop: 10, paddingHorizontal: 10 }}
+          style={{ flexDirection: "row", marginTop: 10, }}
         >
           {/* Unreview */}
           <TouchableOpacity
@@ -189,7 +196,6 @@ const MyFeedback = ({ navigation }) => {
               paddingTop: 5,
               width: "100%",
               marginTop: 10,
-              paddingHorizontal: 15,
             }}
           >
             <FlatList
@@ -206,7 +212,6 @@ const MyFeedback = ({ navigation }) => {
               paddingTop: 5,
               width: "100%",
               marginTop: 10,
-              paddingHorizontal: 15,
             }}
           >
             <FlatList
