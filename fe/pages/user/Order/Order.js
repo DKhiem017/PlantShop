@@ -6,12 +6,15 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  ScrollView,
+  ActivityIndicator,
+  FlatList,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Entypo } from "@expo/vector-icons";
 import Pagetitle from "../../../components/pagetitle";
+import { useState, useEffect } from "react";
+import orderAPI from "../../../../Api/OrderApi";
 
 const adjust = require("../../../../assets/images/Adjust.png");
 const plantImg = require("../../../../assets/images/Monstera_tran.png");
@@ -62,6 +65,165 @@ const styles = StyleSheet.create({
 });
 
 const Order = ({ navigation }) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      try {
+        const response = await orderAPI.getAll('CS0001');
+        console.log("success: ", response);
+        setData(response);
+        setLoading(false);
+      }
+      catch (error) {
+        console.log("Error: ", error);
+        setLoading(false);
+      }
+    }
+
+    fetchAPI()
+  }, [])
+
+  const HandleDetailProduct = (productID) => {
+    navigation.navigate("OrderDetail", {
+      id: productID
+    })
+  }
+
+  const Item = ({ nameProduct, quantity, orderID, totalPrice, status, image }) => {
+    return (
+      <View style={{ width: "100%", marginTop: 15 }}>
+        {/* item */}
+        <View style={styles.orderItem}>
+          <View style={{ height: 52, flexDirection: "row" }}>
+            {/* ảnh sản phẩm */}
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 5,
+                backgroundColor: "#DAF1D4",
+              }}
+            >
+              <Image source={{ uri: `${image}` }} style={styles.backgroundImage}></Image>
+            </View>
+            {/* thông tin sản phẩm */}
+            <View style={{ justifyContent: "space-between", marginLeft: 10 }}>
+              <Text style={{ color: "#498553", fontWeight: 500 }}>
+                {nameProduct}
+              </Text>
+              <Text style={{ color: "#6F6A61", fontSize: 13 }}>{quantity} items</Text>
+            </View>
+            {/* detail button */}
+            <TouchableOpacity
+              style={{
+                height: 25,
+                width: 60,
+                backgroundColor: "#498553",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                paddingLeft: 8,
+                borderRadius: 5,
+                position: "absolute",
+                right: 0,
+              }}
+              onPress={() => HandleDetailProduct(orderID)}
+            >
+              <Text
+                style={{
+                  fontWeight: 400,
+                  color: "#fff",
+                  fontSize: 12,
+                  marginRight: 5,
+                }}
+              >
+                Detail
+              </Text>
+              <Entypo name="chevron-right" size={13} color="#fff" />
+            </TouchableOpacity>
+            {/* Text Container */}
+          </View>
+          <View style={{ gap: 10, marginTop: 10 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={styles.greyText}>ID Order</Text>
+              <Text
+                style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}
+              >
+                {orderID}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={styles.greyText}>Total Price</Text>
+              <Text style={{ fontSize: 13, fontWeight: 600, color: "#000" }}>
+                ${totalPrice}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={styles.greyText}>Status</Text>
+              {StatusColor(status)}
+            </View>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
+  const StatusColor = (status) => {
+    if (status === "Pending") {
+      return (
+        <Text
+          style={{ fontSize: 13, fontWeight: 700, color: "#F4CE14" }}
+        >
+          {status}
+        </Text>
+      )
+    }
+    else if (status === "Packaging") {
+      return (
+        <Text
+          style={{ fontSize: 13, fontWeight: 700, color: "#2A2A86" }}
+        >
+          {status}
+        </Text>
+      )
+    }
+    else if (status === "Delivering") {
+      return (
+        <Text
+          style={{ fontSize: 13, fontWeight: 700, color: "#AAC9FF" }}
+        >
+          {status}
+        </Text>
+      )
+    }
+    else if (status === "Completed") {
+      return (
+        <Text
+          style={{ fontSize: 13, fontWeight: 700, color: "#498553" }}
+        >
+          {status}
+        </Text>
+      )
+    }
+  }
+
   return (
     <SafeAreaView
       style={{
@@ -120,98 +282,25 @@ const Order = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         {/* Order Item  */}
-        <View style={{ width: "100%", marginTop: 15 }}>
-          {/* item */}
-          <View style={styles.orderItem}>
-            <View style={{ height: 52, flexDirection: "row" }}>
-              {/* ảnh sản phẩm */}
-              <View
-                style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 5,
-                  backgroundColor: "#DAF1D4",
-                }}
-              >
-                <Image source={plantImg} style={styles.backgroundImage}></Image>
-              </View>
-              {/* thông tin sản phẩm */}
-              <View style={{ justifyContent: "space-between", marginLeft: 10 }}>
-                <Text style={{ color: "#498553", fontWeight: 500 }}>
-                  Monstera
-                </Text>
-                <Text style={{ color: "#6F6A61", fontSize: 13 }}>2 items</Text>
-              </View>
-              {/* detail button */}
-              <TouchableOpacity
-                style={{
-                  height: 25,
-                  width: 60,
-                  backgroundColor: "#498553",
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  paddingLeft: 8,
-                  borderRadius: 5,
-                  position: "absolute",
-                  right: 0,
-                }}
-              >
-                <Text
-                  style={{
-                    fontWeight: 400,
-                    color: "#fff",
-                    fontSize: 12,
-                    marginRight: 5,
-                  }}
-                >
-                  Detail
-                </Text>
-                <Entypo name="chevron-right" size={13} color="#fff" />
-              </TouchableOpacity>
-              {/* Text Container */}
-            </View>
-            <View style={{ gap: 10, marginTop: 10 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text style={styles.greyText}>ID Order</Text>
-                <Text
-                  style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}
-                >
-                  HK001
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text style={styles.greyText}>Total Price</Text>
-                <Text style={{ fontSize: 13, fontWeight: 600, color: "#000" }}>
-                  $50.55
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text style={styles.greyText}>Status</Text>
-                <Text
-                  style={{ fontSize: 13, fontWeight: 600, color: "#F4CE14" }}
-                >
-                  Pending
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
+        {
+          loading ? <ActivityIndicator size="large"
+            color="#498553"
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }} />
+            : <FlatList style={{ paddingBottom: 10 }}
+              data={data}
+              renderItem={({ item }) => (
+                <Item nameProduct={item.firstProduct.productName}
+                  quantity={item.totalQuantity}
+                  image={item.firstProduct.images[0].imageURL}
+                  orderID={item.orderID}
+                  totalPrice={item.totalPrice}
+                  status={item.status}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+              showsHorizontalScrollIndicator={false}
+            />
+        }
       </View>
     </SafeAreaView>
   );

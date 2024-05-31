@@ -1,20 +1,20 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Image, ActivityIndicator, FlatList, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import Pagetitle from "../../../components/pagetitle";
 import { Entypo } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
+import orderAPI from "../../../../Api/OrderApi";
 
 const plant_img = require("../../../../assets/images/Monstera_tran.png");
 
 const styles = StyleSheet.create({
   container: {
-    paddingLeft: 15,
-    paddingRight: 15,
     marginTop: 15,
-    gap: 10,
   },
   itemContainer: {
     borderRadius: 10,
+    marginBottom: 10,
     width: "100%",
     shadowColor: "#000000",
     shadowOffset: {
@@ -35,166 +35,287 @@ const styles = StyleSheet.create({
   },
 });
 
-const OrderDetail = () => {
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#F5F5F5" }}>
-      <View>
-        <StatusBar></StatusBar>
-        <Pagetitle title={"Order Detail"}></Pagetitle>
-        {/* Thông tin order */}
-        <View style={styles.container}>
-          <View style={styles.itemContainer}>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text style={{ color: "#498553", fontWeight: 600, fontSize: 15 }}>
-                Order Infomation
-              </Text>
-              <View
-                style={{
-                  height: 23,
-                  width: 98,
-                  backgroundColor: "#F4CE14",
-                  borderRadius: 10,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text style={{ color: "#fff" }}>Pending</Text>
-              </View>
-            </View>
-            {/* Text Container */}
-            <View style={{ flexDirection: "row", marginTop: 10, gap: 40 }}>
-              <View style={{ gap: 4 }}>
-                <Text style={{ color: "#498553" }}>OrderID</Text>
-                <Text style={{ color: "#498553" }}>Time</Text>
-                <Text style={{ color: "#498553" }}>Total</Text>
-              </View>
-              <View style={{ gap: 4 }}>
-                <Text style={{ color: "#498553", fontWeight: 500 }}>HK001</Text>
-                <Text style={{ color: "#498553", fontWeight: 500 }}>
-                  03/03/2024 6:50:50
-                </Text>
-                <Text style={{ color: "#498553", fontWeight: 500 }}>
-                  $40.00
-                </Text>
-              </View>
-            </View>
-          </View>
-          {/* Thông tin người nhận */}
-          <View style={styles.itemContainer}>
-            <Text style={{ color: "#498553", fontSize: 15, fontWeight: 600 }}>
-              Recipient Infomation
-            </Text>
-            <View style={{ marginTop: 8, gap: 4 }}>
-              <View style={{ flexDirection: "row", gap: 2 }}>
-                <Text style={{ color: "#498553" }}>Hoàng Phúc</Text>
-                <Text style={{ color: "#498553" }}>-</Text>
-                <Text style={{ color: "#6F6A61" }}>0961826917</Text>
-              </View>
-              <Text style={{ color: "#498553" }}>
-                Tân Lập, Dĩ An, Bình Dương
-              </Text>
-            </View>
-          </View>
-          {/* ProductList */}
-          <View style={styles.itemContainer}>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text style={{ color: "#498553", fontWeight: 600, fontSize: 15 }}>
-                Product List
-              </Text>
-              <TouchableOpacity
-                style={{
-                  height: 20,
-                  width: 20,
-                  backgroundColor: "#498553",
-                  borderRadius: 50,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Entypo name="chevron-down" size={15} color="#fff" />
-              </TouchableOpacity>
-            </View>
-          </View>
-          {/* Item sản phẩm */}
-          <View style={styles.itemContainer}>
-            <View style={{ flexDirection: "row", gap: 10 }}>
-              <View
-                style={{
-                  height: 61,
-                  width: 50,
-                  backgroundColor: "#DAF1D4",
-                  borderRadius: 5,
-                }}
-              >
-                <Image source={plant_img} style={styles.backgroundImg} />
-              </View>
-              <View style={{ justifyContent: "space-between" }}>
-                <Text style={{ color: "#498553", fontSize: 13 }}>Monstera</Text>
-                <Text
-                  style={{
-                    color: "#6F6A61",
-                    fontStyle: "italic",
-                    fontSize: 13,
-                  }}
-                >
-                  2 items
-                </Text>
-                <Text style={{ color: "#000", fontWeight: 600, fontSize: 13 }}>
-                  $30.55
-                </Text>
-              </View>
-            </View>
-          </View>
-          {/* Deliverty & Payment */}
-          <View style={styles.itemContainer}>
-            <Text style={{ color: "#498553", fontSize: 15, fontWeight: 600 }}>
-              Deliverty & Payment
-            </Text>
-            <View style={{ marginTop: 4, gap: 30, flexDirection: "row" }}>
-              <View style={{ gap: 5 }}>
-                <Text style={{ color: "#498553" }}>Delivery Method</Text>
-                <Text style={{ color: "#498553" }}>Payment Method</Text>
-              </View>
-              <View style={{ gap: 5 }}>
-                <Text style={{ color: "#498553", fontWeight: 600 }}>
-                  Express
-                </Text>
-                <Text style={{ color: "#498553", fontWeight: 600 }}>
-                  Pay when receiving
-                </Text>
-              </View>
-            </View>
-          </View>
+const OrderDetail = ({ route, navigation }) => {
+  const { id } = route.params;
 
-          {/* Summary */}
-          <View style={styles.itemContainer}>
-            <Text style={{ color: "#498553", fontSize: 15, fontWeight: 600 }}>
-              Summary
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      try {
+        const response = await orderAPI.getDetail(id);
+        console.log("success: ", response);
+        setData(response);
+        setLoading(false);
+      }
+      catch (error) {
+        console.log("Error: ", error);
+        setLoading(false);
+      }
+    }
+
+    fetchAPI()
+  }, [])
+
+  const formatDate = (date) => {
+    const inputDate = new Date(date);
+
+    const year = inputDate.getUTCFullYear();
+    const month = (inputDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = inputDate.getDate().toString().padStart(2, "0");
+
+    const time = inputDate.getHours().toString().padStart(2, "0")
+      + ':'
+      + inputDate.getMinutes().toString().padStart(2, "0");
+
+    const formattedDate = `${day}/${month}/${year}  ${time}`;
+    return formattedDate;
+  }
+
+  const StatusColor = (status) => {
+    if (status === "Pending") {
+      return (
+        <View
+          style={{
+            height: 23,
+            width: 98,
+            backgroundColor: "#F4CE14",
+            borderRadius: 10,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ color: "#fff" }}>{status}</Text>
+        </View>
+      )
+    }
+    else if (status === "Packaging") {
+      return (
+        <View
+          style={{
+            height: 23,
+            width: 98,
+            backgroundColor: "#2A2A86",
+            borderRadius: 10,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ color: "#fff" }}>{status}</Text>
+        </View>
+      )
+    }
+    else if (status === "Delivering") {
+      return (
+        <View
+          style={{
+            height: 23,
+            width: 98,
+            backgroundColor: "#AAC9FF",
+            borderRadius: 10,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ color: "#fff" }}>{status}</Text>
+        </View>
+      )
+    }
+    else if (status === "Completed") {
+      return (
+        <View
+          style={{
+            height: 23,
+            width: 98,
+            backgroundColor: "#498553",
+            borderRadius: 10,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ color: "#fff" }}>{status}</Text>
+        </View>
+      )
+    }
+  }
+
+  const ProductItem = ({ image, name, quantity, price }) => {
+    return (
+      <View style={styles.itemContainer}>
+        <View style={{ flexDirection: "row", gap: 10, width: 230, marginRight: 10, }}>
+          <View
+            style={{
+              height: 61,
+              width: 50,
+              backgroundColor: "#DAF1D4",
+              borderRadius: 5,
+            }}
+          >
+            <Image source={{ uri: `${image}` }} style={styles.backgroundImg} />
+          </View>
+          <View style={{ justifyContent: "space-between" }}>
+            <Text style={{ color: "#498553", fontSize: 13 }}>{name}</Text>
+            <Text
+              style={{
+                color: "#6F6A61",
+                fontStyle: "italic",
+                fontSize: 13,
+              }}
+            >
+              {quantity} items
             </Text>
-            <View style={{ marginTop: 4, flexDirection: "row", gap: 55 }}>
-              <View style={{ gap: 4 }}>
-                <Text style={{ color: "#498553" }}>SubTotal</Text>
-                <Text style={{ color: "#498553" }}>Delivery Cost</Text>
-                <Text style={{ color: "#498553" }}>Total</Text>
-              </View>
-              <View style={{ gap: 4 }}>
-                <Text style={{ color: "#498553", fontWeight: 600 }}>
-                  $30.00
-                </Text>
-                <Text style={{ color: "#498553", fontWeight: 600 }}>
-                  $10.00
-                </Text>
-                <Text style={{ color: "#E71818", fontWeight: 600 }}>
-                  $40.00
-                </Text>
-              </View>
-            </View>
+            <Text style={{ color: "#000", fontWeight: 600, fontSize: 13 }}>
+              ${price}
+            </Text>
           </View>
         </View>
+      </View>
+    )
+  }
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#F5F5F5", paddingHorizontal: 15 }}>
+      <View
+      >
+        <StatusBar></StatusBar>
+        <Pagetitle title={"Order Detail"} navigation={navigation}></Pagetitle>
+        {/* Thông tin order */}
+        {
+          loading ? <ActivityIndicator size="large"
+            color="#498553"
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }} />
+            :
+            <ScrollView showsVerticalScrollIndicator={false}
+              style={{ marginBottom: 25, marginTop: 10 }}>
+              <View style={styles.container}>
+                <View style={styles.itemContainer}>
+                  <View
+                    style={{ flexDirection: "row", justifyContent: "space-between" }}
+                  >
+                    <Text style={{ color: "#498553", fontWeight: 800, fontSize: 15 }}>
+                      Order Infomation
+                    </Text>
+                    {StatusColor(data.order.status)}
+                  </View>
+                  {/* Text Container */}
+                  <View style={{ flexDirection: "row", marginTop: 10, gap: 40 }}>
+                    <View style={{ gap: 4 }}>
+                      <Text style={{ color: "#498553" }}>OrderID</Text>
+                      <Text style={{ color: "#498553" }}>Time</Text>
+                      <Text style={{ color: "#498553" }}>Total</Text>
+                    </View>
+                    <View style={{ gap: 4 }}>
+                      <Text style={{ color: "#498553", fontWeight: 700 }}>{data.order.orderID}</Text>
+                      <Text style={{ color: "#498553", fontWeight: 700 }}>
+                        {formatDate(data.order.timeCreated)}
+                      </Text>
+                      <Text style={{ color: "#498553", fontWeight: 700 }}>
+                        ${data.order.totalPrice}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+                {/* Thông tin người nhận */}
+                <View style={styles.itemContainer}>
+                  <Text style={{ color: "#498553", fontSize: 15, fontWeight: 700 }}>
+                    Recipient Infomation
+                  </Text>
+                  <View style={{ marginTop: 8, gap: 4 }}>
+                    <View style={{ flexDirection: "row", gap: 5 }}>
+                      <Text style={{ color: "#498553" }}>{data.order.name}</Text>
+                      <Text style={{ color: "#498553" }}>-</Text>
+                      <Text style={{ color: "#6F6A61" }}>{data.order.phone}</Text>
+                    </View>
+                    <Text style={{ color: "#498553" }}>
+                      {data.order.address}
+                    </Text>
+                  </View>
+                </View>
+                {/* ProductList */}
+                <View style={styles.itemContainer}>
+                  <View
+                    style={{ flexDirection: "row", justifyContent: "space-between" }}
+                  >
+                    <Text style={{ color: "#498553", fontWeight: 700, fontSize: 15 }}>
+                      Product List
+                    </Text>
+                    <TouchableOpacity
+                      style={{
+                        height: 20,
+                        width: 20,
+                        backgroundColor: "#498553",
+                        borderRadius: 50,
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Entypo name="chevron-down" size={15} color="#fff" />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                {/* Item sản phẩm */}
+                <FlatList horizontal
+                  data={data.products}
+                  renderItem={({ item }) => (
+                    <ProductItem image={item.product.images[0].imageURL}
+                      name={item.product.productName}
+                      quantity={item.quantity}
+                      price={item.quantity * item.product.price}
+                    />
+                  )}
+                  keyExtractor={(item) => item.id}
+                  showsHorizontalScrollIndicator={false}
+                />
+                {/* Deliverty & Payment */}
+                <View style={styles.itemContainer}>
+                  <Text style={{ color: "#498553", fontSize: 15, fontWeight: 700 }}>
+                    Deliverty & Payment
+                  </Text>
+                  <View style={{ marginTop: 4, gap: 30, flexDirection: "row" }}>
+                    <View style={{ gap: 5 }}>
+                      <Text style={{ color: "#498553" }}>Delivery Method</Text>
+                      <Text style={{ color: "#498553" }}>Payment Method</Text>
+                    </View>
+                    <View style={{ gap: 5 }}>
+                      <Text style={{ color: "#498553", fontWeight: 700 }}>
+                        {data.order.deliveryMethod}
+                      </Text>
+                      <Text style={{ color: "#498553", fontWeight: 700 }}>
+                        {data.order.payMethod}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+
+                {/* Summary */}
+                <View style={styles.itemContainer}>
+                  <Text style={{ color: "#498553", fontSize: 15, fontWeight: 700 }}>
+                    Summary
+                  </Text>
+                  <View style={{ marginTop: 4, flexDirection: "row", gap: 55 }}>
+                    <View style={{ gap: 4 }}>
+                      <Text style={{ color: "#498553" }}>SubTotal</Text>
+                      <Text style={{ color: "#498553" }}>Delivery Cost</Text>
+                      <Text style={{ color: "#498553" }}>Total</Text>
+                    </View>
+                    <View style={{ gap: 4 }}>
+                      <Text style={{ color: "#498553", fontWeight: 700 }}>
+                        ${data.order.totalPrice - data.order.shippingCost}
+                      </Text>
+                      <Text style={{ color: "#498553", fontWeight: 700 }}>
+                        ${data.order.shippingCost}
+                      </Text>
+                      <Text style={{ color: "#E71818", fontWeight: 700 }}>
+                        ${data.order.totalPrice}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </ScrollView>
+
+        }
       </View>
     </SafeAreaView>
   );

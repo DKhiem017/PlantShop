@@ -1,13 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import MyTabs from "./fe/components/tabs";
+import DetailAddress from "./fe/pages/user/DetailAddress/DetailAddress";
 
 
 const App = () => (
   <NavigationContainer>
     <MyTabs></MyTabs>
   </NavigationContainer>
-  // <DetailProduct></DetailProduct>
+  // <DetailAddress></DetailAddress>
 );
 
 const styles = StyleSheet.create({

@@ -32,6 +32,7 @@ const screenOptions = {
 
     elevation: 21,
   },
+  tabBarHideOnKeyboard: true
 };
 
 function MyTabs() {

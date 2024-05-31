@@ -16,19 +16,20 @@ import MyAddress from "../pages/user/MyAddress/MyAddress";
 import MyFeedback from "../pages/user/MyFeedback/MyFeedback";
 import VoucherWallet from "../pages/user/VoucherWallet/VoucherWallet";
 import ChatRoom from "../pages/user/ChatRoom/ChatRoom";
+import DetailAddress from "../pages/user/DetailAddress/DetailAddress";
 
 const Stack = createStackNavigator();
 
 const LoginNavigator = () => {
   <Stack.Navigator>
     <Stack.Screen
-      name="Register"
-      component={Register}
+      name="Login"
+      component={Login}
       options={{ headerShown: false }}
     />
     <Stack.Screen
-      name="Login"
-      component={Login}
+      name="Register"
+      component={Register}
       options={{ headerShown: false }}
     />
   </Stack.Navigator>;
@@ -89,6 +90,11 @@ const MyAccountNavigator = () => {
       <Stack.Screen
         name="MyAddress"
         component={MyAddress}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DetailAddress"
+        component={DetailAddress}
         options={{ headerShown: false }}
       />
       <Stack.Screen
