@@ -169,7 +169,7 @@ const Home = ({ navigation }) => {
     setActiveIndex(index);
   };
 
-  const Item = ({ name, rating, price, id }) => (
+  const Item = ({ name, rating, price, id, img }) => (
     <TouchableOpacity
       style={{
         width: 130,
@@ -191,7 +191,10 @@ const Home = ({ navigation }) => {
         <TouchableOpacity style={styles.addtoWishListButton}>
           <AntDesign name="hearto" size={12} color="#498553" />
         </TouchableOpacity>
-        <Image source={plant_img} style={styles.backgroundImage}></Image>
+        <Image
+          source={{ uri: `${img}` }}
+          style={styles.backgroundImage}
+        ></Image>
       </View>
       {/* Text Container */}
       <View style={styles.textContainer}>
@@ -331,6 +334,7 @@ const Home = ({ navigation }) => {
                   price={item.price}
                   rating={item.reviewPoint}
                   id={item.productID}
+                  img={item.images[0].imageURL}
                 />
               )}
               keyExtractor={(item) => item.id}
@@ -356,6 +360,7 @@ const Home = ({ navigation }) => {
                   price={item.price}
                   rating={item.reviewPoint}
                   id={item.productID}
+                  img={item.images[0].imageURL}
                 />
               )}
               keyExtractor={(item) => item.id}

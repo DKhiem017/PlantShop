@@ -3,7 +3,7 @@ import axios from "axios";
 //let token = localStorage.getItem("token");
 
 const axiosClient = axios.create({
-  baseURL: "https://72cb-27-68-32-251.ngrok-free.app/api/",
+  baseURL: "https://572d-27-68-32-251.ngrok-free.app/api/",
   headers: {
     "Content-Type": "application/json",
   },
