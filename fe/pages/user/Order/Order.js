@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
 const Order = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchCharacter, setSearchCharacter] = useState("");
 
   useEffect(() => {
     const fetchAPI = async () => {
@@ -91,7 +92,7 @@ const Order = ({ navigation }) => {
     })
   }
 
-  const Item = ({ nameProduct, quantity, orderID, totalPrice, status, image }) => {
+  const Item = ({ nameProduct, quantity, orderID, totalPrice, status, image, date }) => {
     return (
       <View style={{ width: "100%", marginTop: 15 }}>
         {/* item */}
@@ -176,6 +177,17 @@ const Order = ({ navigation }) => {
                 justifyContent: "space-between",
               }}
             >
+              <Text style={styles.greyText}>Time of Order</Text>
+              <Text style={{ fontSize: 13, fontWeight: 700, color: "#000" }}>
+                {formatDate(date)}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
               <Text style={styles.greyText}>Status</Text>
               {StatusColor(status)}
             </View>
@@ -183,6 +195,43 @@ const Order = ({ navigation }) => {
         </View>
       </View>
     )
+  }
+
+  const HandleSearch = async (value) => {
+    setLoading(true);
+    if (value != "") {
+      return await orderAPI.searchByID(value)
+        .then((response) => {
+          setData(response);
+          setLoading(false)
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("Not found order with provided keyword")
+        })
+    }
+    else {
+      return await orderAPI.getAll('CS0001')
+        .then((response) => {
+          setData(response);
+          setLoading(false)
+        })
+    }
+  }
+
+  const formatDate = (date) => {
+    const inputDate = new Date(date);
+
+    const year = inputDate.getUTCFullYear();
+    const month = (inputDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = inputDate.getDate().toString().padStart(2, "0");
+
+    const time = inputDate.getHours().toString().padStart(2, "0")
+      + ':'
+      + inputDate.getMinutes().toString().padStart(2, "0");
+
+    const formattedDate = `${day}/${month}/${year}  ${time}`;
+    return formattedDate;
   }
 
   const StatusColor = (status) => {
@@ -253,7 +302,7 @@ const Order = ({ navigation }) => {
             style={{ display: "flex", justifyContent: "center", width: "85%" }}
           >
             <TextInput
-              placeholder="Search for plants..."
+              placeholder="Search for orders..."
               style={{
                 backgroundColor: "#fff",
                 height: 40,
@@ -265,6 +314,8 @@ const Order = ({ navigation }) => {
                 borderWidth: 0.5,
                 borderColor: "#6F6A61",
               }}
+              value={searchCharacter}
+              onChangeText={(e) => setSearchCharacter(e)}
             ></TextInput>
             <Feather
               style={{
@@ -275,6 +326,7 @@ const Order = ({ navigation }) => {
               name="search"
               size={24}
               color="grey"
+              onPress={() => HandleSearch(searchCharacter)}
             />
           </View>
           <TouchableOpacity style={styles.filterContainer}>
@@ -293,6 +345,7 @@ const Order = ({ navigation }) => {
                   quantity={item.totalQuantity}
                   image={item.firstProduct.images[0].imageURL}
                   orderID={item.orderID}
+                  date={item.timeOrder}
                   totalPrice={item.totalPrice}
                   status={item.status}
                 />

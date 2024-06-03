@@ -168,7 +168,7 @@ const Wishlist = ({ navigation }) => {
           WishList
         </Text>
       </View>
-      <Searchbar></Searchbar>
+      <Searchbar placeholder="Search for plants..."></Searchbar>
       <View style={styles.gridContainer}>
         {
           loading ? <ActivityIndicator size="large"

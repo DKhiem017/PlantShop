@@ -246,7 +246,7 @@ const Home = ({ navigation }) => {
           </View>
         </View>
         {/* Searchbar */}
-        <Searchbar></Searchbar>
+        <Searchbar placeholder="Search for plants..."></Searchbar>
         {/* carousel */}
         <Carousel items={items}></Carousel>
         <View style={styles.tagsContainer}>

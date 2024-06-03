@@ -10,6 +10,11 @@ class OrderAPI {
         const url = `OrderDetail/get-detail/${orderID}`;
         return axiosClient.get(url, { orderID });
     }
+
+    searchByID = (orderID) => {
+        const url = `Order/search-by-id?orderID=${orderID}`;
+        return axiosClient.get(url, { orderID });
+    }
 }
 
 const orderAPI = new OrderAPI();
