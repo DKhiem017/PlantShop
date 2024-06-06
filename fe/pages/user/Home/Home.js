@@ -18,7 +18,6 @@ import { useEffect, useState } from "react";
 import productApi from "../../../../Api/ProductApi";
 
 const avt = require("../../../../assets/images/Monstera.jpg");
-const plant_img = require("../../../../assets/images/Monstera_tran.png");
 const product_background = require("../../../../assets/images/Background_Plants.png");
 
 const styles = StyleSheet.create({

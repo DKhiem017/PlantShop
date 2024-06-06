@@ -18,6 +18,7 @@ import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { Rating } from "react-native-ratings";
 import feedbackApi from "../../../../Api/FeedbackApi";
 import { LogBox } from "react-native";
+import cartApi from "../../../../Api/CartApi";
 LogBox.ignoreAllLogs();
 
 const backgroundImage = require("../../../../assets/images/DetailProductBackground.png");
@@ -37,8 +38,14 @@ const ProductDetail = ({ navigation, route }) => {
 
   const { id } = route.params;
 
-  const HandleCheckout = () => {
-    navigation.navigate("AddtoCart");
+  const HandleCheckout = async () => {
+    try {
+      console.log(id, value);
+      await cartApi.addToCart("CS0001", id, value);
+      navigation.navigate("CartScreen");
+    } catch (error) {
+      console.log("Lỗi", error);
+    }
   };
 
   const [product, setProduct] = useState({});
@@ -49,7 +56,7 @@ const ProductDetail = ({ navigation, route }) => {
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const feedbackapi =await feedbackApi.getAll(id);
+        const feedbackapi = await feedbackApi.getAll(id);
         const response = await productApi.getItem(id);
         console.log("success", response);
         console.log("success", feedbackapi);

@@ -1,13 +1,8 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Home from "../pages/user/Home/Home";
-import Cart from "../pages/user/Cart/Cart";
-import Profilemanage from "../pages/user/ProfileManage/Profilemanage";
-import Wishlist from "../pages/user/WishList/Wishlist";
 import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity, View } from "react-native";
-import Imagesearch from "../pages/user/ImageSearch/Imagesearch";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { View } from "react-native";
 
 import {
   HomeNavigator,
@@ -15,6 +10,7 @@ import {
   CartNavigator,
   MyAccountNavigator,
   LoginNavigator,
+  ImagesearchNavigator,
 } from "../navigation/Navigator";
 
 const Tab = createBottomTabNavigator();
@@ -71,7 +67,7 @@ function MyTabs() {
       />
       <Tab.Screen
         name="Imagesearch"
-        component={Imagesearch}
+        component={ImagesearchNavigator}
         options={{
           tabBarLabel: () => null,
           tabBarIcon: ({ focused }) => {

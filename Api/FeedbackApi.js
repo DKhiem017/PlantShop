@@ -10,16 +10,6 @@ class FeedbackApi {
     const url = `Feedback/get-all-reviews/${customerID}`;
     return axiosClient.get(url, { customerID });
   };
-
-  //   getRecommend = (customerID) => {
-  //     const url = `Product/recommend/${customerID}`;
-  //     return axiosClient.get(url, { customerID });
-  //   };
-
-  //   getItem = (productID) => {
-  //     const url = `Product/detail/${productID}`;
-  //     return axiosClient.get(url, { productID });
-  //   };
 }
 
 const feedbackApi = new FeedbackApi();

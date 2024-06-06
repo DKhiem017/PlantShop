@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Pagetitle from "../../../components/pagetitle";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const avt = require("../../../../assets/images/avt_girl.jpg");
 const chatBotImg = require("../../../../assets/images/chatBot.png");
@@ -22,6 +23,10 @@ const styles = StyleSheet.create({
 });
 
 const ChatRoom = ({ navigation }) => {
+  const ChatNavigator = () => {
+    navigation.navigate("ChatBoxScreen", {});
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
       <StatusBar></StatusBar>
@@ -29,7 +34,10 @@ const ChatRoom = ({ navigation }) => {
         <Pagetitle title={"Chat"} navigation={navigation}></Pagetitle>
         {/* Chat Container */}
         <View style={{ marginTop: 20, gap: 5 }}>
-          <View style={styles.chatBackground}>
+          <TouchableOpacity
+            style={styles.chatBackground}
+            onPress={ChatNavigator}
+          >
             <View style={{ flexDirection: "row" }}>
               {/* avt */}
               <View style={{ height: 40, width: 40, borderRadius: 50 }}>
@@ -42,8 +50,8 @@ const ChatRoom = ({ navigation }) => {
                 </Text>
               </View>
             </View>
-          </View>
-          <View style={styles.chatBackground}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.chatBackground}>
             <View style={{ flexDirection: "row" }}>
               {/* avt */}
               <View style={{ height: 40, width: 40, borderRadius: 50 }}>
@@ -56,7 +64,7 @@ const ChatRoom = ({ navigation }) => {
                 </Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

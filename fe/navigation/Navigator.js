@@ -16,6 +16,10 @@ import MyAddress from "../pages/user/MyAddress/MyAddress";
 import MyFeedback from "../pages/user/MyFeedback/MyFeedback";
 import VoucherWallet from "../pages/user/VoucherWallet/VoucherWallet";
 import ChatRoom from "../pages/user/ChatRoom/ChatRoom";
+import ChatBox from "../pages/ChatBox/ChatBox";
+import Imagesearch from "../pages/user/ImageSearch/Imagesearch";
+import CameraScreen from "../pages/user/ImageSearch/CameraScreen/CameraScreen";
+import Result from "../pages/user/ImageSearch/Result/Result";
 
 const Stack = createStackNavigator();
 
@@ -45,6 +49,28 @@ const WishListNavigator = () => {
       <Stack.Screen
         name="Product Info"
         component={ProductDetail}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const ImagesearchNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="ImageSearchScreen"
+        component={Imagesearch}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Camera"
+        component={CameraScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ResultScreen"
+        component={Result}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
@@ -116,6 +142,11 @@ const MyAccountNavigator = () => {
         component={ChatRoom}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="ChatBoxScreen"
+        component={ChatBox}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };
@@ -134,8 +165,8 @@ const HomeNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="AddtoCart"
-        component={CartNavigator}
+        name="CartScreen"
+        component={Cart}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
@@ -148,4 +179,5 @@ export {
   CartNavigator,
   MyAccountNavigator,
   LoginNavigator,
+  ImagesearchNavigator,
 };

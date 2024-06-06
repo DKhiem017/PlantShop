@@ -1,19 +1,13 @@
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList } from "react-native-gesture-handler";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import cartApi from "../../../../Api/CartApi";
 import CheckBox from "../../../components/checkbox";
+import { useFocusEffect } from "@react-navigation/native";
 
 const backgroundImage = require("../../../../assets/images/Monstera_tran.png");
 
@@ -136,17 +130,26 @@ const styles = StyleSheet.create({
 
 const Cart = ({ navigation }) => {
   //chọn số lượng sp
-  const [value, SetValue] = useState(1);
+  // Lưu trữ giá trị value cho mỗi mặt hàng
+  const [itemValues, setItemValues] = useState({});
 
-  const handleMinus = () => {
-    if (value > 0) {
-      SetValue(value - 1);
+  // Hàm xử lý giảm số lượng cho một mặt hàng cụ thể
+  const handleMinus = (id) => {
+    if (itemValues[id] > 0) {
+      setItemValues((prevItemValues) => ({
+        ...prevItemValues,
+        [id]: prevItemValues[id] - 1,
+      }));
     }
   };
 
-  const handlePlus = () => {
-    if (value < 50) {
-      SetValue(value + 1);
+  // Hàm xử lý tăng số lượng cho một mặt hàng cụ thể
+  const handlePlus = (id) => {
+    if (itemValues[id] < 50) {
+      setItemValues((prevItemValues) => ({
+        ...prevItemValues,
+        [id]: prevItemValues[id] + 1,
+      }));
     }
   };
   //checkbox
@@ -167,8 +170,41 @@ const Cart = ({ navigation }) => {
       [id]: !prevState[id],
     }));
   };
+  //delete Item
+  const handleDelete = async (id) => {
+    try {
+      const deleteItem = await cartApi.deleteItem("CS0001", id);
+
+      // Cập nhật danh sách mặt hàng mà không bao gồm mặt hàng đã được xóa
+      setCart((prevCart) =>
+        prevCart.filter((item) => item.product.productID !== id)
+      );
+
+      // Cập nhật giá trị của itemValues bằng cách loại bỏ giá trị của mặt hàng đã xóa
+      setItemValues((prevItemValues) => {
+        const newItemValues = { ...prevItemValues };
+        delete newItemValues[id];
+        return newItemValues;
+      });
+
+      console.log("Item deleted successfully");
+    } catch (error) {
+      console.log("Lỗi", error);
+    }
+  };
   //render flatlist
-  const Item = ({ name, price, img, isChecked, onPress, id }) => (
+  const Item = ({
+    name,
+    price,
+    img,
+    isChecked,
+    onPress,
+    id,
+    value,
+    onMinus,
+    onPlus,
+    onDelete,
+  }) => (
     <View style={styles.itembackground}>
       <CheckBox onPress={() => onPress(id)} isChecked={isChecked}></CheckBox>
       <View style={styles.imageContainer}>
@@ -198,17 +234,17 @@ const Cart = ({ navigation }) => {
         </Text>
       </View>
       <View style={styles.butContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => onDelete(id)}>
           <MaterialCommunityIcons name="trash-can" size={20} color="#498553" />
         </TouchableOpacity>
         <View style={styles.minusAndPlus}>
-          <TouchableOpacity style={styles.minusBut} onPress={handleMinus}>
+          <TouchableOpacity style={styles.minusBut} onPress={() => onMinus(id)}>
             <AntDesign name="minus" size={12} color="#fff" />
           </TouchableOpacity>
           <Text style={{ fontSize: 15, fontWeight: 500, marginRight: 5 }}>
             {value}
           </Text>
-          <TouchableOpacity style={styles.plusBut} onPress={handlePlus}>
+          <TouchableOpacity style={styles.plusBut} onPress={() => onPlus(id)}>
             <AntDesign name="plus" size={10} color="#fff" />
           </TouchableOpacity>
         </View>
@@ -222,20 +258,64 @@ const Cart = ({ navigation }) => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchApi = async () => {
-      try {
-        const response = await cartApi.getAll("CS0001");
-        console.log("success", response);
-        setCart(response);
-        setLoading(false);
-      } catch (error) {
-        console.log("Error", error);
-      }
-    };
-    fetchApi();
-  }, []);
+  // useEffect(() => {
+  //   const fetchApi = async () => {
+  //     try {
+  //       const response = await cartApi.getAll("CS0001");
+  //       console.log("success", response);
+  //       setCart(response);
+  //       setLoading(false);
 
+  //       // Khởi tạo giá trị value cho mỗi mặt hàng
+  //       const initialValues = {};
+  //       response.forEach((item) => {
+  //         initialValues[item.product.productID] = item.quantity; // Giá trị mặc định là 1
+  //       });
+  //       setItemValues(initialValues);
+  //     } catch (error) {
+  //       console.log("Error", error);
+  //     }
+  //   };
+  //   fetchApi();
+  // }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchApi = async () => {
+        try {
+          const response = await cartApi.getAll("CS0001");
+          console.log("success", response);
+          setCart(response);
+          setLoading(false);
+
+          // Khởi tạo giá trị value cho mỗi mặt hàng
+          const initialValues = {};
+          response.forEach((item) => {
+            initialValues[item.product.productID] = item.quantity; // Giá trị mặc định là 1
+          });
+          setItemValues(initialValues);
+        } catch (error) {
+          console.log("Error", error);
+        }
+      };
+
+      fetchApi();
+
+      return () => {
+        // Cleanup function (optional)
+      };
+    }, []) // Dependency array để đảm bảo callback chỉ được gọi khi component được mount lần đầu tiên
+  );
+
+  const handleDeleteAll = async () => {
+    try {
+      const deleteAll = await cartApi.deleteAll("CS0001");
+      console.log("Xoá thành công");
+      setCart([]);
+    } catch (error) {
+      console.log("Xoá không thành công", error);
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ paddingLeft: 15, paddingRight: 15, height: "100%" }}>
@@ -251,7 +331,10 @@ const Cart = ({ navigation }) => {
               All Items
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ position: "absolute", right: 0 }}>
+          <TouchableOpacity
+            style={{ position: "absolute", right: 0 }}
+            onPress={handleDeleteAll}
+          >
             <Text style={{ fontSize: 15, color: "#6F6A61", fontWeight: 600 }}>
               Delete All
             </Text>
@@ -270,6 +353,10 @@ const Cart = ({ navigation }) => {
                 id={item.product.productID}
                 isChecked={!!checkedItems[item.productID]}
                 onPress={handleCheckboxPress}
+                value={itemValues[item.product.productID] || 1} // Sử dụng giá trị từ itemValues
+                onMinus={handleMinus} // Truyền hàm handleMinus
+                onPlus={handlePlus} // Truyền hàm handlePlus
+                onDelete={() => handleDelete(item.product.productID)}
               />
             )}
             keyExtractor={(item) => item.id}
