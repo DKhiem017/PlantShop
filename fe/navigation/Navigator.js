@@ -1,8 +1,5 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import Register from "../pages/register";
-import Login from "../pages/login";
 import Home from "../pages/user/Home/Home";
 import Wishlist from "../pages/user/WishList/Wishlist";
 import Cart from "../pages/user/Cart/Cart";
@@ -19,21 +16,6 @@ import ChatRoom from "../pages/user/ChatRoom/ChatRoom";
 import DetailAddress from "../pages/user/DetailAddress/DetailAddress";
 
 const Stack = createStackNavigator();
-
-const LoginNavigator = () => {
-  <Stack.Navigator>
-    <Stack.Screen
-      name="Login"
-      component={Login}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen
-      name="Register"
-      component={Register}
-      options={{ headerShown: false }}
-    />
-  </Stack.Navigator>;
-};
 
 const WishListNavigator = () => {
   return (
@@ -153,5 +135,4 @@ export {
   WishListNavigator,
   CartNavigator,
   MyAccountNavigator,
-  LoginNavigator,
 };

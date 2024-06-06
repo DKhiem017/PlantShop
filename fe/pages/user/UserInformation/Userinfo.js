@@ -10,8 +10,9 @@ import {
 } from "react-native";
 import Pagetitle from "../../../components/pagetitle";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import customerAPI from "../../../../Api/CustomerApi";
+import { AppContext } from "../../../../contexts/appContext";
 
 const avt = require("../../../../assets/images/Logo.png");
 const styles = StyleSheet.create({
@@ -55,6 +56,8 @@ const styles = StyleSheet.create({
 });
 
 const UserInformation = ({ navigation }) => {
+  const { user } = useContext(AppContext);
+
   const [userName, setUserName] = useState("");
   const [numberPhone, setNumberPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -64,7 +67,8 @@ const UserInformation = ({ navigation }) => {
   useEffect(() => {
     const fetchAPI = async () => {
       try {
-        const response = await customerAPI.getInfo('CS0001');
+        console.log("user", user);
+        const response = await customerAPI.getInfo(user.id);
         setUserName(response.name);
         setNumberPhone(response.phone);
         setAddress(response.address);

@@ -1,15 +1,18 @@
 import { StatusBar } from "expo-status-bar";
+import { useContext, useState } from "react";
 import {
-  Button,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
   Image,
+  ScrollView,
+  ActivityIndicator,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { ImageBackground } from "react-native";
+import authAPI from "../../Api/AuthApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AppContext } from "../../contexts/appContext";
 
 const backgroundImage = require("../../assets/images/LoginBg.png");
 const logo = require("../../assets/images/Logo.png");
@@ -30,21 +33,46 @@ const styles = StyleSheet.create({
   },
 });
 
-const Login = () => {
+const Login = ({ navigation }) => {
+  const { setToken, setUser } = useContext(AppContext);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const HandleLogin = async () => {
+    setLoading(true);
+    if (!email || !password) {
+      return;
+    }
+    let res = await authAPI.login(email, password);
+
+    if (res && res.data.access_token) {
+      console.log("check login: ", res.customer);
+      AsyncStorage.setItem("Token", 'Bearer ' + res.data.access_token);
+      setToken(res.data.access_token);
+      setUser(res.data.customer);
+      setEmail("");
+      setPassword("");
+      navigation.navigate("Main");
+      setLoading(false);
+    } else {
+      console.log("không có res ");
+      setLoading(false);
+    }
+  }
+
+  const HandleRegister = () => {
+    navigation.navigate("Register");
+  }
+
   return (
-    <View style={styles.container}>
+    <ScrollView automaticallyAdjustKeyboardInsets={true}
+      style={styles.container}
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsVerticalScrollIndicator={false}>
       <StatusBar style="dark"></StatusBar>
       <Image source={backgroundImage} style={styles.backgroundImage}></Image>
-      {/* <TouchableOpacity>
-        <View
-          style={{
-            marginTop: 25,
-            marginLeft: 5,
-          }}
-        >
-          <AntDesign name="arrowleft" size={28} color="#498553" />
-        </View>
-      </TouchableOpacity> */}
       <View
         style={{
           marginTop: 150,
@@ -60,7 +88,7 @@ const Login = () => {
         <Text
           style={{
             fontSize: 35,
-            fontWeight: 500,
+            fontWeight: 700,
             color: "#498553",
           }}
         >
@@ -97,7 +125,10 @@ const Login = () => {
               borderColor: "#498553",
               paddingStart: 10,
               fontSize: 15,
+              color: "#498553",
             }}
+            value={email}
+            onChangeText={(e) => setEmail(e)}
           ></TextInput>
         </View>
         <View
@@ -117,7 +148,10 @@ const Login = () => {
               borderColor: "#498553",
               paddingStart: 10,
               fontSize: 15,
+              color: "#498553",
             }}
+            value={password}
+            onChangeText={(e) => setPassword(e)}
           ></TextInput>
         </View>
         <View
@@ -130,8 +164,8 @@ const Login = () => {
           }}
         >
           <TouchableOpacity>
-            <Text style={{ fontWeight: 500, color: "#498553", fontSize: 15 }}>
-              Fotget Password?
+            <Text style={{ fontWeight: 700, color: "#498553", fontSize: 15 }}>
+              Forget Password?
             </Text>
           </TouchableOpacity>
         </View>
@@ -143,8 +177,12 @@ const Login = () => {
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 10,
+            gap: 10,
+            flexDirection: "row"
           }}
+          onPress={HandleLogin}
         >
+          {loading ? <ActivityIndicator size="small" color="#498553" /> : null}
           <Text style={{ color: "#fff", fontSize: 18, fontWeight: 700 }}>
             Login
           </Text>
@@ -159,12 +197,12 @@ const Login = () => {
           }}
         >
           <Text style={{ color: "#498553" }}>Don't have an account? </Text>
-          <TouchableOpacity>
-            <Text style={{ fontWeight: 500, color: "#498553" }}>Register</Text>
+          <TouchableOpacity onPress={HandleRegister}>
+            <Text style={{ fontWeight: 700, color: "#498553" }}>Register</Text>
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

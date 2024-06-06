@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -14,6 +15,9 @@ import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useContext } from "react";
+import { AppContext } from "../../../../contexts/appContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const avt = require("../../../../assets/images/Logo.png");
 
@@ -31,6 +35,8 @@ const styles = StyleSheet.create({
 });
 
 const MyAccount = ({ navigation }) => {
+  const { setToken, setUser } = useContext(AppContext);
+
   const UserinfoNavigation = () => {
     navigation.navigate("UserInfo");
   };
@@ -54,6 +60,26 @@ const MyAccount = ({ navigation }) => {
   const ChatNavigation = () => {
     navigation.navigate("Chat Room");
   };
+
+  const HandleLogout = () => {
+    Alert.alert(
+      "Logout",
+      "Do you want to log out?",
+      [
+        { text: "Cancel", onPress: () => { }, style: "cancel" },
+        {
+          text: "Logout",
+          onPress: async () => {
+            AsyncStorage.removeItem("Token");
+            setToken("");
+            setUser("");
+            navigation.navigate("Login");
+          },
+        },
+      ]
+    );
+  }
+
   return (
     <SafeAreaView>
       <View
@@ -271,6 +297,7 @@ const MyAccount = ({ navigation }) => {
                 borderColor: "#498553",
                 borderWidth: 1,
               }}
+              onPress={HandleLogout}
             >
               <FontAwesome5 name="door-open" size={20} color="#498553" />
               <Text
