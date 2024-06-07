@@ -1,8 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator, FlatList } from "react-native";
 import Searchbar from "../../../components/search";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
+import wishListAPI from "../../../../Api/WishListApi";
 
 const product_background = require("../../../../assets/images/Background_Plants.png");
 const plant_img = require("../../../../assets/images/Monstera_tran.png");
@@ -20,10 +22,8 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     marginTop: 10,
-    height: 400,
+    flex: 1,
     width: "100%",
-    // flex: 1,
-    // flexDirection: "row",
   },
   gridItem: {
     height: 200,
@@ -68,9 +68,90 @@ const styles = StyleSheet.create({
 });
 
 const Wishlist = ({ navigation }) => {
-  const HandleDetailProduct = () => {
-    navigation.navigate("Product Info");
+  const HandleDetailProduct = (productID) => {
+    navigation.navigate("Product Info", {
+      id: productID,
+    });
   };
+
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      try {
+        const response = await wishListAPI.getAll('CS0001');
+        console.log("success: ", response);
+        setData(response);
+        setLoading(false);
+      }
+      catch (error) {
+        console.log("Error: ", error);
+        setLoading(false);
+      }
+    }
+
+    fetchAPI()
+  }, [])
+
+  const Item = ({ image, name, price, reviewPoint, id }) => {
+    return (
+      <View style={styles.gridItem}>
+        <TouchableOpacity
+          style={styles.plant_item}
+          onPress={() => HandleDetailProduct(id)}
+        >
+          {/* Ảnh nền */}
+          <Image
+            source={product_background}
+            style={styles.backgroundImage}
+          ></Image>
+          <View
+            style={{
+              height: 127,
+              position: "absolute",
+              top: 0,
+              width: "100%",
+            }}
+          >
+            <TouchableOpacity style={styles.wishButton}>
+              <AntDesign name="hearto" size={12} color="#498553" />
+            </TouchableOpacity>
+            <Image source={{ uri: `${image}` }} style={styles.backgroundImage}></Image>
+          </View>
+          {/* Text Container */}
+          <View style={styles.textContainer}>
+            <Text style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}>
+              {name}
+            </Text>
+            <Text style={{ fontSize: 12, fontWeight: 600, color: "#000" }}>
+              ${price}
+            </Text>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                position: "absolute",
+                right: 10,
+                bottom: 5,
+              }}
+            >
+              <FontAwesome
+                marginRight={3}
+                name="star"
+                size={12}
+                color="#498553"
+              />
+              <Text style={{ fontSize: 12, color: "#498553" }}>{reviewPoint}</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
+
+    )
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -87,205 +168,28 @@ const Wishlist = ({ navigation }) => {
           WishList
         </Text>
       </View>
-      <Searchbar></Searchbar>
+      <Searchbar placeholder="Search for plants..."></Searchbar>
       <View style={styles.gridContainer}>
-        <View style={styles.gridItem}>
-          <TouchableOpacity
-            style={styles.plant_item}
-            onPress={HandleDetailProduct}
-          >
-            {/* Ảnh nền */}
-            <Image
-              source={product_background}
-              style={styles.backgroundImage}
-            ></Image>
-            <View
-              style={{
-                height: 127,
-                position: "absolute",
-                top: 0,
-                width: "100%",
-              }}
-            >
-              <TouchableOpacity style={styles.wishButton}>
-                <AntDesign name="hearto" size={12} color="#498553" />
-              </TouchableOpacity>
-              <Image source={plant_img} style={styles.backgroundImage}></Image>
-            </View>
-            {/* Text Container */}
-            <View style={styles.textContainer}>
-              <Text style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}>
-                Monstera
-              </Text>
-              <Text style={{ fontSize: 12, fontWeight: 600, color: "#000" }}>
-                $30.55
-              </Text>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  position: "absolute",
-                  right: 10,
-                  bottom: 5,
-                }}
-              >
-                <FontAwesome
-                  marginRight={3}
-                  name="star"
-                  size={12}
-                  color="#498553"
+        {
+          loading ? <ActivityIndicator size="large"
+            color="#498553"
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }} />
+            : <FlatList
+              columnWrapperStyle={{ justifyContent: 'center' }}
+              horizontal={false}
+              numColumns={2}
+              data={data}
+              renderItem={
+                ({ item }) => <Item id={item.product.productID}
+                  name={item.product.productName}
+                  price={item.product.price}
+                  reviewPoint={item.product.reviewPoint}
+                  image={item.product.images[0].imageURL}
                 />
-                <Text style={{ fontSize: 12, color: "#498553" }}>4.5</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-          {/* item  */}
-          <TouchableOpacity style={styles.plant_item}>
-            {/* Ảnh nền */}
-            <Image
-              source={product_background}
-              style={styles.backgroundImage}
-            ></Image>
-            <View
-              style={{
-                height: 127,
-                position: "absolute",
-                top: 0,
-                width: "100%",
-              }}
-            >
-              <TouchableOpacity style={styles.wishButton}>
-                <AntDesign name="hearto" size={12} color="#498553" />
-              </TouchableOpacity>
-              <Image source={plant_img} style={styles.backgroundImage}></Image>
-            </View>
-            {/* Text Container */}
-            <View style={styles.textContainer}>
-              <Text style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}>
-                Monstera
-              </Text>
-              <Text style={{ fontSize: 12, fontWeight: 600, color: "#000" }}>
-                $30.55
-              </Text>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  position: "absolute",
-                  right: 10,
-                  bottom: 5,
-                }}
-              >
-                <FontAwesome
-                  marginRight={3}
-                  name="star"
-                  size={12}
-                  color="#498553"
-                />
-                <Text style={{ fontSize: 12, color: "#498553" }}>4.5</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.gridItem}>
-          <TouchableOpacity style={styles.plant_item}>
-            {/* Ảnh nền */}
-            <Image
-              source={product_background}
-              style={styles.backgroundImage}
-            ></Image>
-            <View
-              style={{
-                height: 127,
-                position: "absolute",
-                top: 0,
-                width: "100%",
-              }}
-            >
-              <TouchableOpacity style={styles.wishButton}>
-                <AntDesign name="hearto" size={12} color="#498553" />
-              </TouchableOpacity>
-              <Image source={plant_img} style={styles.backgroundImage}></Image>
-            </View>
-            {/* Text Container */}
-            <View style={styles.textContainer}>
-              <Text style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}>
-                Monstera
-              </Text>
-              <Text style={{ fontSize: 12, fontWeight: 600, color: "#000" }}>
-                $30.55
-              </Text>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  position: "absolute",
-                  right: 10,
-                  bottom: 5,
-                }}
-              >
-                <FontAwesome
-                  marginRight={3}
-                  name="star"
-                  size={12}
-                  color="#498553"
-                />
-                <Text style={{ fontSize: 12, color: "#498553" }}>4.5</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-          {/* item  */}
-          <TouchableOpacity style={styles.plant_item}>
-            {/* Ảnh nền */}
-            <Image
-              source={product_background}
-              style={styles.backgroundImage}
-            ></Image>
-            <View
-              style={{
-                height: 127,
-                position: "absolute",
-                top: 0,
-                width: "100%",
-              }}
-            >
-              <TouchableOpacity style={styles.wishButton}>
-                <AntDesign name="hearto" size={12} color="#498553" />
-              </TouchableOpacity>
-              <Image source={plant_img} style={styles.backgroundImage}></Image>
-            </View>
-            {/* Text Container */}
-            <View style={styles.textContainer}>
-              <Text style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}>
-                Monstera
-              </Text>
-              <Text style={{ fontSize: 12, fontWeight: 600, color: "#000" }}>
-                $30.55
-              </Text>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  position: "absolute",
-                  right: 10,
-                  bottom: 5,
-                }}
-              >
-                <FontAwesome
-                  marginRight={3}
-                  name="star"
-                  size={12}
-                  color="#498553"
-                />
-                <Text style={{ fontSize: 12, color: "#498553" }}>4.5</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
+              }
+              keyExtractor={item => item.id}
+            />
+        }
       </View>
     </View>
   );

@@ -1,20 +1,14 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Pagetitle from "../../../components/pagetitle";
+import { useEffect, useState } from "react";
+import addressAPI from "../../../../Api/AddressApi";
 
 const styles = StyleSheet.create({
   itembackground: {
     backgroundColor: "#fff",
     borderRadius: 10,
-    shadowColor: "#000000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.19,
-    shadowRadius: 5.62,
-    elevation: 6,
     width: "100%",
     padding: 9,
   },
@@ -25,7 +19,135 @@ const styles = StyleSheet.create({
   },
 });
 
-const MyAddress = ({navigation}) => {
+const MyAddress = ({ navigation }) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      try {
+        const response = await addressAPI.getAll("CS0001")
+        console.log("success: ", response);
+        setData(response);
+        setLoading(false);
+      }
+      catch (error) {
+        console.log("Error: ", error);
+        setLoading(false);
+      }
+    }
+
+    fetchAPI()
+  }, [])
+
+  const HandleDetailAddress = (addressID) => {
+    navigation.navigate("DetailAddress", {
+      id: addressID,
+    })
+  }
+
+  const Item = ({ name, phone, address, isDefault, id }) => {
+    if (isDefault) {
+      return (
+        <View style={styles.itembackground}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            {/* Text Container */}
+            <View style={{ gap: 5 }}>
+              <View style={{ flexDirection: "row", gap: 3 }}>
+                <Text style={styles.text}>{name}</Text>
+                <Text style={styles.text}>|</Text>
+                <Text style={styles.text}>{phone}</Text>
+              </View>
+              <View style={{ flexDirection: "row", gap: 3 }}>
+                <Text style={styles.text}>
+                  {address}
+                </Text>
+              </View>
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderWidth: 1,
+                  borderColor: "#EAC100",
+                  width: 85,
+                  height: 20,
+                }}
+              >
+                <Text style={{ color: "#EAC100", fontSize: 11 }}>
+                  Default
+                </Text>
+              </View>
+            </View>
+            {/* edit button */}
+            <TouchableOpacity onPress={() => HandleDetailAddress(id)}>
+              <Text
+                style={{ fontSize: 13, fontWeight: 500, color: "#627FE7" }}
+              >
+                Edit
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )
+    }
+    else {
+      return (
+        <View style={styles.itembackground}>
+          <View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              {/* Text Container */}
+              <View style={{ gap: 5 }}>
+                <View style={{ flexDirection: "row", gap: 3 }}>
+                  <Text style={styles.text}>{name}</Text>
+                  <Text style={styles.text}>|</Text>
+                  <Text style={styles.text}>{phone}</Text>
+                </View>
+                <View style={{ flexDirection: "row", gap: 3 }}>
+                  <Text style={styles.text}>
+                    {address}
+                  </Text>
+                </View>
+              </View>
+              {/* edit button */}
+              <TouchableOpacity>
+                <Text
+                  style={{ fontSize: 13, fontWeight: 500, color: "#627FE7" }}
+                >
+                  Edit
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ width: "100%", alignItems: "flex-end" }}>
+              <TouchableOpacity
+                style={{
+                  width: 96,
+                  paddingVertical: 5,
+                  borderRadius: 5,
+                  backgroundColor: "#498553",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{ color: "#fff", fontSize: 12, fontWeight: 500 }}
+                >
+                  Set as default
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )
+    }
+  }
+
   return (
     <SafeAreaView
       style={{
@@ -60,98 +182,18 @@ const MyAddress = ({navigation}) => {
         {/* item */}
         <View style={{ marginTop: 20, gap: 15 }}>
           {/* item default */}
-          <View style={styles.itembackground}>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              {/* Text Container */}
-              <View style={{ gap: 5 }}>
-                <View style={{ flexDirection: "row", gap: 3 }}>
-                  <Text style={styles.text}>Hoàng Phúc</Text>
-                  <Text style={styles.text}>|</Text>
-                  <Text style={styles.text}>0961826917</Text>
-                </View>
-                <View style={{ flexDirection: "row", gap: 3 }}>
-                  <Text style={styles.text}>
-                    Tân Lập, Đông Hoà, Dĩ An, Bình Dương
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderWidth: 1,
-                    borderColor: "#EAC100",
-                    width: 85,
-                    height: 20,
-                  }}
-                >
-                  <Text style={{ color: "#EAC100", fontSize: 11 }}>
-                    Default
-                  </Text>
-                </View>
-              </View>
-              {/* edit button */}
-              <TouchableOpacity>
-                <Text
-                  style={{ fontSize: 13, fontWeight: 500, color: "#627FE7" }}
-                >
-                  Edit
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          {/* item new */}
-          <View style={styles.itembackground}>
-            <View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                {/* Text Container */}
-                <View style={{ gap: 5 }}>
-                  <View style={{ flexDirection: "row", gap: 3 }}>
-                    <Text style={styles.text}>Hoàng Phúc</Text>
-                    <Text style={styles.text}>|</Text>
-                    <Text style={styles.text}>0961826917</Text>
-                  </View>
-                  <View style={{ flexDirection: "row", gap: 3 }}>
-                    <Text style={styles.text}>
-                      45b, đường số 8, Linh Trung, Thủ Đức
-                    </Text>
-                  </View>
-                </View>
-                {/* edit button */}
-                <TouchableOpacity>
-                  <Text
-                    style={{ fontSize: 13, fontWeight: 500, color: "#627FE7" }}
-                  >
-                    Edit
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{ width: "100%", alignItems: "flex-end" }}>
-                <TouchableOpacity
-                  style={{
-                    width: 96,
-                    paddingVertical: 5,
-                    borderRadius: 5,
-                    backgroundColor: "#498553",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text
-                    style={{ color: "#fff", fontSize: 12, fontWeight: 500 }}
-                  >
-                    Set as default
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
+          <FlatList
+            data={data}
+            renderItem={({ item }) => (
+              <Item id={item.id}
+                name={item.receiverName}
+                phone={item.phone}
+                address={item.address}
+                isDefault={item.isDefault} />
+            )}
+            keyExtractor={(item) => item.id}
+            showsHorizontalScrollIndicator={false}
+          />
         </View>
       </View>
     </SafeAreaView>

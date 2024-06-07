@@ -1,10 +1,10 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-//let token = localStorage.getItem("token");
+let token = AsyncStorage.getItem("Token");
 
 const axiosClient = axios.create({
-  baseURL:
-    "https://2c30-2402-800-631d-9c15-913d-e1c4-e257-56e4.ngrok-free.app/api/",
+  baseURL: "https://2c30-2402-800-631d-9c15-913d-e1c4-e257-56e4.ngrok-free.app/api/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -12,10 +12,10 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(async (config) => {
   //Handle token here
-  // if (token && config.headers) {
-  //     config.headers.Authorization = token;
-  //     return config;
-  // }
+  if (token && config.headers) {
+    config.headers.Authorization = token;
+    return config;
+  }
   return config;
 });
 

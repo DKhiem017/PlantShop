@@ -1,8 +1,5 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import Register from "../pages/register";
-import Login from "../pages/login";
 import Home from "../pages/user/Home/Home";
 import Wishlist from "../pages/user/WishList/Wishlist";
 import Cart from "../pages/user/Cart/Cart";
@@ -16,27 +13,23 @@ import MyAddress from "../pages/user/MyAddress/MyAddress";
 import MyFeedback from "../pages/user/MyFeedback/MyFeedback";
 import VoucherWallet from "../pages/user/VoucherWallet/VoucherWallet";
 import ChatRoom from "../pages/user/ChatRoom/ChatRoom";
+import DetailAddress from "../pages/user/DetailAddress/DetailAddress";
+import ProductList from "../pages/admin/ProductList/ProductList";
+import AddProduct from "../pages/admin/AddProduct/AddProduct";
+import DetailProduct from "../pages/admin/DetailProduct/DetailProduct";
+import BillList from "../pages/admin/BillList/BillList";
+import ChatRoomAdmin from "../pages/admin/ChatRoomAdmin/ChatRoomAdmin";
+import Report from "../pages/admin/Report/Report";
+import PromotionList from "../pages/admin/PromotionList/PromotionList";
+import PromotionDetail from "../pages/admin/Promotion Detail/PromotionDetail";
+import DetailBill from "../pages/admin/DetailBill/DetailBill";
 import ChatBox from "../pages/ChatBox/ChatBox";
 import Imagesearch from "../pages/user/ImageSearch/Imagesearch";
 import CameraScreen from "../pages/user/ImageSearch/CameraScreen/CameraScreen";
 import Result from "../pages/user/ImageSearch/Result/Result";
 
-const Stack = createStackNavigator();
 
-const LoginNavigator = () => {
-  <Stack.Navigator>
-    <Stack.Screen
-      name="Register"
-      component={Register}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen
-      name="Login"
-      component={Login}
-      options={{ headerShown: false }}
-    />
-  </Stack.Navigator>;
-};
+const Stack = createStackNavigator();
 
 const WishListNavigator = () => {
   return (
@@ -118,6 +111,11 @@ const MyAccountNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name="DetailAddress"
+        component={DetailAddress}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name="Order"
         component={Order}
         options={{ headerShown: false }}
@@ -173,11 +171,96 @@ const HomeNavigator = () => {
   );
 };
 
+const ProductAdminNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="ProductAdmin"
+        component={ProductList}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddProductAdmin"
+        component={AddProduct}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DetailProductAdmin"
+        component={DetailProduct}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  )
+}
+
+const OrderAdminNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="OrderAdmin"
+        component={BillList}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DetailOrderAdmin"
+        component={DetailBill}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  )
+}
+
+const ChatAdminNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="ChatAdmin"
+        component={ChatRoomAdmin}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  )
+}
+
+const ReportAdminNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="ReportAdmin"
+        component={Report}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  )
+}
+
+const PromotionAdminNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="PromotionAdmin"
+        component={PromotionList}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PromotionDetailAdmin"
+        component={PromotionDetail}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  )
+}
+
 export {
   HomeNavigator,
   WishListNavigator,
   CartNavigator,
   MyAccountNavigator,
   LoginNavigator,
+  ProductAdminNavigator,
+  OrderAdminNavigator,
+  ChatAdminNavigator,
+  ReportAdminNavigator,
+  PromotionAdminNavigator,
   ImagesearchNavigator,
 };

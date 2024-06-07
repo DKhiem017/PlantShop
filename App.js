@@ -1,22 +1,14 @@
-import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import MyTabs from "./fe/components/tabs";
+import CustomerNavigator from "./fe/navigation/CustomerNav";
+import { AppProvider } from "./contexts/appContext";
 
+export default function App() {
+  return (
+    <NavigationContainer>
+      <AppProvider>
+        <CustomerNavigator />
+      </AppProvider>
+    </NavigationContainer>
+  )
+}
 
-const App = () => (
-  <NavigationContainer>
-    <MyTabs></MyTabs>
-  </NavigationContainer>
-  // <DetailProduct></DetailProduct>
-);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
-
-export default App;
