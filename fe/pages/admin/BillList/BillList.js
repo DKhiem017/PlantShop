@@ -7,10 +7,14 @@ import {
   View,
   ScrollView,
   Image,
+  FlatList,
+  ActivityIndicator,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useEffect, useState } from "react";
+import orderAPI from "../../../../Api/OrderApi";
 
 const couponImg = require("../../../../assets/images/Bill.png");
 
@@ -28,6 +32,7 @@ const styles = StyleSheet.create({
     elevation: 6,
     borderRadius: 5,
     padding: 5,
+    marginBottom: 10
   },
   backgroundImg: {
     position: "absolute",
@@ -38,7 +43,7 @@ const styles = StyleSheet.create({
   searchBar: {
     backgroundColor: "#DCE1D2",
     height: 45,
-    width: 340,
+    width: "100%",
     borderRadius: 5,
     display: "flex",
     flexDirection: "row",
@@ -46,7 +51,94 @@ const styles = StyleSheet.create({
   },
 });
 
-const BillList = () => {
+const Item = ({ orderID, dayOrder, totalPrice, status, onPress }) => {
+  return (
+    <TouchableOpacity style={styles.itembackground} onPress={onPress}>
+      {/* ảnh bill */}
+      <View
+        style={{ flexDirection: "row", justifyContent: "space-between" }}
+      >
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ height: 70, width: 70 }}>
+            <Image
+              source={couponImg}
+              style={styles.backgroundImg}
+            ></Image>
+          </View>
+          <View
+            style={{
+              justifyContent: "space-between",
+              marginLeft: 10,
+              paddingVertical: 5,
+            }}
+          >
+            <Text
+              style={{ fontSize: 13, fontWeight: 700, color: "#000" }}
+            >
+              {orderID}
+            </Text>
+            <Text
+              style={{
+                fontSize: 11,
+                color: "#6F6A61",
+                fontStyle: "italic",
+              }}
+            >
+              {formatDate(dayOrder)}
+            </Text>
+            <Text
+              style={{ fontSize: 13, color: "#498553", fontWeight: 700 }}
+            >
+              Total: ${totalPrice}
+            </Text>
+          </View>
+        </View>
+        <Text
+          style={{ marginRight: 4, fontWeight: 700, color: "#F4CE14" }}
+        >
+          {status}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  )
+}
+
+const formatDate = (date) => {
+  const inputDate = new Date(date);
+
+  const year = inputDate.getUTCFullYear();
+  const month = (inputDate.getMonth() + 1).toString().padStart(2, "0");
+  const day = inputDate.getDate().toString().padStart(2, "0");
+
+  const formattedDate = `${day}/${month}/${year}`;
+  return formattedDate;
+}
+
+const BillList = ({ navigation }) => {
+  const [order, setOrder] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      try {
+        const response = await orderAPI.getOrderByAdmin();
+        setOrder(response);
+        setLoading(false);
+      }
+      catch (error) {
+        console.log("Error: ", error);
+      }
+    }
+
+    fetchAPI();
+  }, [])
+
+  const HandleDetail = (id) => {
+    navigation.navigate("DetailOrderAdmin", {
+      orderID: id
+    })
+  }
+
   return (
     // View tổng quát
     <SafeAreaView
@@ -70,7 +162,7 @@ const BillList = () => {
           <Text
             style={{
               fontSize: 17,
-              fontWeight: 600,
+              fontWeight: 700,
               color: "#498553",
             }}
           >
@@ -111,101 +203,25 @@ const BillList = () => {
         {/* Content */}
         <View style={{ marginTop: 25, gap: 10 }}>
           {/* item */}
-          <View style={styles.itembackground}>
-            {/* ảnh bill */}
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ height: 70, width: 70 }}>
-                  <Image
-                    source={couponImg}
-                    style={styles.backgroundImg}
-                  ></Image>
-                </View>
-                <View
-                  style={{
-                    justifyContent: "space-between",
-                    marginLeft: 10,
-                    paddingVertical: 5,
-                  }}
-                >
-                  <Text
-                    style={{ fontSize: 13, fontWeight: 600, color: "#000" }}
-                  >
-                    HD0001
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 11,
-                      color: "#6F6A61",
-                      fontStyle: "italic",
-                    }}
-                  >
-                    2 items
-                  </Text>
-                  <Text
-                    style={{ fontSize: 13, color: "#498553", fontWeight: 700 }}
-                  >
-                    $276.00
-                  </Text>
-                </View>
-              </View>
-              <Text
-                style={{ marginRight: 4, fontWeight: 600, color: "#F4CE14" }}
-              >
-                Pending
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.itembackground}>
-            {/* ảnh bill */}
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ height: 70, width: 70 }}>
-                  <Image
-                    source={couponImg}
-                    style={styles.backgroundImg}
-                  ></Image>
-                </View>
-                <View
-                  style={{
-                    justifyContent: "space-between",
-                    marginLeft: 10,
-                    paddingVertical: 5,
-                  }}
-                >
-                  <Text
-                    style={{ fontSize: 13, fontWeight: 600, color: "#000" }}
-                  >
-                    HD0002
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 11,
-                      color: "#6F6A61",
-                      fontStyle: "italic",
-                    }}
-                  >
-                    2 items
-                  </Text>
-                  <Text
-                    style={{ fontSize: 13, color: "#498553", fontWeight: 700 }}
-                  >
-                    $276.00
-                  </Text>
-                </View>
-              </View>
-              <Text
-                style={{ marginRight: 4, fontWeight: 600, color: "#627FE7" }}
-              >
-                Packaged
-              </Text>
-            </View>
-          </View>
+          {
+            loading ? <ActivityIndicator size="large"
+              color="#498553"
+              style={{ flex: 1, alignItems: "center", justifyContent: "center" }} />
+              : <FlatList
+                data={order}
+                renderItem={({ item }) => (
+                  <Item
+                    orderID={item.orderID}
+                    dayOrder={item.timeOrder}
+                    totalPrice={item.totalPrice}
+                    status={item.status}
+                    onPress={() => HandleDetail(item.orderID)}
+                  />
+                )}
+                keyExtractor={(item) => item.orderID}
+                showsHorizontalScrollIndicator={false}
+              />
+          }
         </View>
       </View>
     </SafeAreaView>

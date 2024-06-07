@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
 });
 
 const Login = ({ navigation }) => {
-  const { setToken, setUser } = useContext(AppContext);
+  const { setToken, setUser, setRole } = useContext(AppContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -48,13 +48,13 @@ const Login = ({ navigation }) => {
     let res = await authAPI.login(email, password);
 
     if (res && res.data.access_token) {
-      console.log("check login: ", res.customer);
       AsyncStorage.setItem("Token", 'Bearer ' + res.data.access_token);
       setToken(res.data.access_token);
       setUser(res.data.customer);
+      setRole(res.data.role);
       setEmail("");
       setPassword("");
-      navigation.navigate("Main");
+      navigation.navigate(res.data.role === "Customer" ? "Main" : "Main Admin");
       setLoading(false);
     } else {
       console.log("không có res ");

@@ -6,6 +6,11 @@ class OrderAPI {
         return axiosClient.get(url, { customerID });
     }
 
+    getOrderByAdmin = () => {
+        const url = `Order/get-orders-admin?orderType=0&month=0&today=false`;
+        return axiosClient.get(url);
+    }
+
     getDetail = (orderID) => {
         const url = `OrderDetail/get-detail/${orderID}`;
         return axiosClient.get(url, { orderID });

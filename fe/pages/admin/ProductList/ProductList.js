@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   searchBar: {
     backgroundColor: "#DCE1D2",
     height: 45,
-    width: 330,
+    width: "100%",
     borderRadius: 5,
     display: "flex",
     flexDirection: "row",
@@ -86,7 +86,7 @@ const ProductList = () => {
           <Text
             style={{
               fontSize: 17,
-              fontWeight: 600,
+              fontWeight: 700,
               color: "#498553",
             }}
           >
