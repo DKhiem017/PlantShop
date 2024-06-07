@@ -133,24 +133,64 @@ const Cart = ({ navigation }) => {
   // Lưu trữ giá trị value cho mỗi mặt hàng
   const [itemValues, setItemValues] = useState({});
 
+  //tổng giá trị
+  const [totalPrice, settotalPrice] = useState(0);
+  //hàm xử lý update giá trị giỏ hàng
+  const updateTotalPrice = (newCheckedItems) => {
+    let newTotalPrice = 0;
+    cart.forEach((item) => {
+      if (newCheckedItems[item.product.productID]) {
+        newTotalPrice +=
+          item.product.price * itemValues[item.product.productID];
+      }
+    });
+    settotalPrice(newTotalPrice);
+  };
+
   // Hàm xử lý giảm số lượng cho một mặt hàng cụ thể
   const handleMinus = (id) => {
-    if (itemValues[id] > 0) {
-      setItemValues((prevItemValues) => ({
-        ...prevItemValues,
-        [id]: prevItemValues[id] - 1,
-      }));
-    }
+    setItemValues((prevItemValues) => {
+      if (prevItemValues[id] > 1) {
+        const newValue = prevItemValues[id] - 1;
+        const newItemValues = { ...prevItemValues, [id]: newValue };
+        if (checkedItems[id]) {
+          // Update total price if the item is checked
+          let newTotalPrice = 0;
+          cart.forEach((item) => {
+            if (checkedItems[item.product.productID]) {
+              newTotalPrice +=
+                item.product.price * newItemValues[item.product.productID];
+            }
+          });
+          settotalPrice(newTotalPrice);
+        }
+        return newItemValues;
+      }
+      return prevItemValues; // Return the original values if the item quantity is 1
+    });
   };
 
   // Hàm xử lý tăng số lượng cho một mặt hàng cụ thể
   const handlePlus = (id) => {
-    if (itemValues[id] < 50) {
-      setItemValues((prevItemValues) => ({
-        ...prevItemValues,
-        [id]: prevItemValues[id] + 1,
-      }));
-    }
+    setItemValues((prevItemValues) => {
+      if (prevItemValues[id] < 50) {
+        const newValue = prevItemValues[id] + 1;
+        const newItemValues = { ...prevItemValues, [id]: newValue };
+        if (checkedItems[id]) {
+          // Update total price if the item is checked
+          let newTotalPrice = 0;
+          cart.forEach((item) => {
+            if (checkedItems[item.product.productID]) {
+              newTotalPrice +=
+                item.product.price * newItemValues[item.product.productID];
+            }
+          });
+          settotalPrice(newTotalPrice);
+        }
+        return newItemValues;
+      }
+      return prevItemValues; // Return the original values if the item quantity is 50
+    });
   };
   //checkbox
   const [ischecked, setIsChecked] = useState(false);
@@ -162,13 +202,18 @@ const Cart = ({ navigation }) => {
       newCheckedItems[item.productID] = true;
     });
     setCheckedItems(newCheckedItems);
+    updateTotalPrice(newCheckedItems);
   };
 
   const handleCheckboxPress = (id) => {
-    setCheckedItems((prevState) => ({
-      ...prevState,
-      [id]: !prevState[id],
-    }));
+    setCheckedItems((prevState) => {
+      const newCheckedItems = {
+        ...prevState,
+        [id]: !prevState[id],
+      };
+      updateTotalPrice(newCheckedItems);
+      return newCheckedItems;
+    });
   };
   //delete Item
   const handleDelete = async (id) => {
@@ -187,9 +232,30 @@ const Cart = ({ navigation }) => {
         return newItemValues;
       });
 
+      // Cập nhật checkedItems và totalPrice
+      setCheckedItems((prevCheckedItems) => {
+        const newCheckedItems = { ...prevCheckedItems };
+        delete newCheckedItems[id];
+        updateTotalPrice(newCheckedItems);
+        return newCheckedItems;
+      });
+
       console.log("Item deleted successfully");
     } catch (error) {
       console.log("Lỗi", error);
+    }
+  };
+  //xoá tất cả
+  const handleDeleteAll = async () => {
+    try {
+      await cartApi.deleteAll("CS0001");
+      console.log("Xoá thành công");
+      setCart([]);
+      setItemValues({});
+      setCheckedItems({});
+      settotalPrice(0);
+    } catch (error) {
+      console.log("Xoá không thành công", error);
     }
   };
   //render flatlist
@@ -251,33 +317,25 @@ const Cart = ({ navigation }) => {
       </View>
     </View>
   );
+  //điều hướng checkout
   const HandleCheckout = () => {
-    navigation.navigate("Checkout");
+    // Lọc ra các item đã được check
+    const checkedItemsData = cart.filter(
+      (item) => checkedItems[item.product.productID]
+    );
+
+    // Điều hướng đến trang Checkout với dữ liệu của các mục đã được check
+    navigation.navigate("Checkout", { data: checkedItemsData });
+
+    // Nếu không có item nào được check, cũng điều hướng đến trang Checkout
+    if (checkedItemsData.length === 0) {
+      // Điều hướng đến trang Checkout với dữ liệu rỗng
+      navigation.navigate("Checkout", { data: [] });
+    }
   };
   //fetch Api
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //   const fetchApi = async () => {
-  //     try {
-  //       const response = await cartApi.getAll("CS0001");
-  //       console.log("success", response);
-  //       setCart(response);
-  //       setLoading(false);
-
-  //       // Khởi tạo giá trị value cho mỗi mặt hàng
-  //       const initialValues = {};
-  //       response.forEach((item) => {
-  //         initialValues[item.product.productID] = item.quantity; // Giá trị mặc định là 1
-  //       });
-  //       setItemValues(initialValues);
-  //     } catch (error) {
-  //       console.log("Error", error);
-  //     }
-  //   };
-  //   fetchApi();
-  // }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -307,15 +365,6 @@ const Cart = ({ navigation }) => {
     }, []) // Dependency array để đảm bảo callback chỉ được gọi khi component được mount lần đầu tiên
   );
 
-  const handleDeleteAll = async () => {
-    try {
-      const deleteAll = await cartApi.deleteAll("CS0001");
-      console.log("Xoá thành công");
-      setCart([]);
-    } catch (error) {
-      console.log("Xoá không thành công", error);
-    }
-  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ paddingLeft: 15, paddingRight: 15, height: "100%" }}>
@@ -373,7 +422,7 @@ const Cart = ({ navigation }) => {
                 right: 0,
               }}
             >
-              $ 80
+              $ {totalPrice}
             </Text>
           </View>
           <TouchableOpacity style={styles.checkoutBut} onPress={HandleCheckout}>

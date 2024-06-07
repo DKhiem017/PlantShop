@@ -80,7 +80,7 @@ const ProductDetail = ({ navigation, route }) => {
 
   // tăng giảm giá trị sản phẩm
 
-  const [value, SetValue] = useState(0);
+  const [value, SetValue] = useState(1);
 
   const handleMinus = () => {
     if (value > 0) {
