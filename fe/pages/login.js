@@ -182,7 +182,7 @@ const Login = ({ navigation }) => {
           }}
           onPress={HandleLogin}
         >
-          {loading ? <ActivityIndicator size="small" color="#498553" /> : null}
+          {loading ? <ActivityIndicator size="small" color="white" /> : null}
           <Text style={{ color: "#fff", fontSize: 18, fontWeight: 700 }}>
             Login
           </Text>

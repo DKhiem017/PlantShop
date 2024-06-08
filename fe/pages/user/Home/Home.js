@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   ScrollView,
   StyleSheet,
@@ -16,6 +17,7 @@ import Searchbar from "../../../components/search";
 import Carousel from "../../../components/carousel";
 import { useEffect, useState } from "react";
 import productApi from "../../../../Api/ProductApi";
+import wishListAPI from "../../../../Api/WishListApi";
 
 const avt = require("../../../../assets/images/Monstera.jpg");
 const product_background = require("../../../../assets/images/Background_Plants.png");
@@ -138,16 +140,17 @@ const Home = ({ navigation }) => {
   //get product data
   const [loading, setLoading] = useState(true);
   const [products, setProduct] = useState([]);
-  const [recommend, setRecommend] = useState([]);
+  const [recommendProducts, setRecommendProduct] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(null);
 
   useEffect(() => {
     const fetchApi = async () => {
       try {
         const response = await productApi.getAll();
         const recommend = await productApi.getRecommend("CS0001");
-        console.log("success", recommend);
+        console.log("recommend", recommend);
         setProduct(response);
-        setRecommend(recommend);
+        setRecommendProduct(recommend);
         setLoading(false);
       } catch (error) {
         console.log("Error", error);
@@ -161,8 +164,6 @@ const Home = ({ navigation }) => {
     { image: require("../../../../assets/images/Voucher2.jpg") },
     { image: require("../../../../assets/images/Voucher3.jpg") },
   ];
-
-  const [activeIndex, setActiveIndex] = useState(null);
 
   const handlePress = (index) => {
     setActiveIndex(index);
@@ -342,7 +343,7 @@ const Home = ({ navigation }) => {
           )}
         </View>
         {/* Recommend */}
-        <Text style={{ fontSize: 15, color: "#498553", fontWeight: 600 }}>
+        <Text style={{ fontSize: 16, color: "#498553", fontWeight: 700 }}>
           Recommend for you
         </Text>
         <View>
@@ -352,17 +353,17 @@ const Home = ({ navigation }) => {
             <FlatList
               horizontal={true}
               style={{ paddingVertical: 10 }}
-              data={products}
+              data={recommendProducts}
               renderItem={({ item }) => (
                 <Item
-                  name={item.productName}
-                  price={item.price}
-                  rating={item.reviewPoint}
-                  id={item.productID}
-                  img={item.images[0].imageURL}
+                  name={item.product.productName}
+                  price={item.product.price}
+                  rating={item.product.reviewPoint}
+                  id={item.product.productID}
+                  img={item.product.images[0].imageURL}
                 />
               )}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item.product.productID}
               showsHorizontalScrollIndicator={false}
             ></FlatList>
           )}

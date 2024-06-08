@@ -3,8 +3,9 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator, Fla
 import Searchbar from "../../../components/search";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import wishListAPI from "../../../../Api/WishListApi";
+import { useFocusEffect } from "@react-navigation/native";
 
 const product_background = require("../../../../assets/images/Background_Plants.png");
 const plant_img = require("../../../../assets/images/Monstera_tran.png");
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
   },
   gridItem: {
     height: 200,
-    width: "100%",
+    width: "50%",
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
@@ -77,22 +78,28 @@ const Wishlist = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchAPI = async () => {
-      try {
-        const response = await wishListAPI.getAll('CS0001');
-        console.log("success: ", response);
-        setData(response);
-        setLoading(false);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchAPI = async () => {
+        try {
+          const response = await wishListAPI.getAll('CS0001');
+          console.log("success: ", response);
+          setData(response);
+          setLoading(false);
+        }
+        catch (error) {
+          console.log("Error: ", error);
+          setLoading(false);
+        }
       }
-      catch (error) {
-        console.log("Error: ", error);
-        setLoading(false);
-      }
-    }
 
-    fetchAPI()
-  }, [])
+      fetchAPI();
+
+      return () => {
+        // Cleanup function (optional)
+      };
+    }, [])
+  );
 
   const Item = ({ image, name, price, reviewPoint, id }) => {
     return (
@@ -115,7 +122,7 @@ const Wishlist = ({ navigation }) => {
             }}
           >
             <TouchableOpacity style={styles.wishButton}>
-              <AntDesign name="hearto" size={12} color="#498553" />
+              <AntDesign name="heart" size={12} color="#498553" />
             </TouchableOpacity>
             <Image source={{ uri: `${image}` }} style={styles.backgroundImage}></Image>
           </View>
@@ -148,7 +155,6 @@ const Wishlist = ({ navigation }) => {
           </View>
         </TouchableOpacity>
       </View>
-
     )
   }
 

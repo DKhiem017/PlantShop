@@ -256,7 +256,6 @@ export {
   WishListNavigator,
   CartNavigator,
   MyAccountNavigator,
-  LoginNavigator,
   ProductAdminNavigator,
   OrderAdminNavigator,
   ChatAdminNavigator,
