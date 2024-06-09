@@ -9,6 +9,7 @@ import {
   Image,
   Animated,
   LayoutAnimation,
+  Alert,
 } from "react-native";
 import Pagetitle from "../../../components/pagetitle";
 import { Entypo } from "@expo/vector-icons";
@@ -58,12 +59,14 @@ const Checkout = ({ navigation, route }) => {
           recipient.address,
           selectedItems
         );
-        console.log("Tạo đơn thành công", createOrder);
+        Alert.alert("Successfully create order");
+        navigation.navigate("CartScreen");
       } catch (error) {
         console.log("Không tạo đơn được", error);
       }
     } else {
-      console.log("Không có sản phẩm");
+      Alert.alert("There's no product choosen");
+      navigation.navigate("CartScreen");
     }
   };
 
