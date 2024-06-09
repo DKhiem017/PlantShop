@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -14,20 +14,60 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Rating } from "react-native-ratings";
 import imageSearchApi from "../../../../../Api/ImageSearchApi";
+import axios from "axios";
+import productApi from "../../../../../Api/ProductApi";
 
 const Result = ({ route, navigation }) => {
-  const { photo, base64 } = route.params;
+  const { photo, filename, type } = route.params;
+
+  const apiUrl =
+    "https://2e2a-2402-800-631d-fd4a-fc38-ca0b-db53-5ef9.ngrok-free.app/api/Product/predict-by-image";
+
+  const [hasResult, setHasResult] = useState(false);
+
+  const [product, setProduct] = useState({});
 
   const handleGoback = () => {
     navigation.goBack();
   };
 
+  const handleDetailProduct = (id) => {
+    navigation.navigate("Product Info", { id: id });
+  };
+
+  const handleCameraScreen = () => {
+    navigation.navigate("Camera");
+  };
+
+  console.log(photo);
+  console.log(type);
+  console.log(filename);
+
   const handleSearchByImg = async () => {
+    const imgData = new FormData();
+    imgData.append("Image", {
+      uri: photo,
+      type: type,
+      name: filename,
+    });
     try {
-      const response = await imageSearchApi.predictByImg(base64);
-      console.log("Success", response);
+      const response = await axios.post(apiUrl, imgData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.data.percentage < 0.01) {
+        setHasResult(false);
+      } else {
+        const getProduct = await productApi.getProductByName(
+          response.data.plantName
+        );
+        setProduct(getProduct[0]);
+        setHasResult(true);
+      }
+      console.log("Success: ", response.data);
     } catch (error) {
-      console.error(error);
+      console.log("Error: ", error);
     }
   };
 
@@ -46,7 +86,10 @@ const Result = ({ route, navigation }) => {
         </View>
         <View style={styles.resultItemContainer}>
           <View style={{ marginLeft: 10 }}>
-            <TouchableOpacity style={styles.cameraButton}>
+            <TouchableOpacity
+              style={styles.cameraButton}
+              onPress={handleCameraScreen}
+            >
               <Entypo name="camera" size={24} color="#498553" />
               <Text
                 style={{ fontSize: 15, fontWeight: "bold", color: "#498553" }}
@@ -58,43 +101,52 @@ const Result = ({ route, navigation }) => {
           {/* khung kết quả */}
           <Text style={{ fontSize: 16, fontWeight: 600 }}>Result</Text>
           <View>
-            <View style={styles.itemBackground}>
-              <View style={{ flexDirection: "row" }}>
-                <View style={styles.imgBorder}>
-                  {/* <Image
-                    source={plant_img}
-                    style={styles.backgroundImg}
-                  ></Image> */}
-                </View>
-                <View
-                  style={{ justifyContent: "space-between", marginLeft: 10 }}
-                >
-                  <Text style={{ color: "#000", fontWeight: 600 }}>
-                    Monstera
-                  </Text>
-                  <Text
-                    style={{ color: "#498553", fontWeight: 400, fontSize: 11 }}
+            {hasResult ? (
+              <TouchableOpacity
+                style={styles.itemBackground}
+                onPress={() => handleDetailProduct(product.productID)}
+              >
+                <View style={{ flexDirection: "row" }}>
+                  <View style={styles.imgBorder}>
+                    <Image
+                      source={{ uri: `${product.images[0].imageURL}` }}
+                      style={styles.image}
+                    ></Image>
+                  </View>
+                  <View
+                    style={{ justifyContent: "space-between", marginLeft: 10 }}
                   >
-                    $ 30.55
-                  </Text>
-                  <View>
-                    <Rating
-                      ratingCount={5}
-                      readonly
-                      startingValue={5}
-                      imageSize={14}
-                      ratingColor="#498553"
-                    />
+                    <Text style={{ color: "#000", fontWeight: 600 }}>
+                      {product.productName}
+                    </Text>
+                    <Text
+                      style={{
+                        color: "#498553",
+                        fontWeight: 400,
+                        fontSize: 11,
+                      }}
+                    >
+                      $ {product.price}
+                    </Text>
+                    <View>
+                      <Rating
+                        ratingCount={5}
+                        readonly
+                        startingValue={product.reviewPoint}
+                        imageSize={14}
+                      />
+                    </View>
                   </View>
                 </View>
+              </TouchableOpacity>
+            ) : (
+              <View>
+                <Text>No result found</Text>
               </View>
-            </View>
+            )}
           </View>
           {/* Thư viện ảnh và nút tìm kiếm */}
           <View style={styles.libraryAndSearch}>
-            <TouchableOpacity style={styles.photolibraryButton}>
-              <MaterialIcons name="insert-photo" size={60} color="#498553" />
-            </TouchableOpacity>
             <TouchableOpacity
               style={styles.searchButton}
               onPress={handleSearchByImg}
@@ -151,6 +203,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 5,
     width: 110,
+    alignItems: "center",
   },
   searchButton: {
     width: 60,

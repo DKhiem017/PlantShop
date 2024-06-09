@@ -17,11 +17,12 @@ const Imagesearch = ({ navigation }) => {
 
   const handleChoosePicture = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({ base64: true });
-    console.log(result.assets[0].base64);
+
     if (!result.canceled) {
       navigation.navigate("ResultScreen", {
         photo: result.assets[0].uri,
-        base64: result.assets[0].base64,
+        filename: result.assets[0].fileName,
+        type: result.assets[0].mimeType,
       });
     }
   };

@@ -15,6 +15,11 @@ class ProductApi {
     const url = `Product/detail/${productID}`;
     return axiosClient.get(url, { productID });
   };
+
+  getProductByName = (plantName) => {
+    const url = `Product/search-by-name?name=${plantName}`;
+    return axiosClient.get(url, { plantName });
+  };
 }
 
 const productApi = new ProductApi();

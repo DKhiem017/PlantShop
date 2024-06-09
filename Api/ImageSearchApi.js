@@ -1,9 +1,11 @@
-import axiosClient from "./AxiosClient";
+import axiosMulti from "./AxiosMulti";
 
 class ImageSearchApi {
-  predictByImg = (imgURL) => {
-    const url = `Product/predict-by-image`;
-    return axiosClient.postForm(url, { Image: imgURL });
+  predictByImg = (type, uri, filename) => {
+    const url = "Product/predict-by-image";
+    return axiosMulti.post(url, {
+      Image: { type: type, uri: uri, name: filename },
+    });
   };
 }
 

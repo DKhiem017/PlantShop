@@ -67,6 +67,11 @@ const ImagesearchNavigator = () => {
         component={Result}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="Product Info"
+        component={ProductDetail}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };
