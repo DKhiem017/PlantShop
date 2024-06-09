@@ -13,7 +13,6 @@ import { Entypo } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Rating } from "react-native-ratings";
-import imageSearchApi from "../../../../../Api/ImageSearchApi";
 import axios from "axios";
 import productApi from "../../../../../Api/ProductApi";
 
