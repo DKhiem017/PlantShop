@@ -325,12 +325,15 @@ const Cart = ({ navigation }) => {
     );
 
     // Điều hướng đến trang Checkout với dữ liệu của các mục đã được check
-    navigation.navigate("Checkout", { data: checkedItemsData });
+    navigation.navigate("Checkout", {
+      data: checkedItemsData,
+      subTotal: totalPrice,
+    });
 
     // Nếu không có item nào được check, cũng điều hướng đến trang Checkout
     if (checkedItemsData.length === 0) {
       // Điều hướng đến trang Checkout với dữ liệu rỗng
-      navigation.navigate("Checkout", { data: [] });
+      navigation.navigate("Checkout", { data: [], subTotal: 0 });
     }
   };
   //fetch Api

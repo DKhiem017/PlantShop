@@ -9,26 +9,92 @@ import {
   Image,
   Animated,
   LayoutAnimation,
-  UIManager,
-  Platform,
 } from "react-native";
 import Pagetitle from "../../../components/pagetitle";
 import { Entypo } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import addressAPI from "../../../../Api/AddressApi";
+import checkoutAPI from "../../../../Api/CheckoutApi";
 
 const Checkout = ({ navigation, route }) => {
-  const { data } = route.params;
+  const { data, subTotal, voucherID, voucherName, voucherValue } = route.params;
+
+  const [recipient, setRecipient] = useState({});
+
+  //tính phí
+  const [deliveryFee, setDeliveryFee] = useState(5);
+
+  const reducedcost =
+    voucherValue !== undefined ? subTotal * (voucherValue / 100) : 0;
+
+  const total = subTotal + deliveryFee - reducedcost;
+
+  const [note, setNote] = useState("");
+
+  //tạo đơn
 
   const hasProducts = data && data.length > 0;
 
-  console.log(hasProducts);
+  const selectedItems = data.map((item) => ({
+    productID: item.product.productID, // Sử dụng productID thay vì productName
+    quantity: item.quantity,
+  }));
+
+  const handleCreateOrder = async () => {
+    if (hasProducts) {
+      try {
+        const createOrder = await checkoutAPI.checkout(
+          "CS0001",
+          total,
+          activePayment,
+          activeMethod,
+          deliveryFee,
+          note,
+          voucherID,
+          recipient.receiverName,
+          recipient.phone,
+          recipient.address,
+          selectedItems
+        );
+        console.log("Tạo đơn thành công", createOrder);
+      } catch (error) {
+        console.log("Không tạo đơn được", error);
+      }
+    } else {
+      console.log("Không có sản phẩm");
+    }
+  };
+
+  //fetch Api
+  useFocusEffect(
+    useCallback(() => {
+      const fetchAPI = async () => {
+        try {
+          const response = await addressAPI.getDefault("CS0001");
+          setRecipient(response);
+        } catch (error) {
+          console.log("Error: ", error);
+        }
+      };
+      fetchAPI();
+      return () => {
+        // Cleanup function (optional)
+      };
+    }, []) // Dependency array để đảm bảo callback chỉ được gọi khi component được mount lần đầu tiên
+  );
 
   //xử lý chuyển method Delivery
   const [activeMethod, setActiveMethod] = useState("normal"); // Trạng thái mặc định là 'normal'
 
   const handlePress = (method) => {
     setActiveMethod(method);
+    if (method == "normal") {
+      setDeliveryFee(5);
+    } else if (method == "express") {
+      setDeliveryFee(10);
+    }
   };
 
   const [activePayment, setActivePayment] = useState("normal"); // Trạng thái mặc định là 'normal'
@@ -37,10 +103,16 @@ const Checkout = ({ navigation, route }) => {
     setActivePayment(method);
   };
 
-  //xử lý chuyển đổi payment
+  //xử lý navigation
+  const handleVoucherWalletNavigation = () => {
+    navigation.navigate("VoucherScreen", {
+      ProductList: data,
+      subTotal: subTotal,
+    });
+  };
 
   const HandleMyAddress = () => {
-    navigation.navigate("RecepientInfo");
+    navigation.navigate("MyAddress", { ProductList: data });
   };
 
   // Quản lý trạng thái hiển thị danh sách sản phẩm
@@ -105,7 +177,7 @@ const Checkout = ({ navigation, route }) => {
                 fontStyle: "italic",
               }}
             >
-              Hoàng Phúc
+              {recipient.receiverName}
             </Text>
           </View>
           <View style={{ display: "flex", flexDirection: "row", marginTop: 5 }}>
@@ -120,7 +192,7 @@ const Checkout = ({ navigation, route }) => {
                 fontStyle: "italic",
               }}
             >
-              Tân Lập, Dĩ An, Bình Dương
+              {recipient.address}
             </Text>
           </View>
           <View style={{ display: "flex", flexDirection: "row", marginTop: 5 }}>
@@ -135,7 +207,7 @@ const Checkout = ({ navigation, route }) => {
                 fontStyle: "italic",
               }}
             >
-              0961826917
+              {recipient.phone}
             </Text>
           </View>
         </View>
@@ -146,6 +218,8 @@ const Checkout = ({ navigation, route }) => {
             placeholder="Note"
             fontSize={13}
             multiline={true}
+            value={note}
+            onChangeText={(e) => setNote(e)}
           ></TextInput>
         </View>
         {/* Product List */}
@@ -278,7 +352,10 @@ const Checkout = ({ navigation, route }) => {
         <View style={styles.voucherContainer}>
           <View style={styles.customerInfo_grid1}>
             <Text style={{ color: "#498553", fontWeight: 500 }}>Voucher</Text>
-            <TouchableOpacity style={styles.applyBut}>
+            <TouchableOpacity
+              style={styles.applyBut}
+              onPress={handleVoucherWalletNavigation}
+            >
               <Text style={{ fontWeight: 400, color: "#fff" }}>Apply</Text>
               <Entypo
                 style={{ position: "absolute", right: 4 }}
@@ -289,7 +366,9 @@ const Checkout = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
           <View style={styles.couponBut}>
-            <Text style={{ fontSize: 13, fontWeight: 600 }}>ABCDE</Text>
+            <Text style={{ fontSize: 13, fontWeight: 600, color: "#6F6A61" }}>
+              {voucherName}
+            </Text>
             <Text
               style={{
                 position: "absolute",
@@ -298,7 +377,7 @@ const Checkout = ({ navigation, route }) => {
                 fontWeight: 600,
               }}
             >
-              -10%
+              -{voucherValue}%
             </Text>
           </View>
         </View>
@@ -373,19 +452,19 @@ const Checkout = ({ navigation, route }) => {
             <Text style={{ color: "#6F6A61", fontWeight: 500, fontSize: 13 }}>
               Subtotal:
             </Text>
-            <Text style={styles.subTotalText}>$80.00</Text>
+            <Text style={styles.subTotalText}>$ {subTotal}</Text>
           </View>
           <View style={{ display: "flex", flexDirection: "row", marginTop: 5 }}>
             <Text style={{ color: "#6F6A61", fontWeight: 500, fontSize: 13 }}>
               Delivery Fee:
             </Text>
-            <Text style={styles.subTotalText}>$80.00</Text>
+            <Text style={styles.subTotalText}>$ {deliveryFee}</Text>
           </View>
           <View style={{ display: "flex", flexDirection: "row", marginTop: 5 }}>
             <Text style={{ color: "#6F6A61", fontWeight: 500, fontSize: 13 }}>
               Reduced Cost:
             </Text>
-            <Text style={styles.subTotalText}>$80.00</Text>
+            <Text style={styles.subTotalText}>$ {reducedcost}</Text>
           </View>
           {/* line */}
           <View style={styles.subtoTalLine}></View>
@@ -399,11 +478,14 @@ const Checkout = ({ navigation, route }) => {
             <Text style={{ color: "#6F6A61", fontWeight: 500, fontSize: 13 }}>
               Total:
             </Text>
-            <Text style={styles.subTotalText}>$80.00</Text>
+            <Text style={styles.subTotalText}>$ {total}</Text>
           </View>
         </View>
         <View style={styles.butContainer}>
-          <TouchableOpacity style={styles.acceptButton}>
+          <TouchableOpacity
+            style={styles.acceptButton}
+            onPress={handleCreateOrder}
+          >
             <Text style={{ color: "#fff", fontWeight: 500 }}>Accept</Text>
           </TouchableOpacity>
         </View>

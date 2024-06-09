@@ -27,7 +27,8 @@ import ChatBox from "../pages/ChatBox/ChatBox";
 import Imagesearch from "../pages/user/ImageSearch/Imagesearch";
 import CameraScreen from "../pages/user/ImageSearch/CameraScreen/CameraScreen";
 import Result from "../pages/user/ImageSearch/Result/Result";
-
+import { StackRouter } from "@react-navigation/native";
+import AddAddress from "../pages/user/AddAddress/AddAddress";
 
 const Stack = createStackNavigator();
 
@@ -84,8 +85,23 @@ const CartNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="RecepientInfo"
+        name="MyAddress"
         component={MyAddress}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DetailAddress"
+        component={DetailAddress}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddAddressScreen"
+        component={AddAddress}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="VoucherScreen"
+        component={VoucherWallet}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
@@ -113,6 +129,11 @@ const MyAccountNavigator = () => {
       <Stack.Screen
         name="DetailAddress"
         component={DetailAddress}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddAddressScreen"
+        component={AddAddress}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -167,6 +188,31 @@ const HomeNavigator = () => {
         component={Cart}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="Checkout"
+        component={Checkout}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="MyAddress"
+        component={MyAddress}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DetailAddress"
+        component={DetailAddress}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddAddressScreen"
+        component={AddAddress}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="VoucherScreen"
+        component={VoucherWallet}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };
@@ -190,8 +236,8 @@ const ProductAdminNavigator = () => {
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
 const OrderAdminNavigator = () => {
   return (
@@ -207,8 +253,8 @@ const OrderAdminNavigator = () => {
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
 const ChatAdminNavigator = () => {
   return (
@@ -219,8 +265,8 @@ const ChatAdminNavigator = () => {
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
 const ReportAdminNavigator = () => {
   return (
@@ -231,8 +277,8 @@ const ReportAdminNavigator = () => {
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
 const PromotionAdminNavigator = () => {
   return (
@@ -248,15 +294,14 @@ const PromotionAdminNavigator = () => {
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
 export {
   HomeNavigator,
   WishListNavigator,
   CartNavigator,
   MyAccountNavigator,
-  LoginNavigator,
   ProductAdminNavigator,
   OrderAdminNavigator,
   ChatAdminNavigator,

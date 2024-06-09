@@ -42,7 +42,7 @@ const MyAccount = ({ navigation }) => {
   };
 
   const MyAddressNavigation = () => {
-    navigation.navigate("MyAddress");
+    navigation.navigate("MyAddress", { ProductList: [] });
   };
 
   const MyOrderNavigation = () => {
@@ -54,7 +54,7 @@ const MyAccount = ({ navigation }) => {
   };
 
   const VoucherNavigation = () => {
-    navigation.navigate("Voucher Wallet");
+    navigation.navigate("Voucher Wallet", { ProductList: [] });
   };
 
   const ChatNavigation = () => {
@@ -62,23 +62,19 @@ const MyAccount = ({ navigation }) => {
   };
 
   const HandleLogout = () => {
-    Alert.alert(
-      "Logout",
-      "Do you want to log out?",
-      [
-        { text: "Cancel", onPress: () => { }, style: "cancel" },
-        {
-          text: "Logout",
-          onPress: async () => {
-            AsyncStorage.removeItem("Token");
-            setToken("");
-            setUser("");
-            navigation.navigate("Login");
-          },
+    Alert.alert("Logout", "Do you want to log out?", [
+      { text: "Cancel", onPress: () => {}, style: "cancel" },
+      {
+        text: "Logout",
+        onPress: async () => {
+          AsyncStorage.removeItem("Token");
+          setToken("");
+          setUser("");
+          navigation.navigate("Login");
         },
-      ]
-    );
-  }
+      },
+    ]);
+  };
 
   return (
     <SafeAreaView>
@@ -87,7 +83,7 @@ const MyAccount = ({ navigation }) => {
           display: "flex",
           flexDirection: "column",
           backgroundColor: "#F5F5F5",
-          marginBottom: 15
+          marginBottom: 15,
         }}
       >
         <StatusBar style="dark"></StatusBar>
