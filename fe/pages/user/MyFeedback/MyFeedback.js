@@ -6,34 +6,20 @@ import {
   StyleSheet,
   Image,
   FlatList,
+  Modal,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Pagetitle from "../../../components/pagetitle";
 import { FontAwesome } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "react-native-gesture-handler";
-import { TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import feedbackApi from "../../../../Api/FeedbackApi";
 import { Rating } from "react-native-ratings";
+import { useFocusEffect } from "@react-navigation/native";
 
 const plant_img = require("../../../../assets/images/Monstera_tran.png");
-
-const plantReviewed = [
-  {
-    id: 1,
-    name: "Monstera",
-    rating: "4.5",
-    date: "05/04/2024",
-    comment: "Hàng đẹp, chất lượng",
-  },
-  {
-    id: 2,
-    name: "Fiddle Leaf Fig",
-    rating: "4",
-    date: "05/04/2024",
-    comment: "Hàng đẹp, chất lượng",
-  },
-];
 
 const MyFeedback = ({ navigation }) => {
   //format Date
@@ -56,20 +42,70 @@ const MyFeedback = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [unreviewed, setUnreviewed] = useState([]);
   const [plantReviewed, setPlantReviewed] = useState([]);
+  //thêm Feeback APi
+  const [orderID, setOrderID] = useState("");
+  const [productID, setProductID] = useState("");
 
-  useEffect(() => {
-    const fetchApi = async () => {
-      try {
-        const reviewedList = await feedbackApi.getReviewedFeedback("CS0001");
-        console.log("success", reviewedList);
-        setPlantReviewed(reviewedList);
-        setLoading(false);
-      } catch (error) {
-        console.log("Error", error);
-      }
-    };
-    fetchApi();
-  }, []);
+  const handleAddFeedback = (orderID, productID) => {
+    setOrderID(orderID);
+    setProductID(productID);
+    setshowFeedback(true);
+  };
+
+  const [comment, setComment] = useState("");
+
+  const handleSaveFeedback = async () => {
+    console.log(orderID);
+    console.log(productID);
+    console.log(comment);
+    console.log(defaultRating);
+    try {
+      const addFeedback = await feedbackApi.newFeedback(
+        orderID,
+        "CS0001",
+        productID,
+        comment,
+        defaultRating,
+        null
+      );
+      Alert.alert("Add feedback successfully");
+      setdefaultRating(0);
+      setComment("");
+      setshowFeedback(false);
+    } catch (error) {
+      console.log("Lỗi không thêm được feedback", error);
+    }
+  };
+
+  const handleCancelFeedback = () => {
+    setComment("");
+    setdefaultRating(0);
+    setshowFeedback(false);
+  };
+  useFocusEffect(
+    useCallback(() => {
+      const fetchApi = async () => {
+        try {
+          const reviewedList = await feedbackApi.getReviewedFeedback("CS0001");
+          const unreviewedList = await feedbackApi.getUnreviewedProduct(
+            "CS0001"
+          );
+          setPlantReviewed(reviewedList);
+          setUnreviewed(unreviewedList);
+          console.log("success", unreviewedList);
+          setLoading(false);
+        } catch (error) {
+          console.log("Error", error);
+        }
+      };
+      fetchApi();
+
+      return () => {
+        // Cleanup function (optional)
+      };
+    }, []) // Dependency array để đảm bảo callback chỉ được gọi khi component được mount lần đầu tiên
+  );
+  useEffect(() => {}, []);
   //rating function
   const [defaultRating, setdefaultRating] = useState(0);
   const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
@@ -81,7 +117,13 @@ const MyFeedback = ({ navigation }) => {
         <View style={styles.imgBorder}>
           <Image source={plant_img} style={styles.backgroundImg}></Image>
         </View>
-        <View style={{ justifyContent: "space-between", marginLeft: 10 }}>
+        <View
+          style={{
+            gap: 5,
+            marginLeft: 10,
+            flex: 1,
+          }}
+        >
           <Text style={{ color: "#000", fontWeight: 600 }}>{name}</Text>
           <View style={{ flexDirection: "row", gap: 7, alignItems: "center" }}>
             <Rating
@@ -92,19 +134,38 @@ const MyFeedback = ({ navigation }) => {
             />
             <Text style={{ fontSize: 12 }}>{date}</Text>
           </View>
-          <Text style={{ color: "#498553", fontWeight: 400, fontSize: 11 }}>
-            {comment}
-          </Text>
+          <View style={{ flexShrink: 1 }}>
+            <Text
+              style={{
+                color: "#498553",
+                fontWeight: "400",
+                fontSize: 11,
+                flexShrink: 1,
+              }}
+            >
+              {comment}
+            </Text>
+          </View>
         </View>
       </View>
     </View>
   );
 
-  const ItemUnreviewed = ({ name, price }) => (
+  const ItemUnreviewed = ({
+    orderID,
+    customerID,
+    productID,
+    img,
+    name,
+    price,
+  }) => (
     <View style={styles.itemBackground}>
       <View style={{ flexDirection: "row" }}>
         <View style={styles.imgBorder}>
-          <Image source={plant_img} style={styles.backgroundImg}></Image>
+          <Image
+            source={{ uri: `${img}` }}
+            style={styles.backgroundImg}
+          ></Image>
         </View>
         <View style={{ justifyContent: "space-between", marginLeft: 10 }}>
           <Text style={{ color: "#000", fontWeight: 600 }}>{name}</Text>
@@ -112,7 +173,7 @@ const MyFeedback = ({ navigation }) => {
         </View>
         <TouchableOpacity
           style={styles.feedBackBut}
-          onPress={() => setshowFeedback(true)}
+          onPress={() => handleAddFeedback(orderID, productID)}
         >
           <Text style={{ color: "#fff", fontWeight: 400, fontSize: 11 }}>
             Feedback
@@ -123,7 +184,13 @@ const MyFeedback = ({ navigation }) => {
   );
   //renderItem
   const renderItemUnreviewed = ({ item }) => (
-    <ItemUnreviewed name={item.name} price={item.price} />
+    <ItemUnreviewed
+      img={item.product.images[0].imageURL}
+      name={item.product.productName}
+      price={item.product.price}
+      orderID={item.orderID}
+      productID={item.product.productID}
+    />
   );
 
   const renderItemReviewed = ({ item }) => (
@@ -153,12 +220,10 @@ const MyFeedback = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
-      <View style={{paddingHorizontal:15}}>
+      <View style={{ paddingHorizontal: 15 }}>
         <StatusBar></StatusBar>
         <Pagetitle title={"My Feedback"} navigation={navigation}></Pagetitle>
-        <View
-          style={{ flexDirection: "row", marginTop: 10, }}
-        >
+        <View style={{ flexDirection: "row", marginTop: 10 }}>
           {/* Unreview */}
           <TouchableOpacity
             style={styles.tagContainer}
@@ -224,53 +289,75 @@ const MyFeedback = ({ navigation }) => {
         )}
       </View>
       {showFeedback && (
-        <View style={styles.Formcontainer}>
-          <View style={styles.feedbackForm}>
-            <Text style={{ fontSize: 16, color: "#498553", fontWeight: "600" }}>
-              {" "}
-              Review
-            </Text>
-            <View style={styles.customRatingbar}>
-              {maxRating.map((item, key) => {
-                return (
+        <Modal animationType="fade" transparent={true}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(0,0,0,0.5)",
+            }}
+          >
+            <View style={styles.Formcontainer}>
+              <View style={styles.feedbackForm}>
+                <Text
+                  style={{ fontSize: 16, color: "#498553", fontWeight: "600" }}
+                >
+                  {" "}
+                  Review
+                </Text>
+                <View style={styles.customRatingbar}>
+                  {maxRating.map((item, key) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        key={item}
+                        onPress={() => setdefaultRating(item)}
+                      >
+                        <FontAwesome
+                          name={item <= defaultRating ? "star" : "star-o"}
+                          size={30}
+                          color="yellow"
+                        />
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+                <View>
+                  <TextInput
+                    multiline
+                    numberOfLines={4}
+                    style={styles.inputLabel}
+                    value={comment}
+                    onChangeText={(e) => setComment(e)}
+                  ></TextInput>
+                </View>
+                <View style={{ flexDirection: "row", gap: 10 }}>
                   <TouchableOpacity
-                    activeOpacity={0.7}
-                    key={item}
-                    onPress={() => setdefaultRating(item)}
+                    style={styles.cancelButtonStyle}
+                    onPress={handleCancelFeedback}
                   >
-                    <FontAwesome
-                      name={item <= defaultRating ? "star" : "star-o"}
-                      size={30}
-                      color="yellow"
-                    />
+                    <Text
+                      style={{ fontSize: 12, color: "#fff", fontWeight: 500 }}
+                    >
+                      Cancel
+                    </Text>
                   </TouchableOpacity>
-                );
-              })}
-            </View>
-            <View>
-              <TextInput
-                multiline
-                numberOfLines={4}
-                style={styles.inputLabel}
-              ></TextInput>
-            </View>
-            <View style={{ flexDirection: "row", gap: 10 }}>
-              <TouchableOpacity
-                style={styles.cancelButtonStyle}
-                onPress={() => setshowFeedback(false)}
-              >
-                <Text style={{ fontSize: 12, color: "#fff", fontWeight: 500 }}>
-                  Cancel
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.saveButtonStyle}>
-                <Text style={{ fontSize: 12, color: "#fff", fontWeight: 500 }}>
-                  Save
-                </Text>
-              </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.saveButtonStyle}
+                    onPress={() => handleSaveFeedback()}
+                  >
+                    <Text
+                      style={{ fontSize: 12, color: "#fff", fontWeight: 500 }}
+                    >
+                      Save
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
           </View>
-        </View>
+        </Modal>
       )}
     </SafeAreaView>
   );
