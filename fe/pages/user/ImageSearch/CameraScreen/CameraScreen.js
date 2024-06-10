@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { View, Button, StyleSheet, Image, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
-const CameraScreen = () => {
+const CameraScreen = ({ navigation }) => {
   const [photo, setPhoto] = React.useState(null);
 
   const requestCameraPermission = async () => {
@@ -22,13 +22,16 @@ const CameraScreen = () => {
 
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setPhoto(result.uri);
+      navigation.navigate("ResultScreen", {
+        photo: result.assets[0].uri,
+        filename: result.assets[0].fileName, // Assuming you are extracting the filename from the URI
+        type: result.assets[0].mimeType, // This can be refined based on the result's actual MIME type
+      });
     }
   };
 

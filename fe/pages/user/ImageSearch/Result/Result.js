@@ -20,7 +20,7 @@ const Result = ({ route, navigation }) => {
   const { photo, filename, type } = route.params;
 
   const apiUrl =
-    "https://2e2a-2402-800-631d-fd4a-fc38-ca0b-db53-5ef9.ngrok-free.app/api/Product/predict-by-image";
+    "https://29f2-2402-800-631d-fd4a-8cdc-3075-eb1c-237e.ngrok-free.app/api/Product/predict-by-image";
 
   const [hasResult, setHasResult] = useState(false);
 
