@@ -27,6 +27,7 @@ import ChatBox from "../pages/ChatBox/ChatBox";
 import Imagesearch from "../pages/user/ImageSearch/Imagesearch";
 import CameraScreen from "../pages/user/ImageSearch/CameraScreen/CameraScreen";
 import Result from "../pages/user/ImageSearch/Result/Result";
+import AdminAccount from "../pages/admin/AdminAccount/AdminAccount";
 
 
 const Stack = createStackNavigator();
@@ -213,6 +214,11 @@ const OrderAdminNavigator = () => {
 const ChatAdminNavigator = () => {
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="AccountAdmin"
+        component={AdminAccount}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="ChatAdmin"
         component={ChatRoomAdmin}

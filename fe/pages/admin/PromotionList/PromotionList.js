@@ -7,10 +7,15 @@ import {
   View,
   ScrollView,
   Image,
+  ActivityIndicator,
+  FlatList,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useCallback, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import voucherAPI from "../../../../Api/VoucherApi";
 
 const couponImg = require("../../../../assets/images/gift.png");
 
@@ -28,6 +33,7 @@ const styles = StyleSheet.create({
     elevation: 6,
     borderRadius: 5,
     padding: 5,
+    marginBottom: 10,
   },
   backgroundImg: {
     position: "absolute",
@@ -38,7 +44,6 @@ const styles = StyleSheet.create({
   searchBar: {
     backgroundColor: "#DCE1D2",
     height: 45,
-    width: 340,
     borderRadius: 5,
     display: "flex",
     flexDirection: "row",
@@ -46,7 +51,119 @@ const styles = StyleSheet.create({
   },
 });
 
-const PromotionList = () => {
+const PromotionList = ({ navigation }) => {
+  const [data, setData] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchAPI = async () => {
+        try {
+          const response = await voucherAPI.getAllAdmin();
+          console.log("success: ", response);
+          setData(response);
+          setLoading(false);
+        }
+        catch (error) {
+          console.log("Error: ", error);
+          setLoading(false);
+        }
+      }
+
+      fetchAPI()
+
+      return () => {
+        setSearchValue("");
+      }
+    }, [])
+  );
+
+  const HandleSearch = async (value) => {
+    setLoading(true);
+    if (value != "") {
+      return await voucherAPI.searchByName(value)
+        .then((response) => {
+          setData(response);
+          setLoading(false)
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("Not found voucher with provided keyword")
+        })
+    }
+    else {
+      return await voucherAPI.getAll()
+        .then((response) => {
+          setData(response);
+          setLoading(false)
+        })
+    }
+  }
+
+  const formatDate = (date) => {
+    const inputDate = new Date(date);
+
+    const year = inputDate.getUTCFullYear();
+    const month = (inputDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = inputDate.getDate().toString().padStart(2, "0");
+
+    const formattedDate = `${day}/${month}/${year}`;
+    return formattedDate;
+  }
+
+  const HandleDetailVoucher = (id) => {
+    navigation.navigate("PromotionDetailAdmin", {
+      voucherID: id
+    })
+  }
+
+  const Item = ({ id, name, value, dateBegin, dateEnd, onPress }) => {
+    return (
+      <TouchableOpacity style={styles.itembackground} onPress={onPress}>
+        {/* ảnh sp */}
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ height: 70, width: 70 }}>
+            <Image source={couponImg} style={styles.backgroundImg}></Image>
+          </View>
+          <View
+            style={{
+              borderStyle: "dashed",
+              borderColor: "#D9D9D9",
+              borderWidth: 1,
+              marginLeft: 5,
+            }}
+          ></View>
+          <View
+            style={{
+              justifyContent: "space-between",
+              marginLeft: 10,
+              paddingVertical: 2,
+            }}
+          >
+            <Text
+              style={{ fontSize: 13, fontWeight: 700, color: "#498553" }}
+            >
+              {name}
+            </Text>
+            <Text
+              style={{ fontSize: 11, color: "#6F6A61" }}
+            >
+              Voucher Code: <Text style={{ color: "#498553", fontWeight: "bold" }}>{id}</Text>
+            </Text>
+            <Text style={{ fontSize: 11, color: "#6F6A61" }}>
+              Reduce <Text style={{ color: "red" }}>{value}%</Text> for all orders
+            </Text>
+            <Text style={{ fontSize: 11, color: "#6F6A61" }}>
+              From <Text style={{ fontWeight: "bold" }}>{formatDate(dateBegin)}</Text> to <Text style={{ fontWeight: "bold" }}>{formatDate(dateEnd)}</Text>
+
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
   return (
     // View tổng quát
     <SafeAreaView
@@ -70,11 +187,11 @@ const PromotionList = () => {
           <Text
             style={{
               fontSize: 17,
-              fontWeight: 600,
+              fontWeight: 700,
               color: "#498553",
             }}
           >
-            Product List
+            Promotion List
           </Text>
         </View>
         <View
@@ -88,12 +205,6 @@ const PromotionList = () => {
         >
           {/* Searchbar */}
           <View style={styles.searchBar}>
-            <Feather
-              style={{ position: "absolute", marginLeft: 5 }}
-              name="search"
-              size={25}
-              color="#498553"
-            />
             <TextInput
               style={{
                 color: "#498553",
@@ -102,7 +213,16 @@ const PromotionList = () => {
                 paddingLeft: 40,
               }}
               placeholder="Search"
+              value={searchValue}
+              onChangeText={(e) => setSearchValue(e)}
             ></TextInput>
+            <Feather
+              style={{ position: "absolute", marginLeft: 5 }}
+              name="search"
+              size={25}
+              color="#498553"
+              onPress={() => HandleSearch(searchValue)}
+            />
           </View>
           <TouchableOpacity style={{ marginLeft: 15 }}>
             <FontAwesome6 name="filter" size={24} color="#498553" />
@@ -111,41 +231,25 @@ const PromotionList = () => {
         {/* Content */}
         <View style={{ marginTop: 25, gap: 10 }}>
           {/* item */}
-          <View style={styles.itembackground}>
-            {/* ảnh sp */}
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ height: 70, width: 70 }}>
-                <Image source={couponImg} style={styles.backgroundImg}></Image>
-              </View>
-              <View
-                style={{
-                  borderStyle: "dashed",
-                  borderColor: "#D9D9D9",
-                  borderWidth: 1,
-                  marginLeft: 5,
-                }}
-              ></View>
-              <View
-                style={{
-                  justifyContent: "space-between",
-                  marginLeft: 10,
-                  paddingVertical: 5,
-                }}
-              >
-                <Text
-                  style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}
-                >
-                  Siêu ưu đãi Tết 2024
-                </Text>
-                <Text style={{ fontSize: 11, color: "#6F6A61" }}>
-                  Giảm 20% cho đơn từ $50
-                </Text>
-                <Text style={{ fontSize: 11, color: "#6F6A61" }}>
-                  Từ 08/02/2024-19/02/2024
-                </Text>
-              </View>
-            </View>
-          </View>
+          {
+            loading ? <ActivityIndicator size="large"
+              color="#498553"
+              style={{ flex: 1, alignItems: "center", justifyContent: "center" }} />
+              : <FlatList
+                data={data}
+                renderItem={({ item }) => (
+                  <Item id={item.id}
+                    name={item.name}
+                    value={item.value}
+                    dateBegin={item.dateBegin}
+                    dateEnd={item.dateEnd}
+                    onPress={() => HandleDetailVoucher(item.id)}
+                  />
+                )}
+                keyExtractor={(item) => item.id}
+                showsHorizontalScrollIndicator={false}
+              />
+          }
         </View>
       </View>
     </SafeAreaView>

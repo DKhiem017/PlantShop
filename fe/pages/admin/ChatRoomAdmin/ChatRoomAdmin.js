@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 
 const ChatRoomAdmin = ({ navigation }) => {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#f5f5f5", paddingHorizontal: 8, }}>
       <StatusBar></StatusBar>
       <View>
         <Pagetitle title={"Chat"} navigation={navigation}></Pagetitle>

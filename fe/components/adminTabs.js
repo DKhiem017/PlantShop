@@ -104,9 +104,9 @@ function AdminTabs() {
                     tabBarIcon: ({ focused, color, size }) => (
                         <View style={{ alignItems: "center", justifyContent: "center" }}>
                             {focused ? (
-                                <Ionicons name="chatbubble-ellipses" size={24} color="#498553" /> // Icon khi focused
+                                <Ionicons name="person" size={26} color="#498553" /> // Icon khi focused
                             ) : (
-                                <Ionicons name="chatbubble-ellipses-outline" size={24} color="#498553" /> // Icon khi không focused
+                                <Ionicons name="person-outline" size={26} color="#498553" /> // Icon khi không focused
                             )}
                         </View>
                     ),

@@ -9,12 +9,16 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
+  Alert,
+  Modal,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import orderAPI from "../../../../Api/OrderApi";
+import { useFocusEffect } from "@react-navigation/native";
+import ButtonMultiselect, { ButtonLayout } from "react-native-button-multiselect";
 
 const couponImg = require("../../../../assets/images/Bill.png");
 
@@ -42,8 +46,6 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     backgroundColor: "#DCE1D2",
-    height: 45,
-    width: "100%",
     borderRadius: 5,
     display: "flex",
     flexDirection: "row",
@@ -96,11 +98,50 @@ const Item = ({ orderID, dayOrder, totalPrice, status, onPress }) => {
         <Text
           style={{ marginRight: 4, fontWeight: 700, color: "#F4CE14" }}
         >
-          {status}
+          {StatusColor(status)}
         </Text>
       </View>
     </TouchableOpacity>
   )
+}
+
+const StatusColor = (status) => {
+  if (status === "Pending") {
+    return (
+      <Text
+        style={{ fontSize: 13, fontWeight: 700, color: "#F4CE14" }}
+      >
+        {status}
+      </Text>
+    )
+  }
+  else if (status === "Packaging") {
+    return (
+      <Text
+        style={{ fontSize: 13, fontWeight: 700, color: "#2A2A86" }}
+      >
+        {status}
+      </Text>
+    )
+  }
+  else if (status === "Delivering") {
+    return (
+      <Text
+        style={{ fontSize: 13, fontWeight: 700, color: "#AAC9FF" }}
+      >
+        {status}
+      </Text>
+    )
+  }
+  else if (status === "Completed") {
+    return (
+      <Text
+        style={{ fontSize: 13, fontWeight: 700, color: "#498553" }}
+      >
+        {status}
+      </Text>
+    )
+  }
 }
 
 const formatDate = (date) => {
@@ -110,33 +151,88 @@ const formatDate = (date) => {
   const month = (inputDate.getMonth() + 1).toString().padStart(2, "0");
   const day = inputDate.getDate().toString().padStart(2, "0");
 
-  const formattedDate = `${day}/${month}/${year}`;
+  const time =
+    inputDate.getHours().toString().padStart(2, "0") +
+    ":" +
+    inputDate.getMinutes().toString().padStart(2, "0");
+
+  const formattedDate = `${day}/${month}/${year}  ${time}  `;
   return formattedDate;
 }
 
 const BillList = ({ navigation }) => {
   const [order, setOrder] = useState([]);
+  const [searchParam, setSearchParam] = useState("");
+  const [statusForm, setStatusForm] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchAPI = async () => {
-      try {
-        const response = await orderAPI.getOrderByAdmin();
-        setOrder(response);
-        setLoading(false);
-      }
-      catch (error) {
-        console.log("Error: ", error);
-      }
-    }
+  const buttons = [
+    { label: 'All', value: 0 },
+    { label: 'Pending', value: 1 },
+    { label: 'Packaging', value: 2 },
+    { label: 'Delivering', value: 3 },
+    { label: 'Completed', value: 4 },
+  ];
 
-    fetchAPI();
-  }, [])
+  const [selectedButtons, setSelectedButtons] = useState([]);
+
+  const handleButtonSelected = (selectedValues) => {
+    setSelectedButtons(selectedValues);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchAPI = async () => {
+        try {
+          const response = await orderAPI.getOrderByAdmin();
+          setOrder(response);
+          setLoading(false);
+        }
+        catch (error) {
+          console.log("Error: ", error);
+        }
+      }
+
+      fetchAPI();
+      return () => {
+        //Clean up function
+        setSearchParam("");
+      };
+    }, [])
+  )
 
   const HandleDetail = (id) => {
     navigation.navigate("DetailOrderAdmin", {
       orderID: id
     })
+  }
+
+  const HandleSearchOrder = async (param) => {
+    setLoading(true);
+    return await orderAPI.searchByID(param)
+      .then((res) => {
+        setOrder(res);
+        setLoading(false);
+      })
+      .catch(() => {
+        Alert.alert("Please enter keyword");
+        setLoading(false);
+      })
+  }
+
+  const HandleSubmit = async (value) => {
+    setLoading(true);
+    setStatusForm(false);
+    setSelectedButtons([]);
+    return await orderAPI.filterOrder(value)
+      .then((res) => {
+        setOrder(res);
+        setLoading(false);
+      })
+      .catch(() => {
+        Alert.alert("Cannot find order");
+        setLoading(false);
+      })
   }
 
   return (
@@ -169,47 +265,52 @@ const BillList = ({ navigation }) => {
             Order List
           </Text>
         </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            marginTop: 10,
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
+        <ScrollView showsVerticalScrollIndicator={false}
+          style={{ marginBottom: 10 }}
         >
-          {/* Searchbar */}
-          <View style={styles.searchBar}>
-            <Feather
-              style={{ position: "absolute", marginLeft: 5 }}
-              name="search"
-              size={25}
-              color="#498553"
-            />
-            <TextInput
-              style={{
-                color: "#498553",
-                fontSize: 15,
-                width: "100%",
-                paddingLeft: 40,
-              }}
-              placeholder="Search"
-            ></TextInput>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              marginTop: 10,
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            {/* Searchbar */}
+            <View style={styles.searchBar}>
+              <TextInput
+                style={{
+                  color: "#498553",
+                  fontSize: 15,
+                  height: 45,
+                  width: "90%",
+                  paddingLeft: 40,
+                }}
+                placeholder="Search"
+                value={searchParam}
+                onChangeText={(e) => setSearchParam(e)}
+              ></TextInput>
+              <Feather
+                style={{ position: "absolute", marginLeft: 5 }}
+                name="search"
+                size={25}
+                color="#498553"
+                onPress={() => HandleSearchOrder(searchParam)}
+              />
+            </View>
+            <TouchableOpacity onPress={() => setStatusForm(true)}>
+              <FontAwesome6 name="filter" size={24} color="#498553" />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity style={{ marginLeft: 15 }}>
-            <FontAwesome6 name="filter" size={24} color="#498553" />
-          </TouchableOpacity>
-        </View>
-        {/* Content */}
-        <View style={{ marginTop: 25, gap: 10 }}>
-          {/* item */}
-          {
-            loading ? <ActivityIndicator size="large"
-              color="#498553"
-              style={{ flex: 1, alignItems: "center", justifyContent: "center" }} />
-              : <FlatList
-                data={order}
-                renderItem={({ item }) => (
+          <View style={{ marginTop: 25, gap: 10, marginBottom: 10 }}>
+            {/* item */}
+            {
+              loading ? <ActivityIndicator size="large"
+                color="#498553"
+                style={{ flex: 1, alignItems: "center", justifyContent: "center" }} />
+                :
+                order.map((item, index) => (
                   <Item
                     orderID={item.orderID}
                     dayOrder={item.timeOrder}
@@ -217,13 +318,67 @@ const BillList = ({ navigation }) => {
                     status={item.status}
                     onPress={() => HandleDetail(item.orderID)}
                   />
-                )}
-                keyExtractor={(item) => item.orderID}
-                showsHorizontalScrollIndicator={false}
-              />
-          }
-        </View>
+                ))
+            }
+          </View>
+        </ScrollView>
       </View>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={statusForm}
+        onRequestClose={() => setStatusForm(!statusForm)}
+      >
+        <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+        }}>
+          <View style={{
+            width: "90%",
+            backgroundColor: 'white',
+            borderRadius: 15,
+            alignItems: 'center',
+            justifyContent: "center",
+          }}>
+            <Text style={{
+              fontWeight: 700,
+              fontSize: 16
+            }}>
+              Choose status to filter orders
+            </Text>
+            <ButtonMultiselect
+              containerStyle={{
+                marginTop: 20,
+                height: "40%",
+                paddingHorizontal: 30,
+              }}
+              buttons={buttons}
+              layout={ButtonLayout.GRID}
+              onButtonSelected={handleButtonSelected}
+              selectedButtons={selectedButtons}
+              selectedColors={{
+                textColor: "white",
+                backgroundColor: "#498553",
+                borderColor: "#498553",
+              }}
+            />
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#498553",
+                marginTop: 10,
+                paddingHorizontal: 20,
+                paddingVertical: 10,
+                borderRadius: 10
+              }}
+              onPress={() => HandleSubmit(selectedButtons)}
+            >
+              <Text style={{ fontSize: 15, fontWeight: 700, color: "white" }}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

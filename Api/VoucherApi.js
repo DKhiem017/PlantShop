@@ -6,6 +6,11 @@ class VoucherAPI {
         return axiosClient.get(url, { customerID });
     }
 
+    getAllAdmin = () => {
+        const url = 'Voucher/get-all';
+        return axiosClient.get(url);
+    }
+
     getDetail = (voucherID) => {
         const url = `Voucher/get-detail/${voucherID}`;
         return axiosClient.get(url, { voucherID });
