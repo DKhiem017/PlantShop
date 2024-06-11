@@ -8,6 +8,8 @@ import {
   TextInput,
   ActivityIndicator,
   Modal,
+  ScrollView,
+  Alert,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
@@ -23,9 +25,10 @@ const avt = require("../../../../assets/images/Logo.png");
 const PromotionDetail = ({ navigation, route }) => {
   const { voucherID } = route.params;
 
-  const [voucher, setVoucher] = useState({})
+  const [voucher, setVoucher] = useState({});
+  const [name, setName] = useState("");
+  const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [calendar, setCalendar] = useState(true);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
@@ -46,9 +49,10 @@ const PromotionDetail = ({ navigation, route }) => {
         const response = await voucherAPI.getDetail(voucherID);
         console.log("success: ", response);
         setVoucher(response);
+        setName(response.name);
         setDateBegin(response.dateBegin);
         setDateEnd(response.dateEnd);
-
+        setValue(response.value);
         setLoading(false);
       }
       catch (error) {
@@ -74,18 +78,40 @@ const PromotionDetail = ({ navigation, route }) => {
   const onChange = (event, date) => {
     let currentDate = date || selectedDate; // Use the newly selected date/time or keep the existing one
     setSelectedDate(currentDate); // Update the selected date
-    setDateBegin(currentDate.toString());
-    console.log("Start: ", currentDate);
+    setDateBegin(currentDate);
     setShowDP(false);
   };
 
   const onChangeEnd = (event, dateEnd) => {
     let currentDate = dateEnd || selectedDateEnd; // Use the newly selected date/time or keep the existing one
     setSelectedDateEnd(currentDate); // Update the selected date
-    setDateEnd(currentDate.toString());
-    console.log("End: ", currentDate);
+    setDateEnd(currentDate);
     setShowDPEnd(false);
   };
+
+  const HandleUpdate = async () => {
+    return await voucherAPI.updateVoucher(voucherID, name, dateBegin, dateEnd, value)
+      .then((res) => {
+        navigation.navigate("PromotionAdmin");
+        Alert.alert("Edit voucher successfully");
+      })
+      .catch((error) => {
+        Alert.alert("Cannot edit voucher");
+        console.log("Error: ", error);
+      })
+  }
+
+  const HandleDelete = async () => {
+    return await voucherAPI.deleteVoucher(voucherID)
+      .then((res) => {
+        navigation.navigate("PromotionAdmin");
+        Alert.alert("Delete voucher successfully");
+      })
+      .catch((error) => {
+        Alert.alert("Cannot delete voucher");
+        console.log("Error: ", error);
+      })
+  }
 
   return (
     <SafeAreaView
@@ -95,7 +121,7 @@ const PromotionDetail = ({ navigation, route }) => {
         paddingHorizontal: 15
       }}
     >
-      <View>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <StatusBar style="dark"></StatusBar>
         <Pagetitle
           title={"Promotion Detail"}
@@ -134,8 +160,9 @@ const PromotionDetail = ({ navigation, route }) => {
                     fontSize: 16,
                     color: "#498553",
                   }}
+                  value={name}
+                  onChangeText={(e) => setName(e)}
                 >
-                  {voucher.name}
                 </TextInput>
               </View>
               <View
@@ -270,8 +297,9 @@ const PromotionDetail = ({ navigation, route }) => {
                     fontSize: 15,
                     color: "#498553",
                   }}
+                  value={value.toString()}
+                  onChangeText={(e) => setValue(e)}
                 >
-                  {voucher.value}
                 </TextInput>
               </View>
               <View
@@ -294,6 +322,7 @@ const PromotionDetail = ({ navigation, route }) => {
                     flexDirection: "row",
                     alignItems: "center",
                   }}
+                  onPress={HandleUpdate}
                 >
                   <Text
                     style={{
@@ -305,7 +334,7 @@ const PromotionDetail = ({ navigation, route }) => {
                     Edit
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={HandleDelete}>
                   <View
                     style={{
                       width: 60,
@@ -324,7 +353,7 @@ const PromotionDetail = ({ navigation, route }) => {
               </View>
             </>
         }
-      </View>
+      </ScrollView>
       {
         showDP && <RNDateTimePicker
           mode={mode}

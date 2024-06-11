@@ -15,8 +15,6 @@ import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { useContext } from "react";
-import { AppContext } from "../../../../contexts/appContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const avt = require("../../../../assets/images/Logo.png");
@@ -35,7 +33,6 @@ const styles = StyleSheet.create({
 });
 
 const MyAccount = ({ navigation }) => {
-  const { setToken, setUser } = useContext(AppContext);
 
   const UserinfoNavigation = () => {
     navigation.navigate("UserInfo");
@@ -71,8 +68,9 @@ const MyAccount = ({ navigation }) => {
           text: "Logout",
           onPress: async () => {
             AsyncStorage.removeItem("Token");
-            setToken("");
-            setUser("");
+            AsyncStorage.removeItem("Role");
+            AsyncStorage.removeItem("CustomerID");
+            navigation.navigate("Home");
             navigation.navigate("Login");
           },
         },

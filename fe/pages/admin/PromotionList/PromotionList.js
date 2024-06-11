@@ -13,6 +13,7 @@ import {
 import Feather from "@expo/vector-icons/Feather";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from '@expo/vector-icons';
 import { useCallback, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import voucherAPI from "../../../../Api/VoucherApi";
@@ -99,6 +100,10 @@ const PromotionList = ({ navigation }) => {
           setLoading(false)
         })
     }
+  }
+
+  const HandleAddNew = () => {
+    navigation.navigate("NewPromotionAdmin");
   }
 
   const formatDate = (date) => {
@@ -252,6 +257,23 @@ const PromotionList = ({ navigation }) => {
           }
         </View>
       </View>
+      <TouchableOpacity
+        style={{
+          position: "absolute",
+          bottom: 10,
+          right: 15,
+          flexDirection: "row",
+          paddingHorizontal: 12,
+          paddingVertical: 12,
+          alignItems: "center",
+          backgroundColor: "#498553",
+          borderRadius: 10,
+        }}
+        onPress={HandleAddNew}
+      >
+        <Ionicons name="add" size={18} color="white" />
+        <Text style={{ fontWeight: "700", fontSize: 16, color: "white", marginLeft: 3 }}>New</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

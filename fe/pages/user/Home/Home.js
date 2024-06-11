@@ -18,6 +18,7 @@ import Carousel from "../../../components/carousel";
 import { useCallback, useEffect, useState } from "react";
 import productApi from "../../../../Api/ProductApi";
 import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const avt = require("../../../../assets/images/Monstera.jpg");
 const product_background = require("../../../../assets/images/Background_Plants.png");
@@ -160,7 +161,6 @@ const Home = ({ navigation }) => {
           console.log("Error", error);
         }
       };
-
       fetchApi();
 
       return () => {

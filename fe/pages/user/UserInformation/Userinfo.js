@@ -10,9 +10,9 @@ import {
 } from "react-native";
 import Pagetitle from "../../../components/pagetitle";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import customerAPI from "../../../../Api/CustomerApi";
-import { AppContext } from "../../../../contexts/appContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const avt = require("../../../../assets/images/Logo.png");
 const styles = StyleSheet.create({
@@ -56,7 +56,6 @@ const styles = StyleSheet.create({
 });
 
 const UserInformation = ({ navigation }) => {
-  const { user } = useContext(AppContext);
 
   const [userName, setUserName] = useState("");
   const [numberPhone, setNumberPhone] = useState("");
@@ -67,8 +66,9 @@ const UserInformation = ({ navigation }) => {
   useEffect(() => {
     const fetchAPI = async () => {
       try {
-        console.log("user", user);
-        const response = await customerAPI.getInfo(user.id);
+        const user = await AsyncStorage.getItem("CustomerID");
+
+        const response = await customerAPI.getInfo(user);
         setUserName(response.name);
         setNumberPhone(response.phone);
         setAddress(response.address);

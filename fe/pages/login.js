@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,6 +9,7 @@ import {
   Image,
   ScrollView,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import authAPI from "../../Api/AuthApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -34,32 +35,77 @@ const styles = StyleSheet.create({
 });
 
 const Login = ({ navigation }) => {
-  const { setToken, setUser, setRole } = useContext(AppContext);
+  const { setToken, setUser, setRole, role } = useContext(AppContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const HandleLogin = async () => {
-    setLoading(true);
-    if (!email || !password) {
+  useEffect(() => {
+    setTimeout(() => {
+      HandleGetToken();
+    }, 100)
+  }, []);
+
+  const HandleGetToken = async () => {
+    const dataToken = await AsyncStorage.getItem("Token");
+    const roleUser = await AsyncStorage.getItem("Role");
+    console.log("check: ", customer);
+    if (!dataToken) {
       return;
     }
-    let res = await authAPI.login(email, password);
+    else {
+      navigation.replace(roleUser === "Customer" ? "Main" : "Main Admin");
+    }
+  }
 
-    if (res && res.data.access_token) {
-      AsyncStorage.setItem("Token", 'Bearer ' + res.data.access_token);
-      setToken(res.data.access_token);
-      setUser(res.data.customer);
-      setRole(res.data.role);
-      setEmail("");
-      setPassword("");
-      navigation.navigate(res.data.role === "Customer" ? "Main" : "Main Admin");
-      setLoading(false);
-    } else {
-      console.log("không có res ");
+  const HandleLogin = async () => {
+    setLoading(true);
+
+    if (!password) {
+      Alert.alert("Please enter password");
       setLoading(false);
     }
+    else if (!email) {
+      Alert.alert("Please enter email");
+      setLoading(false);
+    }
+
+    try {
+      const res = await authAPI.login(email, password);
+
+      if (res && res.data.access_token) {
+        AsyncStorage.setItem("Token", 'Bearer ' + res.data.access_token);
+        setToken(res.data.access_token);
+
+        AsyncStorage.setItem("CustomerID", res.data.customer.id);
+        setUser(res.data.customer);
+
+        AsyncStorage.setItem("Role", res.data.role);
+        setRole(res.data.role);
+        setEmail("");
+        setPassword("");
+        navigation.navigate(res.data.role === "Customer" ? "Main" : "Main Admin");
+        setLoading(false);
+      } else {
+        console.log("không có res ");
+        setLoading(false);
+      }
+    }
+    catch (error) {
+      if (error.response.status === 401) {
+        Alert.alert("Incorrect Password");
+        setLoading(false);
+      }
+      else if (error.response.status === 404) {
+        Alert.alert("Email not exists");
+        setLoading(false);
+      } else {
+        Alert.alert(error.response.status);
+        setLoading(false);
+      }
+    }
+
   }
 
   const HandleRegister = () => {

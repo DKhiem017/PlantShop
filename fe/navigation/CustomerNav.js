@@ -5,11 +5,11 @@ import Register from "../pages/register";
 import MyTabs from "../components/tabs";
 import { AppContext } from "../../contexts/appContext";
 import AdminTabs from "../components/adminTabs";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createStackNavigator();
 
 function CustomerNavigator() {
-    const { role } = useContext(AppContext);
     return (
         <Stack.Navigator>
             <Stack.Screen
@@ -22,20 +22,16 @@ function CustomerNavigator() {
                 component={Register}
                 options={{ headerShown: false }}
             />
-            {
-                role === "Customer"
-                    ? <Stack.Screen
-                        name="Main"
-                        component={MyTabs}
-                        options={{ headerShown: false }}
-                    />
-                    : <Stack.Screen
-                        name="Main Admin"
-                        component={AdminTabs}
-                        options={{ headerShown: false }}
-                    />
-            }
-
+            <Stack.Screen
+                name="Main"
+                component={MyTabs}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="Main Admin"
+                component={AdminTabs}
+                options={{ headerShown: false }}
+            />
         </Stack.Navigator>
     )
 };

@@ -28,6 +28,7 @@ import Imagesearch from "../pages/user/ImageSearch/Imagesearch";
 import CameraScreen from "../pages/user/ImageSearch/CameraScreen/CameraScreen";
 import Result from "../pages/user/ImageSearch/Result/Result";
 import AdminAccount from "../pages/admin/AdminAccount/AdminAccount";
+import AddPromotion from "../pages/admin/AddPromtion/AddPromotion";
 
 
 const Stack = createStackNavigator();
@@ -251,6 +252,11 @@ const PromotionAdminNavigator = () => {
       <Stack.Screen
         name="PromotionDetailAdmin"
         component={PromotionDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="NewPromotionAdmin"
+        component={AddPromotion}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
