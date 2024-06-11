@@ -5,29 +5,38 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  ScrollView,
   Image,
+  ActivityIndicator,
+  FlatList,
+  Alert,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
-import { FontAwesome6 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-const backgroundImage = require("../../../../assets/images/Monstera.jpg");
+import { Rating } from "react-native-ratings";
+import { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import productApi from "../../../../Api/ProductApi";
+import { Ionicons } from "@expo/vector-icons";
 
 const styles = StyleSheet.create({
+  imgContainer: {
+    height: 65,
+    width: 65,
+    borderRadius: 5,
+    backgroundColor: "#B7E1A1",
+  },
   backgroundImage: {
     position: "absolute",
     width: "100%",
     height: "100%",
     resizeMode: "cover",
-    borderRadius: 2, // Adjust as needed
+    borderRadius: 5, // Adjust as needed
   },
   greenbackgroundProduct: {
     width: 105,
-    height: "100%",
+    height: 81,
     backgroundColor: "#B7E1A1",
     display: "flex",
     justifyContent: "center",
@@ -40,9 +49,7 @@ const styles = StyleSheet.create({
   },
   productItem: {
     width: "100%",
-    height: 120,
     backgroundColor: "#fff",
-    marginTop: 20,
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: {
@@ -52,9 +59,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    display: "flex",
     flexDirection: "row",
-    alignItems: "center",
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    marginBottom: 10,
   },
   searchBar: {
     backgroundColor: "#DCE1D2",
@@ -65,43 +73,139 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  container: {
+    flex: 1,
+    backgroundColor: "#f5f5f5",
+    paddingHorizontal: 20,
+    paddingBottom: 65,
+  },
+  headerTextStyle: {
+    fontSize: 17,
+    fontWeight: "bold",
+    color: "#498553",
+  },
+  searchBarContainer: {
+    flexDirection: "row",
+    marginTop: 10,
+    alignItems: "center",
+  },
+  searchText: {
+    color: "#498553",
+    fontSize: 15,
+    width: "100%",
+    paddingLeft: 40,
+  },
 });
 
-const ProductList = () => {
+const ProductList = ({ navigation }) => {
+  //get data
+  const [loading, setLoading] = useState(true);
+  const [products, setProduct] = useState([]);
+
+  const HandleAddNew = () => {
+    navigation.navigate("AddProductAdmin");
+  };
+  // xoá 1 sản phẩm
+  const handleDeleteItem = async (id) => {
+    try {
+      const deleteItem = await productApi.deleteItem(id);
+      setProduct((prevProducts) =>
+        prevProducts.filter((product) => product.productID !== id)
+      );
+      Alert.alert("Successfully delete product");
+    } catch (error) {
+      Alert.alert("Cannot delete this product");
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchApi = async () => {
+        try {
+          const response = await productApi.getAll();
+          console.log("success", response);
+          setProduct(response);
+          setLoading(false);
+        } catch (error) {
+          console.log("Error", error);
+        }
+      };
+      fetchApi();
+    }, [])
+  );
+
+  //navigation
+  const handleNavigateDetailProduct = (id) => {
+    navigation.navigate("DetailProductAdmin", { id: id });
+  };
+
+  const Item = ({ name, rating, price, id, img, onDelete }) => (
+    <View style={styles.productItem}>
+      <View style={styles.imgContainer}>
+        <Image
+          source={{ uri: `${img}` }}
+          style={styles.backgroundImage}
+        ></Image>
+      </View>
+      <View
+        style={{
+          justifyContent: "space-between",
+          marginLeft: 10,
+        }}
+      >
+        <Text style={{ fontSize: 15, fontWeight: 500 }}>{name}</Text>
+        <Text style={{ fontSize: 14, fontWeight: 500, color: "#498553" }}>
+          $ {price}
+        </Text>
+        <Rating
+          type="custom"
+          ratingBackgroundColor="#c8c7c8"
+          ratingCount={5}
+          imageSize={13}
+          startingValue={rating}
+          readonly
+        />
+      </View>
+      <View style={styles.greenbackgroundProduct}>
+        <View
+          style={{
+            height: "100%",
+            width: 100,
+            position: "absolute",
+            left: -50,
+            backgroundColor: "#B7E1A1",
+            borderRadius: 50,
+          }}
+        ></View>
+        <TouchableOpacity onPress={() => handleNavigateDetailProduct(id)}>
+          <MaterialIcons name="edit-square" size={23} color="#498553" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ marginLeft: 10, marginTop: -2 }}
+          onPress={onDelete}
+        >
+          <FontAwesome5 name="trash" size={21} color="#498553" />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
   return (
     // View tổng quát\
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: "#f5f5f5", paddingHorizontal: 20 }}
-    >
-      <View>
+    <SafeAreaView style={styles.container}>
+      <View style={{ flex: 1 }}>
         <StatusBar />
         {/* Tiêu đề với search */}
         <View
           style={{
-            display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
-          <Text
-            style={{
-              fontSize: 17,
-              fontWeight: 700,
-              color: "#498553",
-            }}
-          >
-            Product List
-          </Text>
+          <Text style={styles.headerTextStyle}>Product List</Text>
         </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            marginTop: 10,
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+        {/* search container */}
+        <View style={styles.searchBarContainer}>
           {/* Searchbar */}
           <View style={styles.searchBar}>
             <Feather
@@ -111,123 +215,62 @@ const ProductList = () => {
               color="#498553"
             />
             <TextInput
-              style={{
-                color: "#498553",
-                fontSize: 15,
-                width: "100%",
-                paddingLeft: 40,
-              }}
+              style={styles.searchText}
               placeholder="Search"
             ></TextInput>
           </View>
-          <TouchableOpacity style={{ marginLeft: 15 }}>
-            <FontAwesome6 name="filter" size={24} color="#498553" />
-          </TouchableOpacity>
         </View>
         {/* Content */}
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          {/* item sản phẩm */}
-          <View style={styles.productItem}>
-            <View style={{ height: 80, width: 80, marginLeft: 15 }}>
-              <Image
-                source={backgroundImage}
-                style={styles.backgroundImage}
-              ></Image>
-            </View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                marginLeft: 15,
-                gap: 10,
-              }}
-            >
-              <Text style={{ fontSize: 15, fontWeight: 500 }}>Monstera</Text>
-              <Text style={{ fontSize: 14, fontWeight: 500, color: "#498553" }}>
-                $ 30.55
-              </Text>
-              <View style={{ display: "flex", flexDirection: "row" }}>
-                <AntDesign name="star" size={14} color="yellow" />
-                <AntDesign name="star" size={14} color="yellow" />
-                <AntDesign name="star" size={14} color="yellow" />
-                <AntDesign name="star" size={14} color="yellow" />
-              </View>
-            </View>
-            <View style={styles.greenbackgroundProduct}>
-              <View
-                style={{
-                  height: 120,
-                  width: 110,
-                  position: "absolute",
-                  left: -50,
-                  backgroundColor: "#B7E1A1",
-                  borderRadius: 120,
-                }}
-              ></View>
-              <TouchableOpacity>
-                <MaterialIcons name="edit-square" size={23} color="#498553" />
-              </TouchableOpacity>
-              <TouchableOpacity style={{ marginLeft: 10, marginTop: -2 }}>
-                <FontAwesome5 name="trash" size={21} color="#498553" />
-              </TouchableOpacity>
-            </View>
-          </View>
-          {/* item sản phẩm */}
-          <View style={styles.productItem}>
-            <View style={{ height: 80, width: 80, marginLeft: 15 }}>
-              <Image
-                source={backgroundImage}
-                style={styles.backgroundImage}
-              ></Image>
-            </View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                marginLeft: 15,
-                gap: 10,
-              }}
-            >
-              <Text style={{ fontSize: 15, fontWeight: 500 }}>Monstera</Text>
-              <Text style={{ fontSize: 14, fontWeight: 500, color: "#498553" }}>
-                $ 30.55
-              </Text>
-              <View style={{ display: "flex", flexDirection: "row" }}>
-                <AntDesign name="star" size={14} color="yellow" />
-                <AntDesign name="star" size={14} color="yellow" />
-                <AntDesign name="star" size={14} color="yellow" />
-                <AntDesign name="star" size={14} color="yellow" />
-              </View>
-            </View>
-            <View style={styles.greenbackgroundProduct}>
-              <View
-                style={{
-                  height: 120,
-                  width: 110,
-                  position: "absolute",
-                  left: -50,
-                  backgroundColor: "#B7E1A1",
-                  borderRadius: 120,
-                }}
-              ></View>
-              <TouchableOpacity>
-                <MaterialIcons name="edit-square" size={23} color="#498553" />
-              </TouchableOpacity>
-              <TouchableOpacity style={{ marginLeft: 10, marginTop: -2 }}>
-                <FontAwesome5 name="trash" size={21} color="#498553" />
-              </TouchableOpacity>
-            </View>
-          </View>
+        {/* list sp */}
+        <View style={{ flex: 1, marginTop: 10 }}>
+          {loading ? (
+            <ActivityIndicator size="small" color="#00ff00" />
+          ) : (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={products}
+              renderItem={({ item }) => (
+                <Item
+                  name={item.productName}
+                  price={item.price}
+                  rating={item.reviewPoint}
+                  id={item.productID}
+                  img={item.images[0].imageURL}
+                  onDelete={() => handleDeleteItem(item.productID)}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+              showsHorizontalScrollIndicator={false}
+            ></FlatList>
+          )}
         </View>
       </View>
+      <TouchableOpacity
+        style={{
+          position: "absolute",
+          bottom: 10,
+          right: 20,
+          flexDirection: "row",
+          paddingHorizontal: 12,
+          paddingVertical: 12,
+          alignItems: "center",
+          backgroundColor: "#498553",
+          borderRadius: 10,
+        }}
+        onPress={HandleAddNew}
+      >
+        <Ionicons name="add" size={18} color="white" />
+        <Text
+          style={{
+            fontWeight: "700",
+            fontSize: 16,
+            color: "white",
+            marginLeft: 3,
+          }}
+        >
+          New
+        </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

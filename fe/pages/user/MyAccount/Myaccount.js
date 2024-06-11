@@ -77,17 +77,17 @@ const MyAccount = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <View
         style={{
-          display: "flex",
           flexDirection: "column",
           backgroundColor: "#F5F5F5",
           marginBottom: 15,
+          paddingBottom: 10,
         }}
       >
         <StatusBar style="dark"></StatusBar>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View
             style={{
               display: "flex",

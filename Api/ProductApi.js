@@ -20,6 +20,11 @@ class ProductApi {
     const url = `Product/search-by-name?name=${plantName}`;
     return axiosClient.get(url, { plantName });
   };
+
+  deleteItem = (productID) => {
+    const url = `Product/delete-product/${productID}`;
+    return axiosClient.delete(url, { productID });
+  };
 }
 
 const productApi = new ProductApi();
