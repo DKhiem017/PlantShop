@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Pagetitle from "../../../components/pagetitle";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const avt = require("../../../../assets/images/avt_girl.jpg");
 const chatBotImg = require("../../../../assets/images/chatBot.png");
@@ -22,6 +23,10 @@ const styles = StyleSheet.create({
 });
 
 const ChatRoomAdmin = ({ navigation }) => {
+  const handleChatboxNavigation = () => {
+    navigation.navigate("ChatBoxAdminScreen");
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
       <StatusBar></StatusBar>
@@ -29,7 +34,10 @@ const ChatRoomAdmin = ({ navigation }) => {
         <Pagetitle title={"Chat"} navigation={navigation}></Pagetitle>
         {/* Chat Container */}
         <View style={{ marginTop: 20, gap: 5 }}>
-          <View style={styles.chatBackground}>
+          <TouchableOpacity
+            style={styles.chatBackground}
+            onPress={handleChatboxNavigation}
+          >
             <View style={{ flexDirection: "row" }}>
               {/* avt */}
               <View style={{ height: 40, width: 40, borderRadius: 50 }}>
@@ -37,12 +45,10 @@ const ChatRoomAdmin = ({ navigation }) => {
               </View>
               <View style={{ justifyContent: "space-between", marginLeft: 15 }}>
                 <Text style={{ fontWeight: 600 }}>User01</Text>
-                <Text style={{ color: "#6F6A61" }}>
-                  Shop ơi cho em hỏi...
-                </Text>
+                <Text style={{ color: "#6F6A61" }}>Shop ơi cho em hỏi...</Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
           <View style={styles.chatBackground}>
             <View style={{ flexDirection: "row" }}>
               {/* avt */}
@@ -51,9 +57,7 @@ const ChatRoomAdmin = ({ navigation }) => {
               </View>
               <View style={{ justifyContent: "space-between", marginLeft: 15 }}>
                 <Text style={{ fontWeight: 600 }}>Lê Võ Duy Khiêm</Text>
-                <Text style={{ color: "#6F6A61" }}>
-                  Shop ơi cho em hỏi...
-                </Text>
+                <Text style={{ color: "#6F6A61" }}>Shop ơi cho em hỏi...</Text>
               </View>
             </View>
           </View>

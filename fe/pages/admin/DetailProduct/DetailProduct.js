@@ -99,7 +99,7 @@ const DetailProduct = ({ navigation, route }) => {
   const [type, setType] = useState();
   const [fileName, setFileName] = useState();
 
-  const apiUrl = `https://913d-2402-800-631d-fd4a-8cdc-3075-eb1c-237e.ngrok-free.app/api/Product/update-product/${id}`;
+  const apiUrl = `https://c496-171-250-164-111.ngrok-free.app/api/Product/update-product/${id}`;
 
   //fetchAPI
 

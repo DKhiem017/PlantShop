@@ -29,6 +29,7 @@ import CameraScreen from "../pages/user/ImageSearch/CameraScreen/CameraScreen";
 import Result from "../pages/user/ImageSearch/Result/Result";
 import { StackRouter } from "@react-navigation/native";
 import AddAddress from "../pages/user/AddAddress/AddAddress";
+import ChatBoxAdmin from "../pages/ChatBoxAdmin/ChatBoxAdmin";
 
 const Stack = createStackNavigator();
 
@@ -267,6 +268,11 @@ const ChatAdminNavigator = () => {
       <Stack.Screen
         name="ChatAdmin"
         component={ChatRoomAdmin}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ChatBoxAdminScreen"
+        component={ChatBoxAdmin}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
