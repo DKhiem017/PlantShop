@@ -4,7 +4,7 @@ import axios from "axios";
 let token = AsyncStorage.getItem("Token");
 
 const axiosClient = axios.create({
-  baseURL: "https://913d-2402-800-631d-fd4a-8cdc-3075-eb1c-237e.ngrok-free.app/api/",
+  baseURL: "https://f364-171-250-164-111.ngrok-free.app/api/",
   headers: {
     "Content-Type": "application/json",
   },
