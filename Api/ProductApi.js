@@ -16,15 +16,20 @@ class ProductApi {
     return axiosClient.get(url, { productID });
   };
 
-  getProductByName = (plantName) => {
-    const url = `Product/search-by-name?name=${plantName}`;
-    return axiosClient.get(url, { plantName });
-  };
+  getBestSeller = () => {
+    const url = "Product/get-best-seller";
+    return axiosClient.get(url);
+  }
 
-  deleteItem = (productID) => {
-    const url = `Product/delete-product/${productID}`;
-    return axiosClient.delete(url, { productID });
-  };
+  getCategory = (category) => {
+    const url = `Product/get-by-category/${category}`;
+    return axiosClient.get(url);
+  }
+
+  searchByName = (name) => {
+    const url = `Product/search-by-name?name=${name}`;
+    return axiosClient.get(url, { name });
+  }
 }
 
 const productApi = new ProductApi();

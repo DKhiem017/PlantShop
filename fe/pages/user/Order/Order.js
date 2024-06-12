@@ -8,6 +8,7 @@ import {
   Image,
   ActivityIndicator,
   FlatList,
+  Modal,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,6 +16,7 @@ import { Entypo } from "@expo/vector-icons";
 import Pagetitle from "../../../components/pagetitle";
 import { useState, useEffect } from "react";
 import orderAPI from "../../../../Api/OrderApi";
+import ButtonMultiselect, { ButtonLayout } from "react-native-button-multiselect";
 
 const adjust = require("../../../../assets/images/Adjust.png");
 const plantImg = require("../../../../assets/images/Monstera_tran.png");
@@ -68,6 +70,21 @@ const Order = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchCharacter, setSearchCharacter] = useState("");
+  const [statusForm, setStatusForm] = useState(false);
+
+  const buttons = [
+    { label: 'All', value: 0 },
+    { label: 'Pending', value: 1 },
+    { label: 'Packaging', value: 2 },
+    { label: 'Delivering', value: 3 },
+    { label: 'Completed', value: 4 },
+  ];
+
+  const [selectedButtons, setSelectedButtons] = useState([]);
+
+  const handleButtonSelected = (selectedValues) => {
+    setSelectedButtons(selectedValues);
+  };
 
   useEffect(() => {
     const fetchAPI = async () => {
@@ -94,7 +111,7 @@ const Order = ({ navigation }) => {
 
   const Item = ({ nameProduct, quantity, orderID, totalPrice, status, image, date }) => {
     return (
-      <View style={{ width: "100%", marginTop: 15 }}>
+      <View style={{ width: "100%", marginBottom: 15 }}>
         {/* item */}
         <View style={styles.orderItem}>
           <View style={{ height: 52, flexDirection: "row" }}>
@@ -273,14 +290,29 @@ const Order = ({ navigation }) => {
     }
   }
 
+  const HandleSubmit = async (value) => {
+    setLoading(true);
+    setStatusForm(false);
+    setSelectedButtons([]);
+    return await orderAPI.filterOrderByCustomer("CS0001", value)
+      .then((res) => {
+        setData(res);
+        setLoading(false);
+      })
+      .catch(() => {
+        Alert.alert("Cannot find order");
+        setLoading(false);
+      })
+  }
+
   return (
     <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: "#f5f5f5",
         display: "flex",
-        paddingLeft: 15,
-        paddingRight: 15,
+        paddingHorizontal: 15,
+        paddingBottom: 80,
         alignItems: "center",
       }}
     >
@@ -329,7 +361,7 @@ const Order = ({ navigation }) => {
               onPress={() => HandleSearch(searchCharacter)}
             />
           </View>
-          <TouchableOpacity style={styles.filterContainer}>
+          <TouchableOpacity style={styles.filterContainer} onPress={() => setStatusForm(true)}>
             <Image source={adjust} style={styles.filterbackground}></Image>
           </TouchableOpacity>
         </View>
@@ -338,7 +370,7 @@ const Order = ({ navigation }) => {
           loading ? <ActivityIndicator size="large"
             color="#498553"
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }} />
-            : <FlatList style={{ paddingBottom: 10 }}
+            : <FlatList style={{ marginTop: 15 }}
               data={data}
               renderItem={({ item }) => (
                 <Item nameProduct={item.firstProduct.productName}
@@ -350,11 +382,67 @@ const Order = ({ navigation }) => {
                   status={item.status}
                 />
               )}
-              keyExtractor={(item) => item.id}
-              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item) => item.orderID}
+              showsVerticalScrollIndicator={false}
             />
         }
       </View>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={statusForm}
+        onRequestClose={() => setStatusForm(!statusForm)}
+      >
+        <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+        }}>
+          <View style={{
+            width: "90%",
+            backgroundColor: 'white',
+            borderRadius: 15,
+            alignItems: 'center',
+            justifyContent: "center",
+          }}>
+            <Text style={{
+              fontWeight: 700,
+              fontSize: 16
+            }}>
+              Choose status to filter orders
+            </Text>
+            <ButtonMultiselect
+              containerStyle={{
+                marginTop: 20,
+                height: "40%",
+                paddingHorizontal: 30,
+              }}
+              buttons={buttons}
+              layout={ButtonLayout.GRID}
+              onButtonSelected={handleButtonSelected}
+              selectedButtons={selectedButtons}
+              selectedColors={{
+                textColor: "white",
+                backgroundColor: "#498553",
+                borderColor: "#498553",
+              }}
+            />
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#498553",
+                marginTop: 10,
+                paddingHorizontal: 20,
+                paddingVertical: 10,
+                borderRadius: 10
+              }}
+              onPress={() => HandleSubmit(selectedButtons)}
+            >
+              <Text style={{ fontSize: 15, fontWeight: 700, color: "white" }}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

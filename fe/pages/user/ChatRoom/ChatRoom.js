@@ -28,7 +28,7 @@ const ChatRoom = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#f5f5f5", paddingHorizontal: 15 }}>
       <StatusBar></StatusBar>
       <View>
         <Pagetitle title={"Chat"} navigation={navigation}></Pagetitle>

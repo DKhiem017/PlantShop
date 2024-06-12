@@ -27,9 +27,11 @@ import ChatBox from "../pages/ChatBox/ChatBox";
 import Imagesearch from "../pages/user/ImageSearch/Imagesearch";
 import CameraScreen from "../pages/user/ImageSearch/CameraScreen/CameraScreen";
 import Result from "../pages/user/ImageSearch/Result/Result";
-import { StackRouter } from "@react-navigation/native";
 import AddAddress from "../pages/user/AddAddress/AddAddress";
 import ChatBoxAdmin from "../pages/ChatBoxAdmin/ChatBoxAdmin";
+import AdminAccount from "../pages/admin/AdminAccount/AdminAccount";
+import AddPromotion from "../pages/admin/AddPromtion/AddPromotion";
+
 
 const Stack = createStackNavigator();
 
@@ -266,6 +268,11 @@ const ChatAdminNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
+        name="AccountAdmin"
+        component={AdminAccount}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name="ChatAdmin"
         component={ChatRoomAdmin}
         options={{ headerShown: false }}
@@ -302,6 +309,11 @@ const PromotionAdminNavigator = () => {
       <Stack.Screen
         name="PromotionDetailAdmin"
         component={PromotionDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="NewPromotionAdmin"
+        component={AddPromotion}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
