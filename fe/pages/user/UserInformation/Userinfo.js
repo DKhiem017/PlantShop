@@ -56,7 +56,6 @@ const styles = StyleSheet.create({
 });
 
 const UserInformation = ({ navigation }) => {
-
   const [userName, setUserName] = useState("");
   const [numberPhone, setNumberPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -67,22 +66,20 @@ const UserInformation = ({ navigation }) => {
     const fetchAPI = async () => {
       try {
         const user = await AsyncStorage.getItem("CustomerID");
-
         const response = await customerAPI.getInfo(user);
         setUserName(response.name);
         setNumberPhone(response.phone);
         setAddress(response.address);
         setRegisterDay(response.dateBirth);
         setLoading(false);
-      }
-      catch (error) {
+      } catch (error) {
         console.log("Error: ", error);
         setLoading(false);
       }
-    }
+    };
 
-    fetchAPI()
-  }, [])
+    fetchAPI();
+  }, []);
 
   const formatDate = (date) => {
     const inputDate = new Date(date);
@@ -93,18 +90,26 @@ const UserInformation = ({ navigation }) => {
 
     const formattedDate = `${day}/${month}/${year}`;
     return formattedDate;
-  }
+  };
 
   const HandleUpdateInfo = async () => {
-    return await customerAPI.updateInfo('CS0001', userName, numberPhone, true, address, registerDay + 'Z')
+    return await customerAPI
+      .updateInfo(
+        "CS0001",
+        userName,
+        numberPhone,
+        true,
+        address,
+        registerDay + "Z"
+      )
       .then(() => {
-        alert("Changes have been saved")
+        alert("Changes have been saved");
       })
       .catch((error) => {
         console.log("Error: ", error);
-        alert("Cannot make changes, please try again")
-      })
-  }
+        alert("Cannot make changes, please try again");
+      });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -115,91 +120,100 @@ const UserInformation = ({ navigation }) => {
           navigation={navigation}
         ></Pagetitle>
         <View style={{ gap: 10, marginTop: 50 }}>
-          {
-            loading ? <ActivityIndicator size="large"
+          {loading ? (
+            <ActivityIndicator
+              size="large"
               color="#498553"
-              style={{ flex: 1, alignItems: "center", justifyContent: "center" }} />
-              : <>
-                <View style={styles.TextInputContainer}>
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            />
+          ) : (
+            <>
+              <View style={styles.TextInputContainer}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: "#498553",
+                    fontWeight: 600,
+                  }}
+                >
+                  User Name
+                </Text>
+                <TextInput
+                  style={styles.TextInput}
+                  value={userName}
+                  onChangeText={(e) => setUserName(e)}
+                ></TextInput>
+              </View>
+              <View style={styles.TextInputContainer}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: "#498553",
+                    fontWeight: 600,
+                  }}
+                >
+                  Phone Number
+                </Text>
+                <TextInput
+                  style={styles.TextInput}
+                  value={numberPhone}
+                  onChangeText={(e) => setNumberPhone(e)}
+                ></TextInput>
+              </View>
+              <View style={styles.TextInputContainer}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: "#498553",
+                    fontWeight: 600,
+                  }}
+                >
+                  Address
+                </Text>
+                <TextInput
+                  style={styles.TextInput}
+                  value={address}
+                  onChangeText={(e) => setAddress(e)}
+                ></TextInput>
+              </View>
+              <View style={styles.TextInputContainer}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: "#498553",
+                    fontWeight: 600,
+                  }}
+                >
+                  Date of Register
+                </Text>
+                <TextInput
+                  style={styles.TextInput}
+                  value={formatDate(registerDay)}
+                  readOnly
+                ></TextInput>
+              </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.saveButton}
+                  onPress={HandleUpdateInfo}
+                >
                   <Text
                     style={{
-                      fontSize: 15,
-                      color: "#498553",
                       fontWeight: 600,
+                      color: "#fff",
+                      fontSize: 16,
                     }}
                   >
-                    User Name
+                    Save changes
                   </Text>
-                  <TextInput style={styles.TextInput}
-                    value={userName}
-                    onChangeText={(e) => setUserName(e)}
-                  >
-                  </TextInput>
-                </View>
-                <View style={styles.TextInputContainer}>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      color: "#498553",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Phone Number
-                  </Text>
-                  <TextInput style={styles.TextInput}
-                    value={numberPhone}
-                    onChangeText={(e) => setNumberPhone(e)}
-                  >
-                  </TextInput>
-                </View>
-                <View style={styles.TextInputContainer}>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      color: "#498553",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Address
-                  </Text>
-                  <TextInput style={styles.TextInput}
-                    value={address}
-                    onChangeText={(e) => setAddress(e)}
-                  >
-                  </TextInput>
-                </View>
-                <View style={styles.TextInputContainer}>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      color: "#498553",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Date of Register
-                  </Text>
-                  <TextInput style={styles.TextInput}
-                    value={formatDate(registerDay)}
-                    readOnly
-                  >
-                  </TextInput>
-                </View>
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity style={styles.saveButton} onPress={HandleUpdateInfo}>
-                    <Text
-                      style={{
-                        fontWeight: 600,
-                        color: "#fff",
-                        fontSize: 16,
-                      }}
-                    >
-                      Save changes
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-          }
-
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
         </View>
       </View>
     </SafeAreaView>

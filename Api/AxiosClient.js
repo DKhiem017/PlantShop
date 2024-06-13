@@ -1,10 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import ApiURL from "../constants/baseURL";
 
 let token = AsyncStorage.getItem("Token");
 
 const axiosClient = axios.create({
-  baseURL: "https://f364-171-250-164-111.ngrok-free.app/api/",
+  baseURL: `${ApiURL}/api/`,
   headers: {
     "Content-Type": "application/json",
   },

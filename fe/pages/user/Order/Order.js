@@ -16,7 +16,10 @@ import { Entypo } from "@expo/vector-icons";
 import Pagetitle from "../../../components/pagetitle";
 import { useState, useEffect } from "react";
 import orderAPI from "../../../../Api/OrderApi";
-import ButtonMultiselect, { ButtonLayout } from "react-native-button-multiselect";
+import ButtonMultiselect, {
+  ButtonLayout,
+} from "react-native-button-multiselect";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const adjust = require("../../../../assets/images/Adjust.png");
 const plantImg = require("../../../../assets/images/Monstera_tran.png");
@@ -73,11 +76,11 @@ const Order = ({ navigation }) => {
   const [statusForm, setStatusForm] = useState(false);
 
   const buttons = [
-    { label: 'All', value: 0 },
-    { label: 'Pending', value: 1 },
-    { label: 'Packaging', value: 2 },
-    { label: 'Delivering', value: 3 },
-    { label: 'Completed', value: 4 },
+    { label: "All", value: 0 },
+    { label: "Pending", value: 1 },
+    { label: "Packaging", value: 2 },
+    { label: "Delivering", value: 3 },
+    { label: "Completed", value: 4 },
   ];
 
   const [selectedButtons, setSelectedButtons] = useState([]);
@@ -89,27 +92,35 @@ const Order = ({ navigation }) => {
   useEffect(() => {
     const fetchAPI = async () => {
       try {
-        const response = await orderAPI.getAll('CS0001');
+        const user = await AsyncStorage.getItem("CustomerID");
+        const response = await orderAPI.getAll(user);
         console.log("success: ", response);
         setData(response);
         setLoading(false);
-      }
-      catch (error) {
+      } catch (error) {
         console.log("Error: ", error);
         setLoading(false);
       }
-    }
+    };
 
-    fetchAPI()
-  }, [])
+    fetchAPI();
+  }, []);
 
   const HandleDetailProduct = (productID) => {
     navigation.navigate("OrderDetail", {
-      id: productID
-    })
-  }
+      id: productID,
+    });
+  };
 
-  const Item = ({ nameProduct, quantity, orderID, totalPrice, status, image, date }) => {
+  const Item = ({
+    nameProduct,
+    quantity,
+    orderID,
+    totalPrice,
+    status,
+    image,
+    date,
+  }) => {
     return (
       <View style={{ width: "100%", marginBottom: 15 }}>
         {/* item */}
@@ -124,14 +135,19 @@ const Order = ({ navigation }) => {
                 backgroundColor: "#DAF1D4",
               }}
             >
-              <Image source={{ uri: `${image}` }} style={styles.backgroundImage}></Image>
+              <Image
+                source={{ uri: `${image}` }}
+                style={styles.backgroundImage}
+              ></Image>
             </View>
             {/* thông tin sản phẩm */}
             <View style={{ justifyContent: "space-between", marginLeft: 10 }}>
               <Text style={{ color: "#498553", fontWeight: 500 }}>
                 {nameProduct}
               </Text>
-              <Text style={{ color: "#6F6A61", fontSize: 13 }}>{quantity} items</Text>
+              <Text style={{ color: "#6F6A61", fontSize: 13 }}>
+                {quantity} items
+              </Text>
             </View>
             {/* detail button */}
             <TouchableOpacity
@@ -171,9 +187,7 @@ const Order = ({ navigation }) => {
               }}
             >
               <Text style={styles.greyText}>ID Order</Text>
-              <Text
-                style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}
-              >
+              <Text style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}>
                 {orderID}
               </Text>
             </View>
@@ -211,30 +225,30 @@ const Order = ({ navigation }) => {
           </View>
         </View>
       </View>
-    )
-  }
+    );
+  };
 
   const HandleSearch = async (value) => {
     setLoading(true);
     if (value != "") {
-      return await orderAPI.searchByID(value)
+      return await orderAPI
+        .searchByID(value)
         .then((response) => {
           setData(response);
-          setLoading(false)
+          setLoading(false);
         })
         .catch((error) => {
           console.log(error);
-          alert("Not found order with provided keyword")
-        })
+          alert("Not found order with provided keyword");
+        });
+    } else {
+      const user = await AsyncStorage.getItem("CustomerID");
+      return await orderAPI.getAll(user).then((response) => {
+        setData(response);
+        setLoading(false);
+      });
     }
-    else {
-      return await orderAPI.getAll('CS0001')
-        .then((response) => {
-          setData(response);
-          setLoading(false)
-        })
-    }
-  }
+  };
 
   const formatDate = (date) => {
     const inputDate = new Date(date);
@@ -243,58 +257,50 @@ const Order = ({ navigation }) => {
     const month = (inputDate.getMonth() + 1).toString().padStart(2, "0");
     const day = inputDate.getDate().toString().padStart(2, "0");
 
-    const time = inputDate.getHours().toString().padStart(2, "0")
-      + ':'
-      + inputDate.getMinutes().toString().padStart(2, "0");
+    const time =
+      inputDate.getHours().toString().padStart(2, "0") +
+      ":" +
+      inputDate.getMinutes().toString().padStart(2, "0");
 
     const formattedDate = `${day}/${month}/${year}  ${time}`;
     return formattedDate;
-  }
+  };
 
   const StatusColor = (status) => {
     if (status === "Pending") {
       return (
-        <Text
-          style={{ fontSize: 13, fontWeight: 700, color: "#F4CE14" }}
-        >
+        <Text style={{ fontSize: 13, fontWeight: 700, color: "#F4CE14" }}>
           {status}
         </Text>
-      )
-    }
-    else if (status === "Packaging") {
+      );
+    } else if (status === "Packaging") {
       return (
-        <Text
-          style={{ fontSize: 13, fontWeight: 700, color: "#2A2A86" }}
-        >
+        <Text style={{ fontSize: 13, fontWeight: 700, color: "#2A2A86" }}>
           {status}
         </Text>
-      )
-    }
-    else if (status === "Delivering") {
+      );
+    } else if (status === "Delivering") {
       return (
-        <Text
-          style={{ fontSize: 13, fontWeight: 700, color: "#AAC9FF" }}
-        >
+        <Text style={{ fontSize: 13, fontWeight: 700, color: "#AAC9FF" }}>
           {status}
         </Text>
-      )
-    }
-    else if (status === "Completed") {
+      );
+    } else if (status === "Completed") {
       return (
-        <Text
-          style={{ fontSize: 13, fontWeight: 700, color: "#498553" }}
-        >
+        <Text style={{ fontSize: 13, fontWeight: 700, color: "#498553" }}>
           {status}
         </Text>
-      )
+      );
     }
-  }
+  };
 
   const HandleSubmit = async (value) => {
     setLoading(true);
     setStatusForm(false);
     setSelectedButtons([]);
-    return await orderAPI.filterOrderByCustomer("CS0001", value)
+    const user = await AsyncStorage.getItem("CustomerID");
+    return await orderAPI
+      .filterOrderByCustomer(user, value)
       .then((res) => {
         setData(res);
         setLoading(false);
@@ -302,8 +308,8 @@ const Order = ({ navigation }) => {
       .catch(() => {
         Alert.alert("Cannot find order");
         setLoading(false);
-      })
-  }
+      });
+  };
 
   return (
     <SafeAreaView
@@ -361,31 +367,39 @@ const Order = ({ navigation }) => {
               onPress={() => HandleSearch(searchCharacter)}
             />
           </View>
-          <TouchableOpacity style={styles.filterContainer} onPress={() => setStatusForm(true)}>
+          <TouchableOpacity
+            style={styles.filterContainer}
+            onPress={() => setStatusForm(true)}
+          >
             <Image source={adjust} style={styles.filterbackground}></Image>
           </TouchableOpacity>
         </View>
         {/* Order Item  */}
-        {
-          loading ? <ActivityIndicator size="large"
+        {loading ? (
+          <ActivityIndicator
+            size="large"
             color="#498553"
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }} />
-            : <FlatList style={{ marginTop: 15 }}
-              data={data}
-              renderItem={({ item }) => (
-                <Item nameProduct={item.firstProduct.productName}
-                  quantity={item.totalQuantity}
-                  image={item.firstProduct.images[0].imageURL}
-                  orderID={item.orderID}
-                  date={item.timeOrder}
-                  totalPrice={item.totalPrice}
-                  status={item.status}
-                />
-              )}
-              keyExtractor={(item) => item.orderID}
-              showsVerticalScrollIndicator={false}
-            />
-        }
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          />
+        ) : (
+          <FlatList
+            style={{ marginTop: 15 }}
+            data={data}
+            renderItem={({ item }) => (
+              <Item
+                nameProduct={item.firstProduct.productName}
+                quantity={item.totalQuantity}
+                image={item.firstProduct.images[0].imageURL}
+                orderID={item.orderID}
+                date={item.timeOrder}
+                totalPrice={item.totalPrice}
+                status={item.status}
+              />
+            )}
+            keyExtractor={(item) => item.orderID}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
       </View>
       <Modal
         animationType="fade"
@@ -393,23 +407,29 @@ const Order = ({ navigation }) => {
         visible={statusForm}
         onRequestClose={() => setStatusForm(!statusForm)}
       >
-        <View style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'rgba(0,0,0,0.5)',
-        }}>
-          <View style={{
-            width: "90%",
-            backgroundColor: 'white',
-            borderRadius: 15,
-            alignItems: 'center',
+        <View
+          style={{
+            flex: 1,
             justifyContent: "center",
-          }}>
-            <Text style={{
-              fontWeight: 700,
-              fontSize: 16
-            }}>
+            alignItems: "center",
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+        >
+          <View
+            style={{
+              width: "90%",
+              backgroundColor: "white",
+              borderRadius: 15,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: 700,
+                fontSize: 16,
+              }}
+            >
               Choose status to filter orders
             </Text>
             <ButtonMultiselect
@@ -434,11 +454,13 @@ const Order = ({ navigation }) => {
                 marginTop: 10,
                 paddingHorizontal: 20,
                 paddingVertical: 10,
-                borderRadius: 10
+                borderRadius: 10,
               }}
               onPress={() => HandleSubmit(selectedButtons)}
             >
-              <Text style={{ fontSize: 15, fontWeight: 700, color: "white" }}>Submit</Text>
+              <Text style={{ fontSize: 15, fontWeight: 700, color: "white" }}>
+                Submit
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

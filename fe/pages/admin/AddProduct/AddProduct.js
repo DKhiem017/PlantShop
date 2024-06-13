@@ -17,9 +17,10 @@ import productApi from "../../../../Api/ProductApi";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
+import ApiURL from "../../../../constants/baseURL";
 
 const AddProduct = ({ navigation }) => {
-  const apiUrl = `https://913d-2402-800-631d-fd4a-8cdc-3075-eb1c-237e.ngrok-free.app/api/Product/add-product`;
+  const apiUrl = `${ApiURL}/api/Product/add-product`;
 
   const [type, setType] = useState();
   const [fileName, setFileName] = useState();
@@ -71,6 +72,8 @@ const AddProduct = ({ navigation }) => {
           },
         });
         console.log("Success: ", updatedata.data);
+        Alert.alert("Succesfully add a product");
+        navigation.navigate("ProductAdmin");
       } catch (error) {
         console.log("Error: ", error);
       }

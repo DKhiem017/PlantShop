@@ -151,8 +151,9 @@ const Home = ({ navigation }) => {
     useCallback(() => {
       const fetchApi = async () => {
         try {
+          const user = await AsyncStorage.getItem("CustomerID");
           const response = await productApi.getAll();
-          const recommend = await productApi.getRecommend("CS0001");
+          const recommend = await productApi.getRecommend(user);
           console.log("recommend", recommend);
           setProduct(response);
           setRecommendProduct(recommend);
@@ -163,50 +164,52 @@ const Home = ({ navigation }) => {
       };
       fetchApi();
 
-      return () => {
-
-      };
+      return () => {};
     }, [])
   );
 
   const HandleBestSeller = async () => {
     setLoading(true);
-    return await productApi.getBestSeller()
+    return await productApi
+      .getBestSeller()
       .then((res) => {
         setProduct(res);
         setLoading(false);
       })
       .catch((error) => {
         Alert.alert("Cannot load data");
-      })
-  }
+      });
+  };
 
   const HandleGetAll = async () => {
     setLoading(true);
-    return await productApi.getAll()
+    return await productApi
+      .getAll()
       .then((res) => {
         setProduct(res);
         setLoading(false);
       })
       .catch((error) => {
         Alert.alert("Cannot load data");
-      })
-  }
+      });
+  };
 
   const HandleGetIndoor = async (category) => {
     setLoading(true);
-    return await productApi.getCategory(category)
+    return await productApi
+      .getCategory(category)
       .then((res) => {
         setProduct(res);
         setLoading(false);
       })
       .catch((error) => {
         Alert.alert("Cannot load data");
-      })
-  }
+      });
+  };
 
   const HandleSearchProduct = async () => {
-    return await productApi.searchByName(param)
+    return await productApi
+      .searchByName(param)
       .then((res) => {
         setSearchResult(res);
         console.log("Search: ", res);
@@ -214,8 +217,8 @@ const Home = ({ navigation }) => {
       })
       .catch(() => {
         Alert.alert("Please enter keyword to search");
-      })
-  }
+      });
+  };
 
   const items = [
     { image: require("../../../../assets/images/Voucher1.png") },
@@ -307,38 +310,46 @@ const Home = ({ navigation }) => {
           </View>
         </View>
         {/* Searchbar */}
-        <Searchbar placeholder="Search for plants..."
+        <Searchbar
+          placeholder="Search for plants..."
           searchCharacter={param}
-          onChangeText={(param) => setParam(param)}
+          onChangeText={(e) => setParam(e)}
           onPress={HandleSearchProduct}
         ></Searchbar>
-        {
-          showResult
-            ? <View style={{
+        {showResult ? (
+          <View
+            style={{
               marginTop: 10,
-            }}>
-              <Text style={{ fontStyle: "italic", color: "#6F6A61", fontWeight: "700" }}>
-                Found {searchResult.length !== null ? searchResult.length : 0} results
-              </Text>
-              <FlatList
-                horizontal={true}
-                style={{ paddingVertical: 10 }}
-                data={searchResult}
-                renderItem={({ item }) => (
-                  <Item
-                    name={item.productName}
-                    price={item.price}
-                    rating={item.reviewPoint}
-                    id={item.productID}
-                    img={item.images[0].imageURL}
-                  />
-                )}
-                keyExtractor={(item) => item.id}
-                showsHorizontalScrollIndicator={false}
-              ></FlatList>
-            </View>
-            : null
-        }
+            }}
+          >
+            <Text
+              style={{
+                fontStyle: "italic",
+                color: "#6F6A61",
+                fontWeight: "700",
+              }}
+            >
+              Found {searchResult.length !== null ? searchResult.length : 0}{" "}
+              results
+            </Text>
+            <FlatList
+              horizontal={true}
+              style={{ paddingVertical: 10 }}
+              data={searchResult}
+              renderItem={({ item }) => (
+                <Item
+                  name={item.productName}
+                  price={item.price}
+                  rating={item.reviewPoint}
+                  id={item.productID}
+                  img={item.images[0].imageURL}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+              showsHorizontalScrollIndicator={false}
+            ></FlatList>
+          </View>
+        ) : null}
         {/* carousel */}
         <Carousel items={items}></Carousel>
         <View style={styles.tagsContainer}>
@@ -364,7 +375,7 @@ const Home = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              handlePress(0)
+              handlePress(0);
               HandleBestSeller();
             }}
             style={[
@@ -384,7 +395,7 @@ const Home = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => {
               handlePress(1);
-              HandleGetIndoor('Indoor');
+              HandleGetIndoor("Indoor");
             }}
             style={[
               styles.inOutTag,

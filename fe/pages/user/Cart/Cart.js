@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import cartApi from "../../../../Api/CartApi";
 import CheckBox from "../../../components/checkbox";
 import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const backgroundImage = require("../../../../assets/images/Monstera_tran.png");
 
@@ -218,7 +219,8 @@ const Cart = ({ navigation }) => {
   //delete Item
   const handleDelete = async (id) => {
     try {
-      const deleteItem = await cartApi.deleteItem("CS0001", id);
+      const user = await AsyncStorage.getItem("CustomerID");
+      const deleteItem = await cartApi.deleteItem(user, id);
 
       // Cập nhật danh sách mặt hàng mà không bao gồm mặt hàng đã được xóa
       setCart((prevCart) =>
@@ -248,7 +250,8 @@ const Cart = ({ navigation }) => {
   //xoá tất cả
   const handleDeleteAll = async () => {
     try {
-      await cartApi.deleteAll("CS0001");
+      const user = await AsyncStorage.getItem("CustomerID");
+      await cartApi.deleteAll(user);
       console.log("Xoá thành công");
       setCart([]);
       setItemValues({});
@@ -344,7 +347,8 @@ const Cart = ({ navigation }) => {
     useCallback(() => {
       const fetchApi = async () => {
         try {
-          const response = await cartApi.getAll("CS0001");
+          const user = await AsyncStorage.getItem("CustomerID");
+          const response = await cartApi.getAll(user);
           console.log("success", response);
           setCart(response);
           setLoading(false);

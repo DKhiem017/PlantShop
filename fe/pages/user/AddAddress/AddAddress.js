@@ -11,6 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import customerAPI from "../../../../Api/CustomerApi";
 import addressAPI from "../../../../Api/AddressApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const styles = StyleSheet.create({
   container: {
@@ -71,8 +72,9 @@ const AddAddress = ({ navigation }) => {
       setIsValid(true);
     } else {
       try {
+        const user = await AsyncStorage.getItem("CustomerID");
         const response = await addressAPI.addAddress(
-          "CS0001",
+          user,
           name,
           address,
           phoneNumber

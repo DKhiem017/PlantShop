@@ -7,6 +7,7 @@ import {
   View,
   Text,
   TextInput,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Pagetitle from "../../../components/pagetitle";
@@ -16,6 +17,7 @@ import productApi from "../../../../Api/ProductApi";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
+import ApiURL from "../../../../constants/baseURL";
 
 const styles = StyleSheet.create({
   plantImgContainer: {
@@ -99,7 +101,7 @@ const DetailProduct = ({ navigation, route }) => {
   const [type, setType] = useState();
   const [fileName, setFileName] = useState();
 
-  const apiUrl = `https://c496-171-250-164-111.ngrok-free.app/api/Product/update-product/${id}`;
+  const apiUrl = `${ApiURL}/api/Product/update-product/${id}`;
 
   //fetchAPI
 
@@ -178,7 +180,8 @@ const DetailProduct = ({ navigation, route }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("Success: ", updatedata.data);
+      Alert.alert("Succesfully update product information");
+      navigation.navigate("ProductAdmin");
     } catch (error) {
       console.log("Error: ", error);
     }

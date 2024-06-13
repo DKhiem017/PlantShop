@@ -11,6 +11,7 @@ import Pagetitle from "../../../components/pagetitle";
 import { useCallback, useState } from "react";
 import addressAPI from "../../../../Api/AddressApi";
 import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MyAddress = ({ navigation, route }) => {
   const { ProductList } = route.params;
@@ -24,7 +25,8 @@ const MyAddress = ({ navigation, route }) => {
     useCallback(() => {
       const fetchAPI = async () => {
         try {
-          const response = await addressAPI.getAll("CS0001");
+          const user = await AsyncStorage.getItem("CustomerID");
+          const response = await addressAPI.getAll(user);
           console.log("success: ", response);
           setData(response);
           setLoading(false);
@@ -55,7 +57,8 @@ const MyAddress = ({ navigation, route }) => {
   //hàm set default
   const handleSetDefault = async (id) => {
     try {
-      const setdefault = await addressAPI.setDefault("CS0001", id);
+      const user = await AsyncStorage.getItem("CustomerID");
+      const setdefault = await addressAPI.setDefault(user, id);
       setData((prevData) =>
         prevData.map((item) => ({
           ...item,
@@ -234,6 +237,8 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 9,
     marginBottom: 10,
+    borderWidth: 1,
+    borderColor: "#498553",
   },
   text: {
     fontSize: 14,

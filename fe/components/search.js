@@ -2,8 +2,7 @@ import { TouchableOpacity, View, Text, TextInput } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useState } from "react";
 
-const Searchbar = ({ placeholder, onPress }) => {
-  const [searchCharacter, setSearchCharacter] = useState("");
+const Searchbar = ({ placeholder, onPress, onChangeText, searchCharacter }) => {
 
   return (
     <View
@@ -29,7 +28,7 @@ const Searchbar = ({ placeholder, onPress }) => {
           borderColor: '#6F6A61'
         }}
         value={searchCharacter}
-        onChangeText={(e) => setSearchCharacter(e)}
+        onChangeText={onChangeText}
       ></TextInput>
       <Feather
         style={{
@@ -40,7 +39,7 @@ const Searchbar = ({ placeholder, onPress }) => {
         name="search"
         size={24}
         color="grey"
-        onPress={() => onPress(searchCharacter)}
+        onPress={onPress}
       />
     </View>
   );

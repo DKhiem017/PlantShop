@@ -8,17 +8,19 @@ import chatAPI from "../../../Api/ChatApi";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
+import ApiURL from "../../../constants/baseURL";
 
-const ChatBoxAdmin = () => {
-  const apiURL =
-    "https://f364-171-250-164-111.ngrok-free.app/api/Chat/send-message";
+const ChatBoxAdmin = ({ route }) => {
+  const { customerID } = route.params;
+
+  const apiURL = `${ApiURL}/api/Chat/send-message`;
 
   const [messages, setMessages] = useState([]);
   const [connection, setConnection] = useState(null);
 
   useEffect(() => {
     const connect = new HubConnectionBuilder()
-      .withUrl("https://f364-171-250-164-111.ngrok-free.app/chathub")
+      .withUrl(`${ApiURL}/chathub`)
       .withAutomaticReconnect()
       .build();
 
@@ -58,7 +60,7 @@ const ChatBoxAdmin = () => {
   useEffect(() => {
     const fetchAPI = async () => {
       try {
-        const res = await chatAPI.getMessages("CS0003");
+        const res = await chatAPI.getMessages(customerID);
         console.log("Res: ", res);
         setMessages([
           ...res.map((msg) => {
@@ -93,7 +95,7 @@ const ChatBoxAdmin = () => {
     content
   ) => {
     const formData = new FormData();
-    formData.append("CustomerID", "CS0003");
+    formData.append("CustomerID", customerID);
     formData.append("Content", content);
     formData.append("IsCustomerSend", false);
     if (imgChoose) {

@@ -13,6 +13,7 @@ import Searchbar from "../../../components/search";
 import { useEffect, useState } from "react";
 import voucherAPI from "../../../../Api/VoucherApi";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const couponImg = require("../../../../assets/images/gift.png");
 
@@ -79,7 +80,8 @@ const VoucherWallet = ({ navigation, route }) => {
   useEffect(() => {
     const fetchAPI = async () => {
       try {
-        const response = await voucherAPI.getAll("CS0001");
+        const user = await AsyncStorage.getItem("CustomerID");
+        const response = await voucherAPI.getAll(user);
         console.log("success: ", response);
         setData(response);
         setLoading(false);
@@ -106,7 +108,8 @@ const VoucherWallet = ({ navigation, route }) => {
           alert("Not found voucher with provided keyword");
         });
     } else {
-      return await voucherAPI.getAll("CS0001").then((response) => {
+      const user = await AsyncStorage.getItem("CustomerID");
+      return await voucherAPI.getAll(user).then((response) => {
         setData(response);
         setLoading(false);
       });

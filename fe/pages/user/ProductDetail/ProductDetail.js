@@ -21,6 +21,7 @@ import feedbackApi from "../../../../Api/FeedbackApi";
 import { LogBox } from "react-native";
 import cartApi from "../../../../Api/CartApi";
 import wishListAPI from "../../../../Api/WishListApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 LogBox.ignoreAllLogs();
 
 const backgroundImage = require("../../../../assets/images/DetailProductBackground.png");
@@ -42,7 +43,8 @@ const ProductDetail = ({ navigation, route }) => {
 
   const HandleCheckout = async () => {
     try {
-      await cartApi.addToCart("CS0001", id, value);
+      const user = await AsyncStorage.getItem("CustomerID");
+      await cartApi.addToCart(user, id, value);
       navigation.navigate("CartScreen");
     } catch (error) {
       console.log("Lỗi", error);
@@ -76,13 +78,15 @@ const ProductDetail = ({ navigation, route }) => {
   const [isFavourite, setIsFavourite] = useState(false);
 
   const toggleFavourite = async () => {
-    return await wishListAPI.addWishList('CS0001', id)
+    const user = await AsyncStorage.getItem("CustomerID");
+    return await wishListAPI
+      .addWishList(user, id)
       .then(() => {
         setIsFavourite(!isFavourite);
       })
       .catch(() => {
         Alert.alert("Product has been in WishList before");
-      })
+      });
   };
 
   // tăng giảm giá trị sản phẩm

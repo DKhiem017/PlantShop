@@ -7,16 +7,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import chatAPI from "../../../Api/ChatApi";
 import axios from "axios";
+import ApiURL from "../../../constants/baseURL";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ChatBox = () => {
-  const apiURL = "https://f364-171-250-164-111.ngrok-free.app/api/Chat/send-message";
+  const apiURL = `${ApiURL}/api/Chat/send-message`;
 
   const [messages, setMessages] = useState([]);
   const [connection, setConnection] = useState(null);
 
   useEffect(() => {
     const connect = new HubConnectionBuilder()
-      .withUrl("https://f364-171-250-164-111.ngrok-free.app/chathub")
+      .withUrl(`${ApiURL}/chathub`)
       .withAutomaticReconnect()
       .build();
 
@@ -30,17 +32,21 @@ const ChatBox = () => {
         .then(() => {
           console.log("SignalR connected");
           connection.on("ReceiveMessageAdmin", async (message) => {
-            const customMessage = [{
-              _id: message.messageID,
-              text: message.content,
-              image: message.image ? message.image : undefined,
-              createdAt: new Date(message.sendTime).toISOString(),
-              user: {
-                _id: message.isCustomerSend === true ? 1 : 0,
-                name: message.isCustomerSend === true ? 'You' : 'Customer'
-              }
-            }]
-            setMessages((prevMessage) => GiftedChat.append(prevMessage, customMessage))
+            const customMessage = [
+              {
+                _id: message.messageID,
+                text: message.content,
+                image: message.image ? message.image : undefined,
+                createdAt: new Date(message.sendTime).toISOString(),
+                user: {
+                  _id: message.isCustomerSend === true ? 1 : 0,
+                  name: message.isCustomerSend === true ? "You" : "Customer",
+                },
+              },
+            ];
+            setMessages((prevMessage) =>
+              GiftedChat.append(prevMessage, customMessage)
+            );
           });
         })
         .catch((error) => {
@@ -52,8 +58,9 @@ const ChatBox = () => {
   useEffect(() => {
     const fetchAPI = async () => {
       try {
-        const res = await chatAPI.getMessages("CS0003");
-        console.log("Res: ", res)
+        const user = await AsyncStorage.getItem("CustomerID");
+        const res = await chatAPI.getMessages(user);
+        console.log("Res: ", res);
         setMessages([
           ...res.map((msg) => {
             return {
@@ -62,23 +69,30 @@ const ChatBox = () => {
               createdAt: new Date(msg.sendTime),
               user: {
                 _id: msg.isCustomerSend === true ? 1 : 0,
-                name: msg.isCustomerSend === true ? 'You' : 'Customer'
+                name: msg.isCustomerSend === true ? "You" : "Customer",
               },
               image: msg.image ? msg.image : undefined,
-            }
-          })])
-      }
-      catch (error) {
+            };
+          }),
+        ]);
+      } catch (error) {
         console.log("Error: ", error);
       }
-    }
+    };
 
     fetchAPI();
   }, []);
 
-  const handleSendMessage = async (imgChoose, imgURL, type, fileName, content) => {
+  const handleSendMessage = async (
+    imgChoose,
+    imgURL,
+    type,
+    fileName,
+    content
+  ) => {
     const formData = new FormData();
-    formData.append("CustomerID", "CS0003");
+    const user = await AsyncStorage.getItem("CustomerID");
+    formData.append("CustomerID", user);
     formData.append("Content", content);
     formData.append("IsCustomerSend", true);
     if (imgChoose) {
@@ -91,7 +105,7 @@ const ChatBox = () => {
       formData.append("Image", "");
     }
 
-    console.log("Form: ", formData)
+    console.log("Form: ", formData);
     try {
       const updatedata = await axios.post(apiURL, formData, {
         headers: {
@@ -161,7 +175,8 @@ const ChatBox = () => {
         result.assets[0].uri,
         result.assets[0].mimeType,
         result.assets[0].fileName,
-        "");
+        ""
+      );
       onSend([message]);
     }
   };

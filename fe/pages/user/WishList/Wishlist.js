@@ -1,11 +1,20 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+  FlatList,
+} from "react-native";
 import Searchbar from "../../../components/search";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { useCallback, useEffect, useState } from "react";
 import wishListAPI from "../../../../Api/WishListApi";
 import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const product_background = require("../../../../assets/images/Background_Plants.png");
 const plant_img = require("../../../../assets/images/Monstera_tran.png");
@@ -82,16 +91,16 @@ const Wishlist = ({ navigation }) => {
     useCallback(() => {
       const fetchAPI = async () => {
         try {
-          const response = await wishListAPI.getAll('CS0001');
+          const user = await AsyncStorage.getItem("CustomerID");
+          const response = await wishListAPI.getAll(user);
           console.log("success: ", response);
           setData(response);
           setLoading(false);
-        }
-        catch (error) {
+        } catch (error) {
           console.log("Error: ", error);
           setLoading(false);
         }
-      }
+      };
 
       fetchAPI();
 
@@ -124,7 +133,10 @@ const Wishlist = ({ navigation }) => {
             <TouchableOpacity style={styles.wishButton}>
               <AntDesign name="heart" size={12} color="#498553" />
             </TouchableOpacity>
-            <Image source={{ uri: `${image}` }} style={styles.backgroundImage}></Image>
+            <Image
+              source={{ uri: `${image}` }}
+              style={styles.backgroundImage}
+            ></Image>
           </View>
           {/* Text Container */}
           <View style={styles.textContainer}>
@@ -150,13 +162,15 @@ const Wishlist = ({ navigation }) => {
                 size={12}
                 color="#498553"
               />
-              <Text style={{ fontSize: 12, color: "#498553" }}>{reviewPoint}</Text>
+              <Text style={{ fontSize: 12, color: "#498553" }}>
+                {reviewPoint}
+              </Text>
             </View>
           </View>
         </TouchableOpacity>
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -176,26 +190,30 @@ const Wishlist = ({ navigation }) => {
       </View>
       <Searchbar placeholder="Search for plants..."></Searchbar>
       <View style={styles.gridContainer}>
-        {
-          loading ? <ActivityIndicator size="large"
+        {loading ? (
+          <ActivityIndicator
+            size="large"
             color="#498553"
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }} />
-            : <FlatList
-              columnWrapperStyle={{ justifyContent: 'center' }}
-              horizontal={false}
-              numColumns={2}
-              data={data}
-              renderItem={
-                ({ item }) => <Item id={item.product.productID}
-                  name={item.product.productName}
-                  price={item.product.price}
-                  reviewPoint={item.product.reviewPoint}
-                  image={item.product.images[0].imageURL}
-                />
-              }
-              keyExtractor={item => item.id}
-            />
-        }
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          />
+        ) : (
+          <FlatList
+            columnWrapperStyle={{ justifyContent: "center" }}
+            horizontal={false}
+            numColumns={2}
+            data={data}
+            renderItem={({ item }) => (
+              <Item
+                id={item.product.productID}
+                name={item.product.productName}
+                price={item.product.price}
+                reviewPoint={item.product.reviewPoint}
+                image={item.product.images[0].imageURL}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+          />
+        )}
       </View>
     </View>
   );

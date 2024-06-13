@@ -18,6 +18,7 @@ import { ScrollView, TextInput } from "react-native-gesture-handler";
 import feedbackApi from "../../../../Api/FeedbackApi";
 import { Rating } from "react-native-ratings";
 import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const plant_img = require("../../../../assets/images/Monstera_tran.png");
 
@@ -60,9 +61,10 @@ const MyFeedback = ({ navigation }) => {
     console.log(comment);
     console.log(defaultRating);
     try {
+      const user = await AsyncStorage.getItem("CustomerID");
       const addFeedback = await feedbackApi.newFeedback(
         orderID,
-        "CS0001",
+        user,
         productID,
         comment,
         defaultRating,
@@ -86,10 +88,9 @@ const MyFeedback = ({ navigation }) => {
     useCallback(() => {
       const fetchApi = async () => {
         try {
-          const reviewedList = await feedbackApi.getReviewedFeedback("CS0001");
-          const unreviewedList = await feedbackApi.getUnreviewedProduct(
-            "CS0001"
-          );
+          const user = await AsyncStorage.getItem("CustomerID");
+          const reviewedList = await feedbackApi.getReviewedFeedback(user);
+          const unreviewedList = await feedbackApi.getUnreviewedProduct(user);
           setPlantReviewed(reviewedList);
           setUnreviewed(unreviewedList);
           console.log("success", unreviewedList);

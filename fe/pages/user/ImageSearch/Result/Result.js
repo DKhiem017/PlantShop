@@ -15,12 +15,12 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Rating } from "react-native-ratings";
 import axios from "axios";
 import productApi from "../../../../../Api/ProductApi";
+import ApiURL from "../../../../../constants/baseURL";
 
 const Result = ({ route, navigation }) => {
   const { photo, filename, type } = route.params;
 
-  const apiUrl =
-    "https://29f2-2402-800-631d-fd4a-8cdc-3075-eb1c-237e.ngrok-free.app/api/Product/predict-by-image";
+  const apiUrl = `${ApiURL}/api/Product/predict-by-image`;
 
   const [hasResult, setHasResult] = useState(false);
 
@@ -58,7 +58,7 @@ const Result = ({ route, navigation }) => {
       if (response.data.percentage < 0.01) {
         setHasResult(false);
       } else {
-        const getProduct = await productApi.getProductByName(
+        const getProduct = await productApi.searchByName(
           response.data.plantName
         );
         setProduct(getProduct[0]);

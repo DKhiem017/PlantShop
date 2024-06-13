@@ -18,6 +18,7 @@ import { useState, useRef, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import addressAPI from "../../../../Api/AddressApi";
 import checkoutAPI from "../../../../Api/CheckoutApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Checkout = ({ navigation, route }) => {
   const { data, subTotal, voucherID, voucherName, voucherValue } = route.params;
@@ -46,8 +47,9 @@ const Checkout = ({ navigation, route }) => {
   const handleCreateOrder = async () => {
     if (hasProducts) {
       try {
+        const user = await AsyncStorage.getItem("CustomerID");
         const createOrder = await checkoutAPI.checkout(
-          "CS0001",
+          user,
           total,
           activePayment,
           activeMethod,
@@ -75,7 +77,8 @@ const Checkout = ({ navigation, route }) => {
     useCallback(() => {
       const fetchAPI = async () => {
         try {
-          const response = await addressAPI.getDefault("CS0001");
+          const user = await AsyncStorage.getItem("CustomerID");
+          const response = await addressAPI.getDefault(user);
           setRecipient(response);
         } catch (error) {
           console.log("Error: ", error);

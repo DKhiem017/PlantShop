@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import customerAPI from "../../../../Api/CustomerApi";
 import addressAPI from "../../../../Api/AddressApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const styles = StyleSheet.create({
   container: {
@@ -79,8 +80,9 @@ const DetailAddress = ({ navigation, route }) => {
   }, []);
 
   const HandleUpdateInfo = async () => {
+    const user = await AsyncStorage.getItem("CustomerID");
     return await addressAPI
-      .update(id, "CS0001", name, address, numberPhone)
+      .update(id, user, name, address, numberPhone)
       .then(() => {
         alert("Changes have been saved");
         navigation.navigate("MyAddress");

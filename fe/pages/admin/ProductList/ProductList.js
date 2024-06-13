@@ -158,6 +158,7 @@ const ProductList = ({ navigation }) => {
           $ {price}
         </Text>
         <Rating
+          style={{ alignItems: "flex-start" }}
           type="custom"
           ratingBackgroundColor="#c8c7c8"
           ratingCount={5}
