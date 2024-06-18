@@ -51,7 +51,7 @@ const MyAddress = ({ navigation, route }) => {
   };
 
   const handleAddAddress = () => {
-    navigation.navigate("AddAddressScreen");
+    navigation.navigate("AddAddressScreen", { ProductList: ProductList });
   };
 
   //hàm set default

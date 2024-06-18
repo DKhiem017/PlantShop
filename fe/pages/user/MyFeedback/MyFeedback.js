@@ -52,6 +52,28 @@ const MyFeedback = ({ navigation }) => {
     setProductID(productID);
     setshowFeedback(true);
   };
+  const fetchApi = async () => {
+    try {
+      const user = await AsyncStorage.getItem("CustomerID");
+      const reviewedList = await feedbackApi.getReviewedFeedback(user);
+      const unreviewedList = await feedbackApi.getUnreviewedProduct(user);
+      setPlantReviewed(reviewedList);
+      setUnreviewed(unreviewedList);
+      console.log("success", reviewedList);
+      setLoading(false);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+  useFocusEffect(
+    useCallback(() => {
+      fetchApi();
+      return () => {
+        // Cleanup function (optional)
+      };
+    }, []) // Dependency array để đảm bảo callback chỉ được gọi khi component được mount lần đầu tiên
+  );
+  useEffect(() => {}, []);
 
   const [comment, setComment] = useState("");
 
@@ -74,6 +96,7 @@ const MyFeedback = ({ navigation }) => {
       setdefaultRating(0);
       setComment("");
       setshowFeedback(false);
+      fetchApi();
     } catch (error) {
       console.log("Lỗi không thêm được feedback", error);
     }
@@ -84,39 +107,20 @@ const MyFeedback = ({ navigation }) => {
     setdefaultRating(0);
     setshowFeedback(false);
   };
-  useFocusEffect(
-    useCallback(() => {
-      const fetchApi = async () => {
-        try {
-          const user = await AsyncStorage.getItem("CustomerID");
-          const reviewedList = await feedbackApi.getReviewedFeedback(user);
-          const unreviewedList = await feedbackApi.getUnreviewedProduct(user);
-          setPlantReviewed(reviewedList);
-          setUnreviewed(unreviewedList);
-          console.log("success", unreviewedList);
-          setLoading(false);
-        } catch (error) {
-          console.log("Error", error);
-        }
-      };
-      fetchApi();
 
-      return () => {
-        // Cleanup function (optional)
-      };
-    }, []) // Dependency array để đảm bảo callback chỉ được gọi khi component được mount lần đầu tiên
-  );
-  useEffect(() => {}, []);
   //rating function
   const [defaultRating, setdefaultRating] = useState(0);
   const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
   //show Feedback Form
   const [showFeedback, setshowFeedback] = useState(false);
-  const ItemReviewed = ({ name, rating, date, comment }) => (
+  const ItemReviewed = ({ name, rating, date, comment, img }) => (
     <View style={styles.itemBackground}>
       <View style={{ flexDirection: "row" }}>
         <View style={styles.imgBorder}>
-          <Image source={plant_img} style={styles.backgroundImg}></Image>
+          <Image
+            source={{ uri: `${img}` }}
+            style={styles.backgroundImg}
+          ></Image>
         </View>
         <View
           style={{
@@ -200,6 +204,7 @@ const MyFeedback = ({ navigation }) => {
       comment={item.comment}
       rating={item.point}
       date={formatDate(item.feedbackTime)}
+      img={item.product.images[0].imageURL}
     />
   );
 

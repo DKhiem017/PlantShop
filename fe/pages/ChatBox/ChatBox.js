@@ -31,7 +31,7 @@ const ChatBox = () => {
         .start()
         .then(() => {
           console.log("SignalR connected");
-          connection.on("ReceiveMessageAdmin", async (message) => {
+          connection.on("ReceiveMessageCustomer", async (message) => {
             const customMessage = [
               {
                 _id: message.messageID,

@@ -138,7 +138,7 @@ const ProductDetail = ({ navigation, route }) => {
   };
 
   const FeedbackItem = ({ avt, name, date, rating, comment, id }) => (
-    <View style={{ flexDirection: "row", marginTop: 5 }}>
+    <View style={{ flexDirection: "row", marginTop: 5, alignItems:'center', marginRight:10 }}>
       <View style={styles.avtContainer}>
         <Image source={{ uri: `${avt}` }} style={styles.avt_girl}></Image>
       </View>
@@ -335,6 +335,8 @@ const ProductDetail = ({ navigation, route }) => {
               </Text>
               <View style={styles.flatlistContainer}>
                 <FlatList
+                  style={{ paddingBottom: 20 }}
+                  showsHorizontalScrollIndicator={false}
                   data={feedback}
                   horizontal={true}
                   renderItem={({ item }) => (
@@ -528,8 +530,7 @@ const styles = StyleSheet.create({
     borderRadius: 35,
   },
   commentContainer: {
-    width: 200,
-    height: 55,
+    paddingVertical: 5,
     marginLeft: 10,
     display: "flex",
     flexDirection: "column",

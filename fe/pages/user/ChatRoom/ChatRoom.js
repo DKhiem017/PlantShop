@@ -28,7 +28,9 @@ const ChatRoom = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f5f5f5", paddingHorizontal: 15 }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "#f5f5f5", paddingHorizontal: 15 }}
+    >
       <StatusBar></StatusBar>
       <View>
         <Pagetitle title={"Chat"} navigation={navigation}></Pagetitle>
@@ -43,25 +45,13 @@ const ChatRoom = ({ navigation }) => {
               <View style={{ height: 40, width: 40, borderRadius: 50 }}>
                 <Image source={avt} style={styles.backgroundImg}></Image>
               </View>
-              <View style={{ justifyContent: "space-between", marginLeft: 15 }}>
+              <View
+                style={{
+                  marginLeft: 15,
+                  justifyContent: "center",
+                }}
+              >
                 <Text style={{ fontWeight: 600 }}>Admin</Text>
-                <Text style={{ color: "#6F6A61" }}>
-                  Bạn: Shop ơi cho em hỏi...
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.chatBackground}>
-            <View style={{ flexDirection: "row" }}>
-              {/* avt */}
-              <View style={{ height: 40, width: 40, borderRadius: 50 }}>
-                <Image source={chatBotImg} style={styles.backgroundImg}></Image>
-              </View>
-              <View style={{ justifyContent: "space-between", marginLeft: 15 }}>
-                <Text style={{ fontWeight: 600 }}>Greeny</Text>
-                <Text style={{ color: "#6F6A61" }}>
-                  Hi, what can i help you?
-                </Text>
               </View>
             </View>
           </TouchableOpacity>

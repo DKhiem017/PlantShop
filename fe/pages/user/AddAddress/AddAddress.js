@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   TextInput,
+  Alert,
 } from "react-native";
 import Pagetitle from "../../../components/pagetitle";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -53,8 +54,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const AddAddress = ({ navigation }) => {
+const AddAddress = ({ navigation, route }) => {
   const [isValid, setIsValid] = useState(false);
+
+  const { ProductList } = route.params;
+
+  console.log(ProductList);
 
   const [name, setName] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
@@ -79,8 +84,8 @@ const AddAddress = ({ navigation }) => {
           address,
           phoneNumber
         );
-        console.log("Thêm thành công địa chỉ mới", response);
-        navigation.navigate("MyAddress");
+        Alert.alert("Thêm thành công địa chỉ mới");
+        navigation.navigate("MyAddress", { ProductList: ProductList });
       } catch (error) {
         console.log("Thêm không thành công", error);
       }
