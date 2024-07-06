@@ -1,3 +1,6 @@
 # PK PlantShop
 * The project for Project 1 (Course CE201 | UIT)
 * Guided by Msc. Trần Thị Hồng Yến
+<p align="center">
+  <img src="[https://example.com/your-image.jpg](https://private-user-images.githubusercontent.com/100778307/345374623-601d0892-2a6d-4e8b-9c0b-985836daf456.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjAyNzc5MzQsIm5iZiI6MTcyMDI3NzYzNCwicGF0aCI6Ii8xMDA3NzgzMDcvMzQ1Mzc0NjIzLTYwMWQwODkyLTJhNmQtNGU4Yi05YzBiLTk4NTgzNmRhZjQ1Ni5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNzA2JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDcwNlQxNDUzNTRaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1jN2I5NDA5MzM0NzA2NjBlMmVkYTZlMTU2NzI0M2Y5N2UzOGI1Y2FlNWRlNDM3ZTcwMmFlYzFmODJiMDgzZWRhJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.HwoA2BfFIiL24CEQgEYGmDG-LdsEZOytyB1DfQvAyhk)" alt="Mô tả ảnh" />
+</p>
