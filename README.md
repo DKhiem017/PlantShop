@@ -8,7 +8,7 @@
 ## Introduction
 Welcome to PK PlantShop project! This project is a mobile application developed to help users conveniently and quickly buy ornamental plants online, while also providing relatively comprehensive management functions for shop owners.
 ## Demo
-[![PK PlantShop Demo](https://img.youtube.com/vi/O8V7oOSPDuM/maxresdefault.jpg)](https://www.youtube.com/watch?v=O8V7oOSPDuM)
+PK PlantShop Demo: [Watch the video on YouTube](https://www.youtube.com/watch?v=O8V7oOSPDuM)
 ## Features
 * **Login/Register account**.
 * **Account Management for user**.
