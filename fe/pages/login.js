@@ -14,6 +14,8 @@ import {
 import authAPI from "../../Api/AuthApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppContext } from "../../contexts/appContext";
+import Fontisto from "@expo/vector-icons/Fontisto";
+import { useTranslation } from "react-i18next";
 
 const backgroundImage = require("../../assets/images/LoginBg.png");
 const logo = require("../../assets/images/Logo.png");
@@ -32,9 +34,30 @@ const styles = StyleSheet.create({
     height: "100%",
     resizeMode: "cover", // Adjust as needed
   },
+  changeLanguagebut: {
+    paddingHorizontal: 5,
+    paddingVertical: 5,
+    backgroundColor: "#498553",
+    flexDirection: "row",
+    width: 60,
+    borderRadius: 50,
+    alignItems: "center",
+    gap: 5,
+  },
+  changeLanguagebutContainer: {
+    position: "absolute",
+    bottom: 10,
+    right: 10,
+  },
 });
 
 const Login = ({ navigation }) => {
+  const { t, i18n } = useTranslation(); // Khởi tạo hook cho đa ngôn ngữ
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
+
   const { setToken, setUser, setRole } = useContext(AppContext);
 
   const [email, setEmail] = useState("");
@@ -44,7 +67,7 @@ const Login = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
       HandleGetToken();
-    }, 100)
+    }, 100);
   }, []);
 
   const HandleGetToken = async () => {
@@ -53,11 +76,10 @@ const Login = ({ navigation }) => {
     console.log("check: ", roleUser);
     if (!dataToken) {
       return;
-    }
-    else {
+    } else {
       navigation.replace(roleUser === "Customer" ? "Main" : "Main Admin");
     }
-  }
+  };
 
   const HandleLogin = async () => {
     setLoading(true);
@@ -67,40 +89,11 @@ const Login = ({ navigation }) => {
       return;
     }
 
-    // if (!password) {
-    //   Alert.alert("Error", "Please enter password");
-    //   setLoading(false);
-    // }
-    // else if (!email) {
-    //   Alert.alert("Error", "Please enter email");
-    //   setLoading(false);
-    // }
-
-    // const res = await authAPI.login(email, password);
-
-    // if (res && res.data.access_token) {
-    //   AsyncStorage.setItem("Token", 'Bearer ' + res.data.access_token);
-    //   setToken(res.data.access_token);
-
-    //   AsyncStorage.setItem("CustomerID", res.data.customer.id);
-    //   setUser(res.data.customer);
-
-    //   AsyncStorage.setItem("Role", res.data.role);
-    //   setRole(res.data.role);
-    //   setEmail("");
-    //   setPassword("");
-    //   navigation.navigate(res.data.role === "Customer" ? "Main" : "Main Admin");
-    //   setLoading(false);
-    // } else {
-    //   console.log("không có res ");
-    //   setLoading(false);
-    // }
-
     try {
       const res = await authAPI.login(email, password);
 
       if (res && res.data.access_token) {
-        AsyncStorage.setItem("Token", 'Bearer ' + res.data.access_token);
+        AsyncStorage.setItem("Token", "Bearer " + res.data.access_token);
         setToken(res.data.access_token);
 
         AsyncStorage.setItem("CustomerID", res.data.customer.id);
@@ -110,19 +103,19 @@ const Login = ({ navigation }) => {
         setRole(res.data.role);
         setEmail("");
         setPassword("");
-        navigation.navigate(res.data.role === "Customer" ? "Main" : "Main Admin");
+        navigation.navigate(
+          res.data.role === "Customer" ? "Main" : "Main Admin"
+        );
         setLoading(false);
       } else {
         console.log("không có res ");
         setLoading(false);
       }
-    }
-    catch (error) {
+    } catch (error) {
       if (error.response.status === 401) {
         Alert.alert("Error", "Incorrect Password");
         setLoading(false);
-      }
-      else if (error.response.status === 404) {
+      } else if (error.response.status === 404) {
         Alert.alert("Error", "Email not exists");
         setLoading(false);
       } else {
@@ -130,18 +123,19 @@ const Login = ({ navigation }) => {
         setLoading(false);
       }
     }
-
-  }
+  };
 
   const HandleRegister = () => {
     navigation.navigate("Register");
-  }
+  };
 
   return (
-    <ScrollView automaticallyAdjustKeyboardInsets={true}
+    <ScrollView
+      automaticallyAdjustKeyboardInsets={true}
       style={styles.container}
       contentContainerStyle={{ flexGrow: 1 }}
-      showsVerticalScrollIndicator={false}>
+      showsVerticalScrollIndicator={false}
+    >
       <StatusBar style="dark"></StatusBar>
       <Image source={backgroundImage} style={styles.backgroundImage}></Image>
       <View
@@ -172,7 +166,7 @@ const Login = ({ navigation }) => {
           paddingLeft: 35,
         }}
       >
-        <Text>Login to your Account</Text>
+        <Text>{t("loginTitle")}</Text>
       </View>
       <View
         style={{
@@ -185,7 +179,7 @@ const Login = ({ navigation }) => {
             marginTop: 30,
           }}
         >
-          <Text>Email Address</Text>
+          <Text>{t("email")}</Text>
           <TextInput
             style={{
               marginTop: 10,
@@ -207,7 +201,7 @@ const Login = ({ navigation }) => {
             marginTop: 10,
           }}
         >
-          <Text>Password</Text>
+          <Text>{t("password")}</Text>
           <TextInput
             secureTextEntry={true}
             style={{
@@ -236,7 +230,7 @@ const Login = ({ navigation }) => {
         >
           <TouchableOpacity>
             <Text style={{ fontWeight: 700, color: "#498553", fontSize: 15 }}>
-              Forget Password?
+              {t("forgetPassword")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -249,13 +243,13 @@ const Login = ({ navigation }) => {
             alignItems: "center",
             borderRadius: 10,
             gap: 10,
-            flexDirection: "row"
+            flexDirection: "row",
           }}
           onPress={HandleLogin}
         >
           {loading ? <ActivityIndicator size="small" color="white" /> : null}
           <Text style={{ color: "#fff", fontSize: 18, fontWeight: 700 }}>
-            Login
+            {t("loginButton")}
           </Text>
         </TouchableOpacity>
         <View
@@ -267,11 +261,25 @@ const Login = ({ navigation }) => {
             marginTop: 15,
           }}
         >
-          <Text style={{ color: "#498553" }}>Don't have an account? </Text>
+          <Text style={{ color: "#498553" }}>{t("noAccount")} </Text>
           <TouchableOpacity onPress={HandleRegister}>
-            <Text style={{ fontWeight: 700, color: "#498553" }}>Register</Text>
+            <Text style={{ fontWeight: 700, color: "#498553" }}>
+              {t("register")}
+            </Text>
           </TouchableOpacity>
         </View>
+      </View>
+      {/* nút chuyển đổi ngôn ngữ */}
+      <View style={styles.changeLanguagebutContainer}>
+        <TouchableOpacity
+          style={styles.changeLanguagebut}
+          onPress={() => changeLanguage(i18n.language === "en" ? "vi" : "en")}
+        >
+          <Fontisto name="world-o" size={24} color="white" />
+          <Text style={{ color: "#fff" }}>
+            {i18n.language === "en" ? "EN" : "VI"}
+          </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

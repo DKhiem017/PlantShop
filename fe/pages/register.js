@@ -12,10 +12,14 @@ import { AntDesign } from "@expo/vector-icons";
 import { useContext, useState } from "react";
 import { AppContext } from "../../contexts/appContext";
 import authAPI from "../../Api/AuthApi";
-import ButtonMultiselect, { ButtonLayout } from "react-native-button-multiselect";
+import ButtonMultiselect, {
+  ButtonLayout,
+} from "react-native-button-multiselect";
+import { useTranslation } from "react-i18next";
 
 const Register = ({ navigation }) => {
   const { setUser, user } = useContext(AppContext);
+  const { t } = useTranslation(); // Khởi tạo hook cho đa ngôn ngữ
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -24,12 +28,12 @@ const Register = ({ navigation }) => {
   const [form, setForm] = useState(false);
 
   const buttons = [
-    { label: 'Monsera', value: 'Monsera' },
-    { label: 'Cactus', value: 'Cactus' },
-    { label: 'Aroid Palm', value: 'Aroid Palm' },
-    { label: 'Phalaenopsis Orchids', value: 'Phalaenopsis Orchids' },
-    { label: 'Snake Plant', value: 'Snake Plant' },
-    { label: 'Succulent', value: 'Succulent' },
+    { label: "Monsera", value: "Monsera" },
+    { label: "Cactus", value: "Cactus" },
+    { label: "Aroid Palm", value: "Aroid Palm" },
+    { label: "Phalaenopsis Orchids", value: "Phalaenopsis Orchids" },
+    { label: "Snake Plant", value: "Snake Plant" },
+    { label: "Succulent", value: "Succulent" },
   ];
 
   const [selectedButtons, setSelectedButtons] = useState([]);
@@ -39,18 +43,19 @@ const Register = ({ navigation }) => {
   };
 
   const HandleBack = () => {
-    navigation.navigate("Login")
-  }
+    navigation.navigate("Login");
+  };
 
   const HandleLogin = () => {
     navigation.navigate("Login");
-  }
+  };
 
   const HandleRegister = async () => {
     if (!email || !password || !name) {
       return;
     }
-    return await authAPI.registerCustomer(name, email, password, numberPhone)
+    return await authAPI
+      .registerCustomer(name, email, password, numberPhone)
       .then((res) => {
         setUser(res.data);
         setForm(true);
@@ -58,10 +63,11 @@ const Register = ({ navigation }) => {
       .catch((error) => {
         console.log("Error ", error);
       });
-  }
+  };
 
   const HandleSubmit = async () => {
-    return await authAPI.addPlants(user.id, selectedButtons)
+    return await authAPI
+      .addPlants(user.id, selectedButtons)
       .then(() => {
         setForm(false);
         navigation.navigate("Login");
@@ -69,7 +75,7 @@ const Register = ({ navigation }) => {
       .catch((error) => {
         console.log("Error ", error);
       });
-  }
+  };
 
   return (
     <ScrollView
@@ -102,7 +108,7 @@ const Register = ({ navigation }) => {
             marginTop: 20,
           }}
         >
-          Welcome to
+          {t("welcomeTo")}
         </Text>
       </View>
       <View>
@@ -125,7 +131,7 @@ const Register = ({ navigation }) => {
         }}
       >
         <TextInput
-          placeholder="Name"
+          placeholder={t("name")}
           style={{
             marginTop: 25,
             height: 45,
@@ -140,7 +146,7 @@ const Register = ({ navigation }) => {
           onChangeText={(e) => setName(e)}
         ></TextInput>
         <TextInput
-          placeholder="Email"
+          placeholder={t("email")}
           style={{
             marginTop: 25,
             height: 45,
@@ -155,7 +161,7 @@ const Register = ({ navigation }) => {
           onChangeText={(e) => setEmail(e)}
         ></TextInput>
         <TextInput
-          placeholder="Password"
+          placeholder={t("password")}
           secureTextEntry={true}
           style={{
             marginTop: 25,
@@ -171,7 +177,7 @@ const Register = ({ navigation }) => {
           onChangeText={(e) => setPassword(e)}
         ></TextInput>
         <TextInput
-          placeholder="Phone number"
+          placeholder={t("phoneNumber")}
           style={{
             marginTop: 25,
             height: 45,
@@ -197,7 +203,7 @@ const Register = ({ navigation }) => {
           onPress={HandleRegister}
         >
           <Text style={{ color: "#fff", fontSize: 15, fontWeight: 700 }}>
-            Create an Account
+            {t("createAccount")}
           </Text>
         </TouchableOpacity>
         <View
@@ -209,9 +215,14 @@ const Register = ({ navigation }) => {
             marginTop: 15,
           }}
         >
-          <Text style={{ color: "#498553" }}>Already have an account? </Text>
+          <Text style={{ color: "#498553" }}>
+            {t("alreadyHaveAccount")}
+            {"? "}
+          </Text>
           <TouchableOpacity onPress={HandleLogin}>
-            <Text style={{ fontWeight: 700, color: "#498553" }}>Login</Text>
+            <Text style={{ fontWeight: 700, color: "#498553" }}>
+              {t("login")}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -222,24 +233,30 @@ const Register = ({ navigation }) => {
         visible={form}
         onRequestClose={() => setForm(!form)}
       >
-        <View style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'rgba(0,0,0,0.5)',
-        }}>
-          <View style={{
-            width: "90%",
-            backgroundColor: 'white',
-            borderRadius: 15,
-            alignItems: 'center',
+        <View
+          style={{
+            flex: 1,
             justifyContent: "center",
-          }}>
-            <Text style={{
-              fontWeight: 700,
-              fontSize: 16
-            }}>
-              Choose plants that you may care about
+            alignItems: "center",
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+        >
+          <View
+            style={{
+              width: "90%",
+              backgroundColor: "white",
+              borderRadius: 15,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: 700,
+                fontSize: 16,
+              }}
+            >
+              {t("choosePlants")}
             </Text>
             <ButtonMultiselect
               containerStyle={{
@@ -264,11 +281,13 @@ const Register = ({ navigation }) => {
                 marginTop: 10,
                 paddingHorizontal: 20,
                 paddingVertical: 10,
-                borderRadius: 10
+                borderRadius: 10,
               }}
               onPress={HandleSubmit}
             >
-              <Text style={{ fontSize: 15, fontWeight: 700, color: "white" }}>Submit</Text>
+              <Text style={{ fontSize: 15, fontWeight: 700, color: "white" }}>
+                {t("submit")}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

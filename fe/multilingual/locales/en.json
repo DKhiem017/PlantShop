@@ -1,0 +1,16 @@
+{
+  "loginTitle": "Login to your Account",
+  "email": "Email Address",
+  "password": "Password",
+  "forgetPassword": "Forget Password?",
+  "loginButton": "Login",
+  "noAccount": "Don't have an account?",
+  "register": "Register",
+
+"welcomeTo": "Welcome to",
+  "name": "Name",
+  "phoneNumber": "Phone number",
+  "createAccount": "Create an Account",
+  "alreadyHaveAccount": "Already have an Account",
+  "login": "Login"
+}

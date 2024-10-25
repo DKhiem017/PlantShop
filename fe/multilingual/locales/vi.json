@@ -1,0 +1,16 @@
+{
+  "loginTitle": "Đăng nhập vào tài khoản của bạn",
+  "email": "Địa chỉ Email",
+  "password": "Mật khẩu",
+  "forgetPassword": "Quên mật khẩu?",
+  "loginButton": "Đăng nhập",
+  "noAccount": "Chưa có tài khoản?",
+  "register": "Đăng ký",
+
+  "welcomeTo": "Chào mừng bạn đến với",
+  "name": "Tên",
+  "phoneNumber": "Số điện thoại",
+  "createAccount": "Tạo tài khoản mới",
+  "alreadyHaveAccount": "Đã có tài khoản",
+  "login": "Đăng nhập"
+}
