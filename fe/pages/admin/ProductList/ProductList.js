@@ -19,6 +19,7 @@ import { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import productApi from "../../../../Api/ProductApi";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 const styles = StyleSheet.create({
   imgContainer: {
@@ -99,6 +100,8 @@ const styles = StyleSheet.create({
 
 const ProductList = ({ navigation }) => {
   //get data
+  const { t } = useTranslation();
+
   const [loading, setLoading] = useState(true);
   const [products, setProduct] = useState([]);
 
@@ -112,9 +115,9 @@ const ProductList = ({ navigation }) => {
       setProduct((prevProducts) =>
         prevProducts.filter((product) => product.productID !== id)
       );
-      Alert.alert("Successfully delete product");
+      Alert.alert(t("successfullyDeleteProduct"));
     } catch (error) {
-      Alert.alert("Cannot delete this product");
+      Alert.alert(t("cannotDeleteThisProduct"));
     }
   };
 
@@ -203,7 +206,7 @@ const ProductList = ({ navigation }) => {
             alignItems: "center",
           }}
         >
-          <Text style={styles.headerTextStyle}>Product List</Text>
+          <Text style={styles.headerTextStyle}>{t("productList")}</Text>
         </View>
         {/* search container */}
         <View style={styles.searchBarContainer}>
@@ -217,7 +220,7 @@ const ProductList = ({ navigation }) => {
             />
             <TextInput
               style={styles.searchText}
-              placeholder="Search"
+              placeholder={t("search")}
             ></TextInput>
           </View>
         </View>
@@ -269,7 +272,7 @@ const ProductList = ({ navigation }) => {
             marginLeft: 3,
           }}
         >
-          New
+          {t("new")}
         </Text>
       </TouchableOpacity>
     </SafeAreaView>

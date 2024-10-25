@@ -17,12 +17,15 @@ import { Fontisto } from "@expo/vector-icons";
 import Pagetitle from "../../../components/pagetitle";
 import { SafeAreaView } from "react-native-safe-area-context";
 import voucherAPI from "../../../../Api/VoucherApi";
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from "@react-native-community/datetimepicker";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { useTranslation } from "react-i18next";
 
 const avt = require("../../../../assets/images/Logo.png");
 
 const PromotionDetail = ({ navigation, route }) => {
+  const { t } = useTranslation();
+
   const { voucherID } = route.params;
 
   const [voucher, setVoucher] = useState({});
@@ -33,12 +36,12 @@ const PromotionDetail = ({ navigation, route }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
   const [showDP, setShowDP] = useState(false);
-  const [mode, setMode] = useState('date');
+  const [mode, setMode] = useState("date");
 
   const [selectedDateEnd, setSelectedDateEnd] = useState(new Date());
   const [selectedTimeEnd, setSelectedTimeEnd] = useState(null);
   const [showDPEnd, setShowDPEnd] = useState(false);
-  const [modeEnd, setModeEnd] = useState('date');
+  const [modeEnd, setModeEnd] = useState("date");
 
   const [dateBegin, setDateBegin] = useState("");
   const [dateEnd, setDateEnd] = useState("");
@@ -54,14 +57,13 @@ const PromotionDetail = ({ navigation, route }) => {
         setDateEnd(response.dateEnd);
         setValue(response.value);
         setLoading(false);
-      }
-      catch (error) {
+      } catch (error) {
         console.log("Error: ", error);
         setLoading(false);
       }
-    }
+    };
 
-    fetchAPI()
+    fetchAPI();
   }, []);
 
   const formatDate = (date) => {
@@ -73,7 +75,7 @@ const PromotionDetail = ({ navigation, route }) => {
 
     const formattedDate = `${day}.${month}.${year}`;
     return formattedDate;
-  }
+  };
 
   const onChange = (event, date) => {
     let currentDate = date || selectedDate; // Use the newly selected date/time or keep the existing one
@@ -90,287 +92,294 @@ const PromotionDetail = ({ navigation, route }) => {
   };
 
   const HandleUpdate = async () => {
-    return await voucherAPI.updateVoucher(voucherID, name, dateBegin, dateEnd, value)
+    return await voucherAPI
+      .updateVoucher(voucherID, name, dateBegin, dateEnd, value)
       .then((res) => {
         navigation.navigate("PromotionAdmin");
-        Alert.alert("Edit voucher successfully");
+        Alert.alert(t("editVoucherSuccessfully"));
       })
       .catch((error) => {
-        Alert.alert("Cannot edit voucher");
+        Alert.alert(t("cannotEditVoucher"));
         console.log("Error: ", error);
-      })
-  }
+      });
+  };
 
   const HandleDelete = async () => {
-    return await voucherAPI.deleteVoucher(voucherID)
+    return await voucherAPI
+      .deleteVoucher(voucherID)
       .then((res) => {
         navigation.navigate("PromotionAdmin");
-        Alert.alert("Delete voucher successfully");
+        Alert.alert(t("deleteVoucherSuccessfully"));
       })
       .catch((error) => {
-        Alert.alert("Cannot delete voucher");
+        Alert.alert(t("cannotDeleteVoucher"));
         console.log("Error: ", error);
-      })
-  }
+      });
+  };
 
   return (
     <SafeAreaView
       style={{
         backgroundColor: "#F5F5F5",
         flex: 1,
-        paddingHorizontal: 15
+        paddingHorizontal: 15,
       }}
     >
       <ScrollView showsVerticalScrollIndicator={false}>
         <StatusBar style="dark"></StatusBar>
         <Pagetitle
-          title={"Promotion Detail"}
+          title={t("promotionDetail")}
           navigation={navigation}
         ></Pagetitle>
-        {
-          loading ? <ActivityIndicator size="large"
+        {loading ? (
+          <ActivityIndicator
+            size="large"
             color="#498553"
-            style={{ flex: 1, alignItems: "center", justifyContent: "center", marginTop: 10 }} />
-            : <>
-              <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 10,
+            }}
+          />
+        ) : (
+          <>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginTop: 30,
+              }}
+            >
+              <Text
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginTop: 30,
+                  fontSize: 15,
+                  color: "#498553",
+                  fontWeight: 700,
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 15,
-                    color: "#498553",
-                    fontWeight: 700,
-                  }}
-                >
-                  Promotion Name
-                </Text>
-                <TextInput
-                  style={{
-                    marginTop: 5,
-                    height: 55,
-                    backgroundColor: "#fff",
-                    borderRadius: 5,
-                    borderWidth: 1,
-                    borderColor: "#498553",
-                    paddingStart: 10,
-                    fontSize: 16,
-                    color: "#498553",
-                  }}
-                  value={name}
-                  onChangeText={(e) => setName(e)}
-                >
-                </TextInput>
-              </View>
-              <View
+                {t("promotionName")}
+              </Text>
+              <TextInput
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginTop: 10,
+                  marginTop: 5,
+                  height: 55,
+                  backgroundColor: "#fff",
+                  borderRadius: 5,
+                  borderWidth: 1,
+                  borderColor: "#498553",
+                  paddingStart: 10,
+                  fontSize: 16,
+                  color: "#498553",
+                }}
+                value={name}
+                onChangeText={(e) => setName(e)}
+              ></TextInput>
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginTop: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "#498553",
+                  fontWeight: 700,
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 15,
-                    color: "#498553",
-                    fontWeight: 700,
-                  }}
-                >
-                  Start Date
-                </Text>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center"
-                  }}
-                >
-                  <TextInput
-                    style={{
-                      marginTop: 5,
-                      height: 55,
-                      backgroundColor: "#fff",
-                      borderRadius: 5,
-                      borderWidth: 1,
-                      borderColor: "#498553",
-                      paddingStart: 10,
-                      paddingEnd: 50,
-                      fontSize: 15,
-                      color: "#498553",
-                      width: "100%",
-                    }}
-                  >
-                    {formatDate(dateBegin)}
-                  </TextInput>
-                  <TouchableOpacity
-                    style={{
-                      position: "absolute",
-                      right: 10
-                    }}
-                    onPress={() => setShowDP(true)}
-                  >
-                    <FontAwesome name="calendar" size={28} color="#498553" />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginTop: 10,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 15,
-                    color: "#498553",
-                    fontWeight: 700,
-                  }}
-                >
-                  Expired Date
-                </Text>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center"
-                  }}
-                >
-                  <TextInput
-                    style={{
-                      marginTop: 5,
-                      height: 55,
-                      backgroundColor: "#fff",
-                      borderRadius: 5,
-                      borderWidth: 1,
-                      borderColor: "#498553",
-                      paddingStart: 10,
-                      paddingEnd: 50,
-                      fontSize: 15,
-                      color: "#498553",
-                      width: "100%",
-                    }}
-                  >
-                    {formatDate(dateEnd)}
-                  </TextInput>
-                  <TouchableOpacity
-                    style={{
-                      position: "absolute",
-                      right: 10
-                    }}
-                    onPress={() => setShowDPEnd(true)}
-                  >
-                    <FontAwesome name="calendar" size={28} color="#498553" />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginTop: 10,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 15,
-                    color: "#498553",
-                    fontWeight: 700,
-                  }}
-                >
-                  Discount Value (%)
-                </Text>
-                <TextInput
-                  style={{
-                    marginTop: 5,
-                    height: 55,
-                    backgroundColor: "#fff",
-                    borderRadius: 5,
-                    borderWidth: 1,
-                    borderColor: "#498553",
-                    paddingStart: 10,
-                    fontSize: 15,
-                    color: "#498553",
-                  }}
-                  value={value.toString()}
-                  onChangeText={(e) => setValue(e)}
-                >
-                </TextInput>
-              </View>
+                {t("startDate")}
+              </Text>
               <View
                 style={{
                   display: "flex",
                   flexDirection: "row",
+                  justifyContent: "space-between",
                   alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: 80,
                 }}
               >
+                <TextInput
+                  style={{
+                    marginTop: 5,
+                    height: 55,
+                    backgroundColor: "#fff",
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: "#498553",
+                    paddingStart: 10,
+                    paddingEnd: 50,
+                    fontSize: 15,
+                    color: "#498553",
+                    width: "100%",
+                  }}
+                >
+                  {formatDate(dateBegin)}
+                </TextInput>
                 <TouchableOpacity
                   style={{
-                    height: 50,
-                    backgroundColor: "#498553",
-                    width: 250,
-                    borderRadius: 5,
-                    display: "flex",
-                    justifyContent: "center",
-                    flexDirection: "row",
-                    alignItems: "center",
+                    position: "absolute",
+                    right: 10,
                   }}
-                  onPress={HandleUpdate}
+                  onPress={() => setShowDP(true)}
                 >
-                  <Text
-                    style={{
-                      fontWeight: 700,
-                      color: "#fff",
-                      fontSize: 16,
-                    }}
-                  >
-                    Edit
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={HandleDelete}>
-                  <View
-                    style={{
-                      width: 60,
-                      height: 50,
-                      borderColor: "#498553",
-                      borderWidth: 1,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      marginLeft: 10,
-                      borderRadius: 5,
-                    }}
-                  >
-                    <Fontisto name="trash" size={24} color="#498553" />
-                  </View>
+                  <FontAwesome name="calendar" size={28} color="#498553" />
                 </TouchableOpacity>
               </View>
-            </>
-        }
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginTop: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "#498553",
+                  fontWeight: 700,
+                }}
+              >
+                {t("expiredDate")}
+              </Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <TextInput
+                  style={{
+                    marginTop: 5,
+                    height: 55,
+                    backgroundColor: "#fff",
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: "#498553",
+                    paddingStart: 10,
+                    paddingEnd: 50,
+                    fontSize: 15,
+                    color: "#498553",
+                    width: "100%",
+                  }}
+                >
+                  {formatDate(dateEnd)}
+                </TextInput>
+                <TouchableOpacity
+                  style={{
+                    position: "absolute",
+                    right: 10,
+                  }}
+                  onPress={() => setShowDPEnd(true)}
+                >
+                  <FontAwesome name="calendar" size={28} color="#498553" />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginTop: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "#498553",
+                  fontWeight: 700,
+                }}
+              >
+                {t("discountValue")} (%)
+              </Text>
+              <TextInput
+                style={{
+                  marginTop: 5,
+                  height: 55,
+                  backgroundColor: "#fff",
+                  borderRadius: 5,
+                  borderWidth: 1,
+                  borderColor: "#498553",
+                  paddingStart: 10,
+                  fontSize: 15,
+                  color: "#498553",
+                }}
+                value={value.toString()}
+                onChangeText={(e) => setValue(e)}
+              ></TextInput>
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 80,
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  height: 50,
+                  backgroundColor: "#498553",
+                  width: 250,
+                  borderRadius: 5,
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+                onPress={HandleUpdate}
+              >
+                <Text
+                  style={{
+                    fontWeight: 700,
+                    color: "#fff",
+                    fontSize: 16,
+                  }}
+                >
+                  {t("edit")}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={HandleDelete}>
+                <View
+                  style={{
+                    width: 60,
+                    height: 50,
+                    borderColor: "#498553",
+                    borderWidth: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginLeft: 10,
+                    borderRadius: 5,
+                  }}
+                >
+                  <Fontisto name="trash" size={24} color="#498553" />
+                </View>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </ScrollView>
-      {
-        showDP && <RNDateTimePicker
+      {showDP && (
+        <RNDateTimePicker
           mode={mode}
-          display={mode === 'date' ? 'calendar' : 'spinner'}
+          display={mode === "date" ? "calendar" : "spinner"}
           value={selectedDate}
           onChange={onChange}
         />
-      }
-      {
-        showDPEnd && <RNDateTimePicker
+      )}
+      {showDPEnd && (
+        <RNDateTimePicker
           mode={modeEnd}
-          display={modeEnd === 'date' ? 'calendar' : 'spinner'}
+          display={modeEnd === "date" ? "calendar" : "spinner"}
           value={selectedDateEnd}
           onChange={onChangeEnd}
         />
-      }
-
+      )}
     </SafeAreaView>
   );
 };

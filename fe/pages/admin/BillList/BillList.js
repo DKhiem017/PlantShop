@@ -57,6 +57,8 @@ const styles = StyleSheet.create({
 });
 
 const Item = ({ orderID, dayOrder, totalPrice, status, onPress }) => {
+  const { t } = useTranslation();
+
   return (
     <TouchableOpacity style={styles.itembackground} onPress={onPress}>
       {/* ảnh bill */}
@@ -85,7 +87,7 @@ const Item = ({ orderID, dayOrder, totalPrice, status, onPress }) => {
               {formatDate(dayOrder)}
             </Text>
             <Text style={{ fontSize: 13, color: "#498553", fontWeight: 700 }}>
-              Total: ${totalPrice}
+              {t("total")}: ${totalPrice}
             </Text>
           </View>
         </View>
@@ -98,28 +100,29 @@ const Item = ({ orderID, dayOrder, totalPrice, status, onPress }) => {
 };
 
 const StatusColor = (status) => {
+  const { t } = useTranslation();
   if (status === "Pending") {
     return (
       <Text style={{ fontSize: 13, fontWeight: 700, color: "#F4CE14" }}>
-        {status}
+        {t("pending")}
       </Text>
     );
   } else if (status === "Packaging") {
     return (
       <Text style={{ fontSize: 13, fontWeight: 700, color: "#2A2A86" }}>
-        {status}
+        {t("packaging")}
       </Text>
     );
   } else if (status === "Delivering") {
     return (
       <Text style={{ fontSize: 13, fontWeight: 700, color: "#AAC9FF" }}>
-        {status}
+        {t("delivering")}
       </Text>
     );
   } else if (status === "Completed") {
     return (
       <Text style={{ fontSize: 13, fontWeight: 700, color: "#498553" }}>
-        {status}
+        {t("completed")}
       </Text>
     );
   }
@@ -150,11 +153,11 @@ const BillList = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
 
   const buttons = [
-    { label: "All", value: 0 },
-    { label: "Pending", value: 1 },
-    { label: "Packaging", value: 2 },
-    { label: "Delivering", value: 3 },
-    { label: "Completed", value: 4 },
+    { label: t("all"), value: 0 },
+    { label: t("pending"), value: 1 },
+    { label: t("packaging"), value: 2 },
+    { label: t("delivering"), value: 3 },
+    { label: t("completed"), value: 4 },
   ];
 
   const [selectedButtons, setSelectedButtons] = useState([]);

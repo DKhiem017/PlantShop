@@ -47,12 +47,13 @@
 
   "orderHasBeenCompleted": "Order has been completed",
   "cannotChangeStatus": "can't change status",
-  "customerInfomation":"Customer information",
-  "completed":"Completed",
+  "customerInfomation": "Customer information",
+  "completed": "Completed",
   "delivering": "Delivering",
   "packaging": "Packaging",
   "pending": "Pending",
-  "back":"Back",
+  "back": "Back",
+  "all" : "All",
   "orderDetail": "Order detail",
   "address": "Address",
   "payment": "Payment",
@@ -63,5 +64,17 @@
   "details": "Details",
   "total": "Total",
 
-  "succesfullyUpdateProductInformation": "Successfully update product information"
+  "succesfullyUpdateProductInformation": "Successfully update product information",
+
+  "successfullyDeleteProduct": "Successfully delete product",
+  "cannotDeleteThisProduct": "Can't delete this product",
+  "new": "New",
+  "productList": "Product List",
+
+  "editVoucherSuccessfully": "Successfully edit voucher",
+  "cannotEditVoucher": "Can't edit this voucher",
+  "deleteVoucherSuccessfully": "Successfully delete voucher",
+  "cannotDeleteVoucher": "Can't delete this voucher",
+  "promotionDetail": "Promotion Detail",
+  "edit": "Edit"
 }
