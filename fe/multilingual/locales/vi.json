@@ -43,5 +43,23 @@
   "orderList": "Danh sách hoá đơn",
   "search": "Tìm kiếm",
   "chooseStatusToFilterOrders":"Chọn trạng thái để lọc",
-  "submit":"Xác nhận"
+  "submit":"Xác nhận",
+
+  "orderHasBeenCompleted": "Hoá đơn đã được hoàn thành",
+  "cannotChangeStatus": "không thể thay đổi trạng thái",
+  "customerInfomation":"Thông tin khách hàng",
+  "completed":"Hoàn thành",
+  "delivering": "Đang vận chuyển",
+  "packaging": "Đang đóng gói",
+  "pending": "Đang xử lý",
+  "back":"Trở lại",
+  "orderDetail": "Thông tin hoá đơn",
+  "address": "Địa chỉ",
+  "payment": "Thanh toán",
+  "delivery": "Vận chuyển",
+  "deliveryMethod": "Phương thức vận chuyển",
+  "shippingCost": "Phí giao hàng",
+  "paymentMethod": "Phương thức thanh toán",
+  "details": "Thông tin",
+  "total": "Tổng tiền"
 }
