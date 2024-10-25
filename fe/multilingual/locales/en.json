@@ -32,5 +32,16 @@
   "startDate": "Start Date",
   "expiredDate": "Expired Date",
   "discountValue":"Discount Value",
-  "add":"Add"
+  "add":"Add",
+
+  "myAccount": "My Account",
+  "chatRoom":"Chat Room",
+  "logout":"Logout",
+
+  "pleaseEnterKeyword": "Please enter keyword",
+  "cannotFindOrder": "Cannot find Order",
+  "orderList": "Order List",
+  "search": "Search",
+  "chooseStatusToFilterOrders":"Choose status to filter orders",
+  "submit":"Submit"
 }

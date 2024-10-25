@@ -32,5 +32,16 @@
   "startDate": "Ngày bắt đầu",
   "expiredDate": "Ngày hết hạn",
   "discountValue":"Chiết khấu",
-  "add":"Thêm"
+  "add":"Thêm",
+  
+  "myAccount": "Tài khoản của tôi",
+  "chatRoom":"Tin nhắn",
+  "logout":"Đăng xuất",
+
+  "pleaseEnterKeyword": "Vui lòng nhập từ khoá",
+  "cannotFindOrder": "Không thể tìm thấy hoá đơn",
+  "orderList": "Danh sách hoá đơn",
+  "search": "Tìm kiếm",
+  "chooseStatusToFilterOrders":"Chọn trạng thái để lọc",
+  "submit":"Xác nhận"
 }

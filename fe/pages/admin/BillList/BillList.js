@@ -18,7 +18,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useCallback, useEffect, useState } from "react";
 import orderAPI from "../../../../Api/OrderApi";
 import { useFocusEffect } from "@react-navigation/native";
-import ButtonMultiselect, { ButtonLayout } from "react-native-button-multiselect";
+import ButtonMultiselect, {
+  ButtonLayout,
+} from "react-native-button-multiselect";
+import { useTranslation } from "react-i18next";
 
 const couponImg = require("../../../../assets/images/Bill.png");
 
@@ -36,7 +39,7 @@ const styles = StyleSheet.create({
     elevation: 6,
     borderRadius: 5,
     padding: 5,
-    marginBottom: 10
+    marginBottom: 10,
   },
   backgroundImg: {
     position: "absolute",
@@ -57,15 +60,10 @@ const Item = ({ orderID, dayOrder, totalPrice, status, onPress }) => {
   return (
     <TouchableOpacity style={styles.itembackground} onPress={onPress}>
       {/* ảnh bill */}
-      <View
-        style={{ flexDirection: "row", justifyContent: "space-between" }}
-      >
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <View style={{ flexDirection: "row" }}>
           <View style={{ height: 70, width: 70 }}>
-            <Image
-              source={couponImg}
-              style={styles.backgroundImg}
-            ></Image>
+            <Image source={couponImg} style={styles.backgroundImg}></Image>
           </View>
           <View
             style={{
@@ -74,9 +72,7 @@ const Item = ({ orderID, dayOrder, totalPrice, status, onPress }) => {
               paddingVertical: 5,
             }}
           >
-            <Text
-              style={{ fontSize: 13, fontWeight: 700, color: "#000" }}
-            >
+            <Text style={{ fontSize: 13, fontWeight: 700, color: "#000" }}>
               {orderID}
             </Text>
             <Text
@@ -88,61 +84,46 @@ const Item = ({ orderID, dayOrder, totalPrice, status, onPress }) => {
             >
               {formatDate(dayOrder)}
             </Text>
-            <Text
-              style={{ fontSize: 13, color: "#498553", fontWeight: 700 }}
-            >
+            <Text style={{ fontSize: 13, color: "#498553", fontWeight: 700 }}>
               Total: ${totalPrice}
             </Text>
           </View>
         </View>
-        <Text
-          style={{ marginRight: 4, fontWeight: 700, color: "#F4CE14" }}
-        >
+        <Text style={{ marginRight: 4, fontWeight: 700, color: "#F4CE14" }}>
           {StatusColor(status)}
         </Text>
       </View>
     </TouchableOpacity>
-  )
-}
+  );
+};
 
 const StatusColor = (status) => {
   if (status === "Pending") {
     return (
-      <Text
-        style={{ fontSize: 13, fontWeight: 700, color: "#F4CE14" }}
-      >
+      <Text style={{ fontSize: 13, fontWeight: 700, color: "#F4CE14" }}>
         {status}
       </Text>
-    )
-  }
-  else if (status === "Packaging") {
+    );
+  } else if (status === "Packaging") {
     return (
-      <Text
-        style={{ fontSize: 13, fontWeight: 700, color: "#2A2A86" }}
-      >
+      <Text style={{ fontSize: 13, fontWeight: 700, color: "#2A2A86" }}>
         {status}
       </Text>
-    )
-  }
-  else if (status === "Delivering") {
+    );
+  } else if (status === "Delivering") {
     return (
-      <Text
-        style={{ fontSize: 13, fontWeight: 700, color: "#AAC9FF" }}
-      >
+      <Text style={{ fontSize: 13, fontWeight: 700, color: "#AAC9FF" }}>
         {status}
       </Text>
-    )
-  }
-  else if (status === "Completed") {
+    );
+  } else if (status === "Completed") {
     return (
-      <Text
-        style={{ fontSize: 13, fontWeight: 700, color: "#498553" }}
-      >
+      <Text style={{ fontSize: 13, fontWeight: 700, color: "#498553" }}>
         {status}
       </Text>
-    )
+    );
   }
-}
+};
 
 const formatDate = (date) => {
   const inputDate = new Date(date);
@@ -158,20 +139,22 @@ const formatDate = (date) => {
 
   const formattedDate = `${day}/${month}/${year}  ${time}  `;
   return formattedDate;
-}
+};
 
 const BillList = ({ navigation }) => {
+  const { t } = useTranslation();
+
   const [order, setOrder] = useState([]);
   const [searchParam, setSearchParam] = useState("");
   const [statusForm, setStatusForm] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const buttons = [
-    { label: 'All', value: 0 },
-    { label: 'Pending', value: 1 },
-    { label: 'Packaging', value: 2 },
-    { label: 'Delivering', value: 3 },
-    { label: 'Completed', value: 4 },
+    { label: "All", value: 0 },
+    { label: "Pending", value: 1 },
+    { label: "Packaging", value: 2 },
+    { label: "Delivering", value: 3 },
+    { label: "Completed", value: 4 },
   ];
 
   const [selectedButtons, setSelectedButtons] = useState([]);
@@ -187,11 +170,10 @@ const BillList = ({ navigation }) => {
           const response = await orderAPI.getOrderByAdmin();
           setOrder(response);
           setLoading(false);
-        }
-        catch (error) {
+        } catch (error) {
           console.log("Error: ", error);
         }
-      }
+      };
 
       fetchAPI();
       return () => {
@@ -199,41 +181,43 @@ const BillList = ({ navigation }) => {
         setSearchParam("");
       };
     }, [])
-  )
+  );
 
   const HandleDetail = (id) => {
     navigation.navigate("DetailOrderAdmin", {
-      orderID: id
-    })
-  }
+      orderID: id,
+    });
+  };
 
   const HandleSearchOrder = async (param) => {
     setLoading(true);
-    return await orderAPI.searchByID(param)
+    return await orderAPI
+      .searchByID(param)
       .then((res) => {
         setOrder(res);
         setLoading(false);
       })
       .catch(() => {
-        Alert.alert("Please enter keyword");
+        Alert.alert(t("pleaseEnterKeyword"));
         setLoading(false);
-      })
-  }
+      });
+  };
 
   const HandleSubmit = async (value) => {
     setLoading(true);
     setStatusForm(false);
     setSelectedButtons([]);
-    return await orderAPI.filterOrder(value)
+    return await orderAPI
+      .filterOrder(value)
       .then((res) => {
         setOrder(res);
         setLoading(false);
       })
       .catch(() => {
-        Alert.alert("Cannot find order");
+        Alert.alert(t("cannotFindOrder"));
         setLoading(false);
-      })
-  }
+      });
+  };
 
   return (
     // View tổng quát
@@ -262,10 +246,11 @@ const BillList = ({ navigation }) => {
               color: "#498553",
             }}
           >
-            Order List
+            {t("orderList")}
           </Text>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
           style={{ marginBottom: 10 }}
         >
           <View
@@ -287,7 +272,7 @@ const BillList = ({ navigation }) => {
                   width: "90%",
                   paddingLeft: 40,
                 }}
-                placeholder="Search"
+                placeholder={t("search")}
                 value={searchParam}
                 onChangeText={(e) => setSearchParam(e)}
               ></TextInput>
@@ -305,21 +290,27 @@ const BillList = ({ navigation }) => {
           </View>
           <View style={{ marginTop: 25, gap: 10, marginBottom: 10 }}>
             {/* item */}
-            {
-              loading ? <ActivityIndicator size="large"
+            {loading ? (
+              <ActivityIndicator
+                size="large"
                 color="#498553"
-                style={{ flex: 1, alignItems: "center", justifyContent: "center" }} />
-                :
-                order.map((item, index) => (
-                  <Item
-                    orderID={item.orderID}
-                    dayOrder={item.timeOrder}
-                    totalPrice={item.totalPrice}
-                    status={item.status}
-                    onPress={() => HandleDetail(item.orderID)}
-                  />
-                ))
-            }
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+            ) : (
+              order.map((item, index) => (
+                <Item
+                  orderID={item.orderID}
+                  dayOrder={item.timeOrder}
+                  totalPrice={item.totalPrice}
+                  status={item.status}
+                  onPress={() => HandleDetail(item.orderID)}
+                />
+              ))
+            )}
           </View>
         </ScrollView>
       </View>
@@ -329,24 +320,30 @@ const BillList = ({ navigation }) => {
         visible={statusForm}
         onRequestClose={() => setStatusForm(!statusForm)}
       >
-        <View style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'rgba(0,0,0,0.5)',
-        }}>
-          <View style={{
-            width: "90%",
-            backgroundColor: 'white',
-            borderRadius: 15,
-            alignItems: 'center',
+        <View
+          style={{
+            flex: 1,
             justifyContent: "center",
-          }}>
-            <Text style={{
-              fontWeight: 700,
-              fontSize: 16
-            }}>
-              Choose status to filter orders
+            alignItems: "center",
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+        >
+          <View
+            style={{
+              width: "90%",
+              backgroundColor: "white",
+              borderRadius: 15,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: 700,
+                fontSize: 16,
+              }}
+            >
+              {t("chooseStatusToFilterOrders")}
             </Text>
             <ButtonMultiselect
               containerStyle={{
@@ -370,11 +367,13 @@ const BillList = ({ navigation }) => {
                 marginTop: 10,
                 paddingHorizontal: 20,
                 paddingVertical: 10,
-                borderRadius: 10
+                borderRadius: 10,
               }}
               onPress={() => HandleSubmit(selectedButtons)}
             >
-              <Text style={{ fontSize: 15, fontWeight: 700, color: "white" }}>Submit</Text>
+              <Text style={{ fontSize: 15, fontWeight: 700, color: "white" }}>
+                {t("submit")}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
