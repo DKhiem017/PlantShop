@@ -12,5 +12,17 @@
   "phoneNumber": "Số điện thoại",
   "createAccount": "Tạo tài khoản mới",
   "alreadyHaveAccount": "Đã có tài khoản",
-  "login": "Đăng nhập"
+  "login": "Đăng nhập",
+
+  "successAddProduct": "Thêm sản phẩm thành công",
+  "pleaseChooseAnImage": "Vui lòng chọn ảnh",
+  "productName":"Tên sản phẩm",
+  "category":"Phân loại",
+  "price": "Giá",
+  "description": "Mô tả",
+  "size": "Kích thước",
+  "height": "Chiều cao",
+  "temperature": "Nhiệt độ",
+  "quantity":"Số lượng",
+  "save":"Lưu"
 }

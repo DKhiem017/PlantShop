@@ -16,11 +16,13 @@ import { useState, useEffect, useCallback } from "react";
 import productApi from "../../../../Api/ProductApi";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
-import { useFocusEffect } from "@react-navigation/native";
 import ApiURL from "../../../../constants/baseURL";
+import { useTranslation } from "react-i18next";
 
 const AddProduct = ({ navigation }) => {
   const apiUrl = `${ApiURL}/api/Product/add-product`;
+
+  const {t} = useTranslation();
 
   const [type, setType] = useState();
   const [fileName, setFileName] = useState();
@@ -72,13 +74,13 @@ const AddProduct = ({ navigation }) => {
           },
         });
         console.log("Success: ", updatedata.data);
-        Alert.alert("Succesfully add a product");
+        Alert.alert(t("successAddProduct"));
         navigation.navigate("ProductAdmin");
       } catch (error) {
         console.log("Error: ", error);
       }
     } else {
-      Alert.alert("Please choose an image");
+      Alert.alert(t("pleaseChooseAnImage"));
     }
   };
   return (
@@ -87,7 +89,7 @@ const AddProduct = ({ navigation }) => {
     >
       <StatusBar></StatusBar>
       <View style={{ height: "100%" }}>
-        <Pagetitle title={"Product Detail"} navigation={navigation}></Pagetitle>
+        <Pagetitle title={t("productDetail")} navigation={navigation}></Pagetitle>
         <View
           style={{
             alignItems: "center",
@@ -123,7 +125,7 @@ const AddProduct = ({ navigation }) => {
                   fontWeight: 600,
                 }}
               >
-                Product Name
+                {t("productName")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -140,7 +142,7 @@ const AddProduct = ({ navigation }) => {
                   fontWeight: 600,
                 }}
               >
-                Category
+                {t("category")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -157,7 +159,7 @@ const AddProduct = ({ navigation }) => {
                   fontWeight: 600,
                 }}
               >
-                Price
+                {t("price")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -174,7 +176,7 @@ const AddProduct = ({ navigation }) => {
                   fontWeight: 600,
                 }}
               >
-                Description
+                {t("description")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -192,7 +194,7 @@ const AddProduct = ({ navigation }) => {
                   fontWeight: 600,
                 }}
               >
-                Size
+                {t("size")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -211,7 +213,7 @@ const AddProduct = ({ navigation }) => {
                   fontWeight: 600,
                 }}
               >
-                Height
+                {t("height")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -228,7 +230,7 @@ const AddProduct = ({ navigation }) => {
                   fontWeight: 600,
                 }}
               >
-                Temperature
+                {t("temperature")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -245,7 +247,7 @@ const AddProduct = ({ navigation }) => {
                   fontWeight: 600,
                 }}
               >
-                Quantity
+                {t("quantity")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -267,7 +269,7 @@ const AddProduct = ({ navigation }) => {
               onPress={handleAddProduct}
             >
               <Text style={{ fontSize: 16, fontWeight: "600", color: "#fff" }}>
-                Save
+                {t("save")}
               </Text>
             </TouchableOpacity>
           </View>

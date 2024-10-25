@@ -7,10 +7,22 @@
   "noAccount": "Don't have an account?",
   "register": "Register",
 
-"welcomeTo": "Welcome to",
+  "welcomeTo": "Welcome to",
   "name": "Name",
   "phoneNumber": "Phone number",
   "createAccount": "Create an Account",
   "alreadyHaveAccount": "Already have an Account",
-  "login": "Login"
+  "login": "Login",
+
+  "successAddProduct": "Successfully add a product",
+  "pleaseChooseAnImage": "Please choose an image",
+  "productName":"Product Name",
+  "category":"Category",
+  "price": "Price",
+  "description": "Description",
+  "size": "Size",
+  "height": "Height",
+  "temperature": "Temperature",
+  "quantity":"Quantity",
+  "save":"Save"
 }
