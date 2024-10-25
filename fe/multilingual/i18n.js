@@ -12,7 +12,7 @@ i18n.use(initReactI18next).init({
       translation: vi,
     },
   },
-  lng: "en", // Ngôn ngữ mặc định
+  lng: "vi", // Ngôn ngữ mặc định
   fallbackLng: "en", // Ngôn ngữ dự phòng
   interpolation: {
     escapeValue: false, // Không cần thiết cho React

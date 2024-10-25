@@ -18,6 +18,7 @@ import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 import ApiURL from "../../../../constants/baseURL";
+import { useTranslation } from "react-i18next";
 
 const styles = StyleSheet.create({
   plantImgContainer: {
@@ -96,6 +97,8 @@ const styles = StyleSheet.create({
 });
 
 const DetailProduct = ({ navigation, route }) => {
+  const { t } = useTranslation();
+
   const { id } = route.params;
 
   const [type, setType] = useState();
@@ -180,7 +183,7 @@ const DetailProduct = ({ navigation, route }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      Alert.alert("Succesfully update product information");
+      Alert.alert(t("succesfullyUpdateProductInformation"));
       navigation.navigate("ProductAdmin");
     } catch (error) {
       console.log("Error: ", error);
@@ -193,7 +196,7 @@ const DetailProduct = ({ navigation, route }) => {
     >
       <StatusBar></StatusBar>
       <View style={{ height: "100%" }}>
-        <Pagetitle title={"Product Detail"} navigation={navigation}></Pagetitle>
+        <Pagetitle title={t("productDetail")} navigation={navigation}></Pagetitle>
         <View
           style={{
             alignItems: "center",
@@ -229,7 +232,7 @@ const DetailProduct = ({ navigation, route }) => {
                   fontWeight: 600,
                 }}
               >
-                Product Name
+                {t("productName")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -246,7 +249,7 @@ const DetailProduct = ({ navigation, route }) => {
                   fontWeight: 600,
                 }}
               >
-                Category
+                {t("category")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -263,7 +266,7 @@ const DetailProduct = ({ navigation, route }) => {
                   fontWeight: 600,
                 }}
               >
-                Price
+                {t("price")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -280,7 +283,7 @@ const DetailProduct = ({ navigation, route }) => {
                   fontWeight: 600,
                 }}
               >
-                Description
+                {t("description")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -298,7 +301,7 @@ const DetailProduct = ({ navigation, route }) => {
                   fontWeight: 600,
                 }}
               >
-                Size
+                {t("size")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -317,7 +320,7 @@ const DetailProduct = ({ navigation, route }) => {
                   fontWeight: 600,
                 }}
               >
-                Height
+                {t("height")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -334,7 +337,7 @@ const DetailProduct = ({ navigation, route }) => {
                   fontWeight: 600,
                 }}
               >
-                Temperature
+                {t("temperature")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -351,7 +354,7 @@ const DetailProduct = ({ navigation, route }) => {
                   fontWeight: 600,
                 }}
               >
-                Quantity
+                {t("quantity")}
               </Text>
               <TextInput
                 style={styles.TextInputContent}
@@ -373,7 +376,7 @@ const DetailProduct = ({ navigation, route }) => {
               onPress={handleUpdateProduct}
             >
               <Text style={{ fontSize: 16, fontWeight: "600", color: "#fff" }}>
-                Save
+                {t("save")}
               </Text>
             </TouchableOpacity>
           </View>

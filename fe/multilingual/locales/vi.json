@@ -34,7 +34,7 @@
   "discountValue":"Chiết khấu",
   "add":"Thêm",
   
-  "myAccount": "Tài khoản của tôi",
+  "myAccount": "Tài khoản",
   "chatRoom":"Tin nhắn",
   "logout":"Đăng xuất",
 
@@ -61,5 +61,7 @@
   "shippingCost": "Phí giao hàng",
   "paymentMethod": "Phương thức thanh toán",
   "details": "Thông tin",
-  "total": "Tổng tiền"
+  "total": "Tổng tiền",
+
+  "succesfullyUpdateProductInformation": "Cập nhật thông tin sản phẩm thành công"
 }

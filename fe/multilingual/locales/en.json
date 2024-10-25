@@ -61,5 +61,7 @@
   "shippingCost": "Shipping cost",
   "paymentMethod": "Payment method",
   "details": "Details",
-  "total": "Total"
+  "total": "Total",
+
+  "succesfullyUpdateProductInformation": "Successfully update product information"
 }

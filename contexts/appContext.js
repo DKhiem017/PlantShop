@@ -6,7 +6,7 @@ export const AppProvider = ({ children }) => {
   const [token, setToken] = useState("");
   const [user, setUser] = useState({});
   const [role, setRole] = useState("");
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState("vi");
 
   return (
     <AppContext.Provider
