@@ -74,7 +74,14 @@
   "editVoucherSuccessfully": "Successfully edit voucher",
   "cannotEditVoucher": "Can't edit this voucher",
   "deleteVoucherSuccessfully": "Successfully delete voucher",
-  "cannotDeleteVoucher": "Can't delete this voucher",
+  "cannotDeleteVoucher": "Can't delete this product",
   "promotionDetail": "Promotion Detail",
-  "edit": "Edit"
+  "edit": "Edit",
+
+  "promotionList": "Promotion List",
+  "voucherCode": "Voucher Code",
+  "reduce": "Reduce",
+  "forAllOrders": "for all orders",
+  "from": "From",
+  "to": "to"
 }

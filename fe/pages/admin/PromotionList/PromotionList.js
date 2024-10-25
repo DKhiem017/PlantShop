@@ -13,10 +13,11 @@ import {
 import Feather from "@expo/vector-icons/Feather";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import voucherAPI from "../../../../Api/VoucherApi";
+import { useTranslation } from "react-i18next";
 
 const couponImg = require("../../../../assets/images/gift.png");
 
@@ -53,6 +54,8 @@ const styles = StyleSheet.create({
 });
 
 const PromotionList = ({ navigation }) => {
+  const { t } = useTranslation();
+
   const [data, setData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(true);
@@ -65,46 +68,44 @@ const PromotionList = ({ navigation }) => {
           console.log("success: ", response);
           setData(response);
           setLoading(false);
-        }
-        catch (error) {
+        } catch (error) {
           console.log("Error: ", error);
           setLoading(false);
         }
-      }
+      };
 
-      fetchAPI()
+      fetchAPI();
 
       return () => {
         setSearchValue("");
-      }
+      };
     }, [])
   );
 
   const HandleSearch = async (value) => {
     setLoading(true);
     if (value != "") {
-      return await voucherAPI.searchByName(value)
+      return await voucherAPI
+        .searchByName(value)
         .then((response) => {
           setData(response);
-          setLoading(false)
+          setLoading(false);
         })
         .catch((error) => {
           console.log(error);
-          alert("Not found voucher with provided keyword")
-        })
+          alert(t("voucherNotFound"));
+        });
+    } else {
+      return await voucherAPI.getAll().then((response) => {
+        setData(response);
+        setLoading(false);
+      });
     }
-    else {
-      return await voucherAPI.getAll()
-        .then((response) => {
-          setData(response);
-          setLoading(false)
-        })
-    }
-  }
+  };
 
   const HandleAddNew = () => {
     navigation.navigate("NewPromotionAdmin");
-  }
+  };
 
   const formatDate = (date) => {
     const inputDate = new Date(date);
@@ -115,13 +116,13 @@ const PromotionList = ({ navigation }) => {
 
     const formattedDate = `${day}/${month}/${year}`;
     return formattedDate;
-  }
+  };
 
   const HandleDetailVoucher = (id) => {
     navigation.navigate("PromotionDetailAdmin", {
-      voucherID: id
-    })
-  }
+      voucherID: id,
+    });
+  };
 
   const Item = ({ id, name, value, dateBegin, dateEnd, onPress }) => {
     return (
@@ -146,28 +147,29 @@ const PromotionList = ({ navigation }) => {
               paddingVertical: 2,
             }}
           >
-            <Text
-              style={{ fontSize: 13, fontWeight: 700, color: "#498553" }}
-            >
+            <Text style={{ fontSize: 13, fontWeight: 700, color: "#498553" }}>
               {name}
             </Text>
-            <Text
-              style={{ fontSize: 11, color: "#6F6A61" }}
-            >
-              Voucher Code: <Text style={{ color: "#498553", fontWeight: "bold" }}>{id}</Text>
+            <Text style={{ fontSize: 11, color: "#6F6A61" }}>
+              {t("voucherCode")}:{" "}
+              <Text style={{ color: "#498553", fontWeight: "bold" }}>{id}</Text>
             </Text>
             <Text style={{ fontSize: 11, color: "#6F6A61" }}>
-              Reduce <Text style={{ color: "red" }}>{value}%</Text> for all orders
+              {t("reduce")} <Text style={{ color: "red" }}>{value}%</Text> {t("forAllOrders")}
             </Text>
             <Text style={{ fontSize: 11, color: "#6F6A61" }}>
-              From <Text style={{ fontWeight: "bold" }}>{formatDate(dateBegin)}</Text> to <Text style={{ fontWeight: "bold" }}>{formatDate(dateEnd)}</Text>
-
+              {t("from")}{" "}
+              <Text style={{ fontWeight: "bold" }}>
+                {formatDate(dateBegin)}
+              </Text>{" "}
+              {t("to")}{" "}
+              <Text style={{ fontWeight: "bold" }}>{formatDate(dateEnd)}</Text>
             </Text>
           </View>
         </View>
       </TouchableOpacity>
-    )
-  }
+    );
+  };
 
   return (
     // View tổng quát
@@ -196,7 +198,7 @@ const PromotionList = ({ navigation }) => {
               color: "#498553",
             }}
           >
-            Promotion List
+            {t("promotionList")}
           </Text>
         </View>
         <View
@@ -217,7 +219,7 @@ const PromotionList = ({ navigation }) => {
                 width: "100%",
                 paddingLeft: 40,
               }}
-              placeholder="Search"
+              placeholder={t("search")}
               value={searchValue}
               onChangeText={(e) => setSearchValue(e)}
             ></TextInput>
@@ -236,25 +238,33 @@ const PromotionList = ({ navigation }) => {
         {/* Content */}
         <View style={{ marginTop: 25, gap: 10 }}>
           {/* item */}
-          {
-            loading ? <ActivityIndicator size="large"
+          {loading ? (
+            <ActivityIndicator
+              size="large"
               color="#498553"
-              style={{ flex: 1, alignItems: "center", justifyContent: "center" }} />
-              : <FlatList
-                data={data}
-                renderItem={({ item }) => (
-                  <Item id={item.id}
-                    name={item.name}
-                    value={item.value}
-                    dateBegin={item.dateBegin}
-                    dateEnd={item.dateEnd}
-                    onPress={() => HandleDetailVoucher(item.id)}
-                  />
-                )}
-                keyExtractor={(item) => item.id}
-                showsHorizontalScrollIndicator={false}
-              />
-          }
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            />
+          ) : (
+            <FlatList
+              data={data}
+              renderItem={({ item }) => (
+                <Item
+                  id={item.id}
+                  name={item.name}
+                  value={item.value}
+                  dateBegin={item.dateBegin}
+                  dateEnd={item.dateEnd}
+                  onPress={() => HandleDetailVoucher(item.id)}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+              showsHorizontalScrollIndicator={false}
+            />
+          )}
         </View>
       </View>
       <TouchableOpacity
@@ -272,7 +282,16 @@ const PromotionList = ({ navigation }) => {
         onPress={HandleAddNew}
       >
         <Ionicons name="add" size={18} color="white" />
-        <Text style={{ fontWeight: "700", fontSize: 16, color: "white", marginLeft: 3 }}>New</Text>
+        <Text
+          style={{
+            fontWeight: "700",
+            fontSize: 16,
+            color: "white",
+            marginLeft: 3,
+          }}
+        >
+          {t("new")}
+        </Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

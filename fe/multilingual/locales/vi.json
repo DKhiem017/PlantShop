@@ -76,5 +76,12 @@
   "deleteVoucherSuccessfully": "Xoá khuyến mãi thành công",
   "cannotDeleteVoucher": "Không thể xoá khuyến mãi này",
   "promotionDetail": "Thông tin khuyến mãi",
-  "edit": "Chỉnh sửa"
+  "edit": "Chỉnh sửa",
+
+  "promotionList": "Danh sách khuyến mãi",
+  "voucherCode": "Mã khuyến mãi",
+  "reduce": "Giảm",
+  "forAllOrders": "cho tất cả hoá đơn",
+  "from": "Từ",
+  "to": "đến"
 }
