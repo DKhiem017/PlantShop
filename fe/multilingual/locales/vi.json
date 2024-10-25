@@ -14,6 +14,7 @@
   "alreadyHaveAccount": "Đã có tài khoản",
   "login": "Đăng nhập",
 
+  "productDetail":"Thông tin sản phẩm",
   "successAddProduct": "Thêm sản phẩm thành công",
   "pleaseChooseAnImage": "Vui lòng chọn ảnh",
   "productName":"Tên sản phẩm",
@@ -24,5 +25,12 @@
   "height": "Chiều cao",
   "temperature": "Nhiệt độ",
   "quantity":"Số lượng",
-  "save":"Lưu"
+  "save":"Lưu",
+
+  "newPromotion": "Khuyến mãi mới",
+  "promotionName": "Tên khuyến mãi",
+  "startDate": "Ngày bắt đầu",
+  "expiredDate": "Ngày hết hạn",
+  "discountValue":"Chiết khấu",
+  "add":"Thêm"
 }

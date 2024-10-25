@@ -14,6 +14,7 @@
   "alreadyHaveAccount": "Already have an Account",
   "login": "Login",
 
+  "productDetail":"Product Detail",
   "successAddProduct": "Successfully add a product",
   "pleaseChooseAnImage": "Please choose an image",
   "productName":"Product Name",
@@ -24,5 +25,12 @@
   "height": "Height",
   "temperature": "Temperature",
   "quantity":"Quantity",
-  "save":"Save"
+  "save":"Save",
+
+  "newPromotion": "New Promotion",
+  "promotionName": "Promotion Name",
+  "startDate": "Start Date",
+  "expiredDate": "Expired Date",
+  "discountValue":"Discount Value",
+  "add":"Add"
 }
