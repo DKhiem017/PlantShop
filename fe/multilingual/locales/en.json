@@ -115,5 +115,10 @@
   "Subtotal": "Subtotal",
   "DeliveryFee": "Delivery Fee",
   "ReducedCost": "Reduced Cost",
-  "Accept": "Accept"
+  "Accept": "Accept",
+
+  "ChangesHaveBeenSaved": "Changes have been saved",
+  "CannotMakeChanges": "Cannot make changes, please try again",
+  "AddressDetail": "Address Detail",
+  "changes": "changes"
 }

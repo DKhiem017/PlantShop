@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import customerAPI from "../../../../Api/CustomerApi";
 import addressAPI from "../../../../Api/AddressApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const styles = StyleSheet.create({
   container: {
@@ -55,6 +56,8 @@ const styles = StyleSheet.create({
 });
 
 const DetailAddress = ({ navigation, route }) => {
+  const { t } = useTranslation();
+
   const { id } = route.params;
 
   const [name, setName] = useState("");
@@ -84,12 +87,12 @@ const DetailAddress = ({ navigation, route }) => {
     return await addressAPI
       .update(id, user, name, address, numberPhone)
       .then(() => {
-        alert("Changes have been saved");
+        alert("ChangesHaveBeenSaved");
         navigation.navigate("MyAddress");
       })
       .catch((error) => {
         console.log("Error: ", error);
-        alert("Cannot make changes, please try again");
+        alert("CannotMakeChanges");
       });
   };
 
@@ -97,7 +100,7 @@ const DetailAddress = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       <View>
         <StatusBar style="dark"></StatusBar>
-        <Pagetitle title={"Detail Address"} navigation={navigation}></Pagetitle>
+        <Pagetitle title={t("AddressDetail")} navigation={navigation}></Pagetitle>
         <View style={{ gap: 10, marginTop: 50 }}>
           {loading ? (
             <ActivityIndicator
@@ -119,7 +122,7 @@ const DetailAddress = ({ navigation, route }) => {
                     fontWeight: 700,
                   }}
                 >
-                  Receiver
+                {t("Receiver")}
                 </Text>
                 <TextInput
                   style={styles.TextInput}
@@ -135,7 +138,7 @@ const DetailAddress = ({ navigation, route }) => {
                     fontWeight: 700,
                   }}
                 >
-                  Phone Number
+                  {t("phoneNumber")}
                 </Text>
                 <TextInput
                   style={styles.TextInput}
@@ -151,7 +154,7 @@ const DetailAddress = ({ navigation, route }) => {
                     fontWeight: 700,
                   }}
                 >
-                  Address
+                  {t("address")}
                 </Text>
                 <TextInput
                   style={styles.TextInput}
@@ -171,7 +174,7 @@ const DetailAddress = ({ navigation, route }) => {
                       fontSize: 16,
                     }}
                   >
-                    Save changes
+                    {t("save")} {t("changes")}
                   </Text>
                 </TouchableOpacity>
               </View>
