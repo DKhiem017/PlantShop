@@ -16,6 +16,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome6 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const avt = require("../../../../assets/images/Logo.png");
 
@@ -33,6 +34,8 @@ const styles = StyleSheet.create({
 });
 
 const MyAccount = ({ navigation }) => {
+
+  const {t} = useTranslation();
 
   const UserinfoNavigation = () => {
     navigation.navigate("UserInfo");
@@ -60,12 +63,12 @@ const MyAccount = ({ navigation }) => {
 
   const HandleLogout = () => {
     Alert.alert(
-      "Logout",
-      "Do you want to log out?",
+      t("Logout"),
+      t("DoUWantToLogout"),
       [
-        { text: "Cancel", onPress: () => { }, style: "cancel" },
+        { text: t("Cancel"), onPress: () => { }, style: "cancel" },
         {
-          text: "Logout",
+          text: t("Logout"),
           onPress: async () => {
             AsyncStorage.removeItem("Token");
             AsyncStorage.removeItem("Role");
@@ -99,7 +102,7 @@ const MyAccount = ({ navigation }) => {
             }}
           >
             <Text style={{ fontSize: 19, fontWeight: 800, color: "#498553" }}>
-              My Account
+              {t("MyAccount")}
             </Text>
             <View
               style={{
@@ -143,7 +146,7 @@ const MyAccount = ({ navigation }) => {
                   fontSize: 16,
                 }}
               >
-                User Information
+                {t("UserInfo")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -169,7 +172,7 @@ const MyAccount = ({ navigation }) => {
                   fontSize: 16,
                 }}
               >
-                My Address
+                {t("MyAddress")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -195,7 +198,7 @@ const MyAccount = ({ navigation }) => {
                   fontSize: 16,
                 }}
               >
-                My Order
+                {t("MyOrder")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -218,7 +221,7 @@ const MyAccount = ({ navigation }) => {
                   fontSize: 16,
                 }}
               >
-                Chat Room
+                {t("ChatRoom")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -244,7 +247,7 @@ const MyAccount = ({ navigation }) => {
                   fontSize: 16,
                 }}
               >
-                My Feedback
+                {t("MyFeedback")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -270,7 +273,7 @@ const MyAccount = ({ navigation }) => {
                   fontSize: 16,
                 }}
               >
-                Voucher Wallet
+                {t("VoucherWallet")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -306,7 +309,7 @@ const MyAccount = ({ navigation }) => {
                   marginLeft: 70,
                 }}
               >
-                Logout
+                {t("Logout")}
               </Text>
             </TouchableOpacity>
           </View>

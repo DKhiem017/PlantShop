@@ -138,4 +138,18 @@
   "ChooseYourOption": "Choose your Option",
   "TakeAPhoto": "Take a photo",
   "ChooseAPic": "Choose a picture",
+
+  "Result": "Result",
+  "NoResultFound": "No result found",
+
+  "MyAccount": "My Account",
+  "UserInfo": "User Information",
+  "MyAddress": "My Address",
+  "MyOrder": "My Order",
+  "ChatRoom": "Chat Room",
+  "MyFeedback": "My Feedback",
+  "VoucherWallet": "Voucher Wallet",
+  "Logout": "Logout",
+  "DoUWantToLogout": "Do you want to logout?",
+  "Cancel": "cancel"
 }

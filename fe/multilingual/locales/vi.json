@@ -94,7 +94,7 @@
   "newAddress": "địa chỉ mới",
   "Receiver": "Người nhận hàng",
 
-  "MyCart": "Giỏ hàng của tôi",
+  "MyCart": "Giỏ hàng",
   "AllItems": "Chọn tất cả",
   "DeleteAll": "Xoá tất cả",
   "Checkout": "Thanh toán",
@@ -138,4 +138,18 @@
   "ChooseYourOption": "Lựa chọn của bạn",
   "TakeAPhoto": "Chụp ảnh",
   "ChooseAPic": "Chọn ảnh từ thư viện",
+
+  "Result": "Kết quả",
+  "NoResultFound": "Không tìm thấy kết quả",
+
+  "MyAccount": "Tài khoản",
+  "UserInfo": "Thông tin",
+  "MyAddress": "Địa chỉ",
+  "MyOrder": "Đơn hàng",
+  "ChatRoom": "Nhắn tin",
+  "MyFeedback": "Bài đánh giá",
+  "VoucherWallet": "Khuyến mãi",
+  "Logout": "Đăng xuất",
+  "DoUWantToLogout": "Bạn thực sự muốn đăng xuất?",
+  "Cancel": "huỷ"
 }

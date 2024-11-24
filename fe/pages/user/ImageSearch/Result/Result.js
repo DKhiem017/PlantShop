@@ -16,8 +16,11 @@ import { Rating } from "react-native-ratings";
 import axios from "axios";
 import productApi from "../../../../../Api/ProductApi";
 import ApiURL from "../../../../../constants/baseURL";
+import { useTranslation } from "react-i18next";
 
 const Result = ({ route, navigation }) => {
+  const { t } = useTranslation();
+
   const { photo, filename, type } = route.params;
 
   const apiUrl = `${ApiURL}/api/Product/predict-by-image`;
@@ -98,7 +101,7 @@ const Result = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
           {/* khung kết quả */}
-          <Text style={{ fontSize: 16, fontWeight: 600 }}>Result</Text>
+          <Text style={{ fontSize: 16, fontWeight: 600 }}>{t("Result")}</Text>
           <View>
             {hasResult ? (
               <TouchableOpacity
@@ -140,7 +143,7 @@ const Result = ({ route, navigation }) => {
               </TouchableOpacity>
             ) : (
               <View>
-                <Text>No result found</Text>
+                <Text>{t("NoResultFound")}</Text>
               </View>
             )}
           </View>
