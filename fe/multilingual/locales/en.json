@@ -151,5 +151,15 @@
   "VoucherWallet": "Voucher Wallet",
   "Logout": "Logout",
   "DoUWantToLogout": "Do you want to logout?",
-  "Cancel": "cancel"
+  "Cancel": "cancel",
+  
+  "Default": "Default",
+  "Delete": "Delete",
+  "SetAsDefault": "Set as default",
+
+  "Unreviewed": "Unreviewed",
+  "Reviewed": "Reviewed",
+
+  "UserName": "User Name",
+  "DateOfRegister": "Date of Register"
 }

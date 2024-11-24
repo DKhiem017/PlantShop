@@ -4,7 +4,7 @@ class CheckoutAPI {
   checkout = (
     customerID,
     totalPrice,
-    payMethod,
+    paymentType,
     deliveryMethod,
     shippingCost,
     note,
@@ -14,11 +14,10 @@ class CheckoutAPI {
     address,
     selectedItems
   ) => {
-    const url = `Order/new-order`;
+    const url = `Order/new-order?paymentType=${paymentType}`;
     return axiosClient.post(url, {
       customerID,
       totalPrice,
-      payMethod,
       deliveryMethod,
       shippingCost,
       note,

@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import customerAPI from "../../../../Api/CustomerApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const avt = require("../../../../assets/images/Logo.png");
 const styles = StyleSheet.create({
@@ -61,6 +62,8 @@ const UserInformation = ({ navigation }) => {
   const [address, setAddress] = useState("");
   const [registerDay, setRegisterDay] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchAPI = async () => {
@@ -116,7 +119,7 @@ const UserInformation = ({ navigation }) => {
       <View>
         <StatusBar style="dark"></StatusBar>
         <Pagetitle
-          title={"User Information"}
+          title={t("UserInfo")}
           navigation={navigation}
         ></Pagetitle>
         <View style={{ gap: 10, marginTop: 50 }}>
@@ -140,7 +143,7 @@ const UserInformation = ({ navigation }) => {
                     fontWeight: 600,
                   }}
                 >
-                  User Name
+                  {t("UserName")}
                 </Text>
                 <TextInput
                   style={styles.TextInput}
@@ -156,7 +159,7 @@ const UserInformation = ({ navigation }) => {
                     fontWeight: 600,
                   }}
                 >
-                  Phone Number
+                  {t("phoneNumber")}
                 </Text>
                 <TextInput
                   style={styles.TextInput}
@@ -172,7 +175,7 @@ const UserInformation = ({ navigation }) => {
                     fontWeight: 600,
                   }}
                 >
-                  Address
+                 {t("address")}
                 </Text>
                 <TextInput
                   style={styles.TextInput}
@@ -188,7 +191,7 @@ const UserInformation = ({ navigation }) => {
                     fontWeight: 600,
                   }}
                 >
-                  Date of Register
+                  {t("DateOfRegister")}                  
                 </Text>
                 <TextInput
                   style={styles.TextInput}
@@ -208,7 +211,7 @@ const UserInformation = ({ navigation }) => {
                       fontSize: 16,
                     }}
                   >
-                    Save changes
+                    {t("save")} {t("changes")}
                   </Text>
                 </TouchableOpacity>
               </View>

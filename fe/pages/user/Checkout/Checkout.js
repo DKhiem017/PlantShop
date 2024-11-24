@@ -31,6 +31,8 @@ const Checkout = ({ navigation, route }) => {
   //tính phí
   const [deliveryFee, setDeliveryFee] = useState(5);
 
+  const [paymentType, setPaymentType] = useState(1);
+
   const reducedcost =
     voucherValue !== undefined ? subTotal * (voucherValue / 100) : 0;
 
@@ -54,7 +56,7 @@ const Checkout = ({ navigation, route }) => {
         const createOrder = await checkoutAPI.checkout(
           user,
           total,
-          activePayment,
+          paymentType,
           activeMethod,
           deliveryFee,
           note,
@@ -110,6 +112,9 @@ const Checkout = ({ navigation, route }) => {
 
   const handlePayment = (method) => {
     setActivePayment(method);
+    if (method !== "normal") {
+      setPaymentType(2);
+    }
   };
 
   //xử lý navigation
@@ -165,7 +170,9 @@ const Checkout = ({ navigation, route }) => {
               style={styles.modifyBut}
               onPress={HandleMyAddress}
             >
-              <Text style={{ fontWeight: 400, color: "#fff" }}>{t("Modify")}</Text>
+              <Text style={{ fontWeight: 400, color: "#fff" }}>
+                {t("Modify")}
+              </Text>
               <Entypo
                 style={{ position: "absolute", right: 4 }}
                 name="chevron-right"
@@ -360,12 +367,16 @@ const Checkout = ({ navigation, route }) => {
         {/* Voucher */}
         <View style={styles.voucherContainer}>
           <View style={styles.customerInfo_grid1}>
-            <Text style={{ color: "#498553", fontWeight: 500 }}>{t("Voucher")}</Text>
+            <Text style={{ color: "#498553", fontWeight: 500 }}>
+              {t("Voucher")}
+            </Text>
             <TouchableOpacity
               style={styles.applyBut}
               onPress={handleVoucherWalletNavigation}
             >
-              <Text style={{ fontWeight: 400, color: "#fff" }}>{t("Apply")}</Text>
+              <Text style={{ fontWeight: 400, color: "#fff" }}>
+                {t("Apply")}
+              </Text>
               <Entypo
                 style={{ position: "absolute", right: 4 }}
                 name="chevron-right"
@@ -413,25 +424,6 @@ const Checkout = ({ navigation, route }) => {
                 }}
               >
                 {t("Normal")}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.paymentBut}
-              onPress={() => handlePayment("momo")}
-            >
-              <Entypo
-                name="dot-single"
-                size={24}
-                color={activePayment === "momo" ? "#498553" : "#6F6A61"}
-              />
-              <Text
-                style={{
-                  fontWeight: "500",
-                  color: activePayment === "momo" ? "#498553" : "#6F6A61",
-                  fontSize: 13,
-                }}
-              >
-                Momo
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -495,7 +487,9 @@ const Checkout = ({ navigation, route }) => {
             style={styles.acceptButton}
             onPress={handleCreateOrder}
           >
-            <Text style={{ color: "#fff", fontWeight: 500 }}>{t("Accept")}</Text>
+            <Text style={{ color: "#fff", fontWeight: 500 }}>
+              {t("Accept")}
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

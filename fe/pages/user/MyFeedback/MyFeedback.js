@@ -19,10 +19,12 @@ import feedbackApi from "../../../../Api/FeedbackApi";
 import { Rating } from "react-native-ratings";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const plant_img = require("../../../../assets/images/Monstera_tran.png");
 
 const MyFeedback = ({ navigation }) => {
+  const { t } = useTranslation();
   //format Date
   const formatDate = (date) => {
     const inputDate = new Date(date);
@@ -181,7 +183,7 @@ const MyFeedback = ({ navigation }) => {
           onPress={() => handleAddFeedback(orderID, productID)}
         >
           <Text style={{ color: "#fff", fontWeight: 400, fontSize: 11 }}>
-            Feedback
+            {t("Feedback")}
           </Text>
         </TouchableOpacity>
       </View>
@@ -228,7 +230,7 @@ const MyFeedback = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
       <View style={{ paddingHorizontal: 15 }}>
         <StatusBar></StatusBar>
-        <Pagetitle title={"My Feedback"} navigation={navigation}></Pagetitle>
+        <Pagetitle title={t("MyFeedback")} navigation={navigation}></Pagetitle>
         <View style={{ flexDirection: "row", marginTop: 10 }}>
           {/* Unreview */}
           <TouchableOpacity
@@ -241,7 +243,7 @@ const MyFeedback = ({ navigation }) => {
                 { color: reviewed === true ? "#6F6A61" : "#498553" },
               ]}
             >
-              Unreviewed
+              {t("Unreviewed")}
             </Text>
             {!reviewed && <View style={styles.underline}></View>}
           </TouchableOpacity>
@@ -255,7 +257,7 @@ const MyFeedback = ({ navigation }) => {
                 { color: reviewed === false ? "#6F6A61" : "#498553" },
               ]}
             >
-              Reviewed
+              {t("Reviewed")}
             </Text>
             {reviewed && <View style={styles.underline}></View>}
           </TouchableOpacity>
@@ -310,7 +312,7 @@ const MyFeedback = ({ navigation }) => {
                   style={{ fontSize: 16, color: "#498553", fontWeight: "600" }}
                 >
                   {" "}
-                  Review
+                  {t("Review")}
                 </Text>
                 <View style={styles.customRatingbar}>
                   {maxRating.map((item, key) => {
@@ -346,7 +348,7 @@ const MyFeedback = ({ navigation }) => {
                     <Text
                       style={{ fontSize: 12, color: "#fff", fontWeight: 500 }}
                     >
-                      Cancel
+                      {t("Cancel")}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -356,7 +358,7 @@ const MyFeedback = ({ navigation }) => {
                     <Text
                       style={{ fontSize: 12, color: "#fff", fontWeight: 500 }}
                     >
-                      Save
+                      {t("save")}
                     </Text>
                   </TouchableOpacity>
                 </View>

@@ -110,7 +110,7 @@
   "Express": "Hoả tốc",
   "Voucher": "Khuyến mãi",
   "Apply": "Áp dụng",
-  "PaymentMethod": "Payment Method",
+  "PaymentMethod": "Phương thức thanh toán",
   "Banking": "Ngân hàng",
   "Subtotal": "Tổng giá trị",
   "DeliveryFee": "Phí vận chuyển",
@@ -143,7 +143,7 @@
   "NoResultFound": "Không tìm thấy kết quả",
 
   "MyAccount": "Tài khoản",
-  "UserInfo": "Thông tin",
+  "UserInfo": "Thông tin tài khoản",
   "MyAddress": "Địa chỉ",
   "MyOrder": "Đơn hàng",
   "ChatRoom": "Nhắn tin",
@@ -151,5 +151,15 @@
   "VoucherWallet": "Khuyến mãi",
   "Logout": "Đăng xuất",
   "DoUWantToLogout": "Bạn thực sự muốn đăng xuất?",
-  "Cancel": "huỷ"
+  "Cancel": "huỷ",
+
+  "Default": "Mặc định",
+  "Delete": "Xoá",
+  "SetAsDefault": "Đặt làm mặc định",
+
+  "Unreviewed": "Chưa đánh giá",
+  "Reviewed": "Đã đánh giá",
+
+  "UserName": "Tên tài khoản",
+  "DateOfRegister": "Ngày đăng ký"
 }

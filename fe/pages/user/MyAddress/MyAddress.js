@@ -12,8 +12,11 @@ import { useCallback, useState } from "react";
 import addressAPI from "../../../../Api/AddressApi";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const MyAddress = ({ navigation, route }) => {
+  const { t } = useTranslation();
+
   const { ProductList } = route.params;
   console.log(ProductList);
   //dữ liệu
@@ -111,7 +114,7 @@ const MyAddress = ({ navigation, route }) => {
                 </View>
                 <View style={styles.defaultContainer}>
                   <Text style={{ color: "#EAC100", fontSize: 11 }}>
-                    Default
+                    {t("Default")}
                   </Text>
                 </View>
               </View>
@@ -120,7 +123,7 @@ const MyAddress = ({ navigation, route }) => {
                 <Text
                   style={{ fontSize: 13, fontWeight: 500, color: "#627FE7" }}
                 >
-                  Edit
+                  {t("edit")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -159,14 +162,14 @@ const MyAddress = ({ navigation, route }) => {
                       marginRight: 20,
                     }}
                   >
-                    Edit
+                    {t("edit")}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => onDelete(id)}>
                   <Text
                     style={{ fontSize: 13, fontWeight: 500, color: "#cd5c5c" }}
                   >
-                    Delete
+                    {t("Delete")}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -177,7 +180,7 @@ const MyAddress = ({ navigation, route }) => {
                 onPress={() => onSetDefault(id)}
               >
                 <Text style={{ color: "#fff", fontSize: 12, fontWeight: 500 }}>
-                  Set as default
+                  {t("SetAsDefault")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -191,7 +194,7 @@ const MyAddress = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       <View>
         <StatusBar></StatusBar>
-        <Pagetitle title={"My Address"} navigation={navigation}></Pagetitle>
+        <Pagetitle title={t("MyAddress")} navigation={navigation}></Pagetitle>
         {/* add address */}
         <View style={{ marginTop: 15, width: "100%", alignItems: "flex-end" }}>
           <TouchableOpacity
@@ -199,7 +202,7 @@ const MyAddress = ({ navigation, route }) => {
             onPress={handleAddAddress}
           >
             <Text style={{ color: "#fff", fontSize: 12, fontWeight: 500 }}>
-              Add new Address
+              {t("add")} {t("newAddress")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -254,7 +257,7 @@ const styles = StyleSheet.create({
     height: 20,
   },
   setDefaultButton: {
-    width: 96,
+    paddingHorizontal:10,
     paddingVertical: 5,
     borderRadius: 5,
     backgroundColor: "#498553",
