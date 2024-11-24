@@ -9,8 +9,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Entypo } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { useTranslation } from "react-i18next";
 
 const Imagesearch = ({ navigation }) => {
+  const { t } = useTranslation();
   const handleCameraNavigation = () => {
     navigation.navigate("Camera");
   };
@@ -30,7 +32,7 @@ const Imagesearch = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={{ fontSize: 25, fontWeight: "bold", color: "#498553" }}>
-        Choose your option
+        {t("ChooseYourOption")}
       </Text>
       <View style={styles.optionContainer}>
         <TouchableOpacity
@@ -39,7 +41,7 @@ const Imagesearch = ({ navigation }) => {
         >
           <Entypo name="camera" size={70} color="#498553" />
           <Text style={{ color: "#498553", fontSize: 15, fontWeight: "bold" }}>
-            Take a photo
+            {t("TakeAPhoto")}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -48,7 +50,7 @@ const Imagesearch = ({ navigation }) => {
         >
           <MaterialIcons name="insert-photo" size={70} color="#498553" />
           <Text style={{ color: "#498553", fontSize: 15, fontWeight: "bold" }}>
-            Choose a picture
+            {t("ChooseAPic")}
           </Text>
         </TouchableOpacity>
       </View>

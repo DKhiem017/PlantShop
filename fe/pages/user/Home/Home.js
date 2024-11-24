@@ -19,6 +19,8 @@ import { useCallback, useEffect, useState } from "react";
 import productApi from "../../../../Api/ProductApi";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
+import customerAPI from "../../../../Api/CustomerApi";
 
 const avt = require("../../../../assets/images/Monstera.jpg");
 const product_background = require("../../../../assets/images/Background_Plants.png");
@@ -132,6 +134,8 @@ const styles = StyleSheet.create({
 });
 
 const Home = ({ navigation }) => {
+  const { t } = useTranslation();
+
   const DetailProductNavigation = (productID) => {
     navigation.navigate("Product Info", {
       id: productID,
@@ -147,14 +151,17 @@ const Home = ({ navigation }) => {
   const [searchResult, setSearchResult] = useState([]);
   const [param, setParam] = useState("");
 
+  const [userName, setUserName] = useState();
+
   useFocusEffect(
     useCallback(() => {
       const fetchApi = async () => {
         try {
           const user = await AsyncStorage.getItem("CustomerID");
+          const userInfo = await customerAPI.getInfo(user);
+          setUserName(userInfo.name);
           const response = await productApi.getAll();
           const recommend = await productApi.getRecommend(user);
-          console.log("recommend", recommend);
           setProduct(response);
           setRecommendProduct(recommend);
           setLoading(false);
@@ -177,7 +184,7 @@ const Home = ({ navigation }) => {
         setLoading(false);
       })
       .catch((error) => {
-        Alert.alert("Cannot load data");
+        Alert.alert(t("CannotLoadData"));
       });
   };
 
@@ -190,7 +197,7 @@ const Home = ({ navigation }) => {
         setLoading(false);
       })
       .catch((error) => {
-        Alert.alert("Cannot load data");
+        Alert.alert(t("CannotLoadData"));
       });
   };
 
@@ -203,7 +210,7 @@ const Home = ({ navigation }) => {
         setLoading(false);
       })
       .catch((error) => {
-        Alert.alert("Cannot load data");
+        Alert.alert(t("CannotLoadData"));
       });
   };
 
@@ -216,7 +223,7 @@ const Home = ({ navigation }) => {
         setShowResult(true);
       })
       .catch(() => {
-        Alert.alert("Please enter keyword to search");
+        Alert.alert(t("PleaseEnterKeywordToSearch"));
       });
   };
 
@@ -300,18 +307,18 @@ const Home = ({ navigation }) => {
             }}
           >
             <Text style={{ color: "#6F6A61", opacity: 80, fontSize: 12 }}>
-              Welcome to our Store
+              {t("WelcomeTo")} {t("ourStore")}
             </Text>
             <Text
               style={{ color: "#498553", fontWeight: "bold", fontSize: 15 }}
             >
-              Hoàng Phúc
+              {userName}
             </Text>
           </View>
         </View>
         {/* Searchbar */}
         <Searchbar
-          placeholder="Search for plants..."
+          placeholder={t("SearchForPlants") + ("...")}
           searchCharacter={param}
           onChangeText={(e) => setParam(e)}
           onPress={HandleSearchProduct}
@@ -329,8 +336,8 @@ const Home = ({ navigation }) => {
                 fontWeight: "700",
               }}
             >
-              Found {searchResult.length !== null ? searchResult.length : 0}{" "}
-              results
+              {t("Found")} {searchResult.length !== null ? searchResult.length : 0}{" "}
+              {t("results")}
             </Text>
             <FlatList
               horizontal={true}
@@ -370,7 +377,7 @@ const Home = ({ navigation }) => {
                 { color: activeIndex === null ? "#fff" : "#6F6A61" },
               ]}
             >
-              All
+              {t("all")}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -389,7 +396,7 @@ const Home = ({ navigation }) => {
                 { color: activeIndex === 0 ? "#fff" : "#6F6A61" },
               ]}
             >
-              Best-seller
+              {t("BestSeller")}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -408,7 +415,7 @@ const Home = ({ navigation }) => {
                 { color: activeIndex === 1 ? "#fff" : "#6F6A61" },
               ]}
             >
-              Indoor
+              {t("Indoor")}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -427,7 +434,7 @@ const Home = ({ navigation }) => {
                 { color: activeIndex === 2 ? "#fff" : "#6F6A61" },
               ]}
             >
-              Outdoor
+              {t("Outdoor")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -456,7 +463,7 @@ const Home = ({ navigation }) => {
         </View>
         {/* Recommend */}
         <Text style={{ fontSize: 16, color: "#498553", fontWeight: 700 }}>
-          Recommend for you
+          {t("Recommend")} {t("forYou")}
         </Text>
         <View>
           {loading ? (

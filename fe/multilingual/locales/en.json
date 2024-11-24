@@ -120,5 +120,22 @@
   "ChangesHaveBeenSaved": "Changes have been saved",
   "CannotMakeChanges": "Cannot make changes, please try again",
   "AddressDetail": "Address Detail",
-  "changes": "changes"
+  "changes": "changes",
+
+  "CannotLoadData": "Cannot load data",
+  "PleaseEnterKeywordToSearch": "Please enter keyword to search",
+  "WelcomeTo": "Welcome to",
+  "ourStore": "our Store",
+  "SearchForPlants": "Search for plants",
+  "Found": "Found",
+  "results": "results",
+  "BestSeller": "Best-seller",
+  "Indoor": "Indoor",
+  "Outdoor": "Outdoor",
+  "Recommend": "Recommend",
+  "forYou": "for You",
+
+  "ChooseYourOption": "Choose your Option",
+  "TakeAPhoto": "Take a photo",
+  "ChooseAPic": "Choose a picture",
 }

@@ -120,5 +120,22 @@
   "ChangesHaveBeenSaved": "Thay đổi đã được lưu",
   "CannotMakeChanges": "Không thể thay đổi thông tin, vui lòng thử lại",
   "AddressDetail": "Thông tin địa chỉ",
-  "changes": "thay đổi"
+  "changes": "thay đổi",
+
+  "CannotLoadData": "Không thể tải dữ liệu",
+  "PleaseEnterKeywordToSearch": "Vui lòng nhập từ khoá",
+  "WelcomeTo": "Chào mừng đến với",
+  "ourStore": "cửa hàng",
+  "SearchForPlants": "Tìm kiếm cây cảnh",
+  "Found": "Tìm thấy",
+  "results": "kết quả",
+  "BestSeller": "Bán chạy",
+  "Indoor": "Trong nhà",
+  "Outdoor": "Ngoài trời",
+  "Recommend": "Gợi ý",
+  "forYou": "cho bạn",
+
+  "ChooseYourOption": "Lựa chọn của bạn",
+  "TakeAPhoto": "Chụp ảnh",
+  "ChooseAPic": "Chọn ảnh từ thư viện",
 }
