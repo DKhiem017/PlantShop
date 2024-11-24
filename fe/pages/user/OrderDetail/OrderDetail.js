@@ -14,6 +14,7 @@ import Pagetitle from "../../../components/pagetitle";
 import { Entypo } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import orderAPI from "../../../../Api/OrderApi";
+import { useTranslation } from "react-i18next";
 
 const styles = StyleSheet.create({
   container: {
@@ -59,6 +60,8 @@ const styles = StyleSheet.create({
 });
 
 const OrderDetail = ({ route, navigation }) => {
+  const { t } = useTranslation();
+
   const { id } = route.params;
 
   const [data, setData] = useState([]);
@@ -183,7 +186,7 @@ const OrderDetail = ({ route, navigation }) => {
                 fontSize: 13,
               }}
             >
-              {quantity} items
+              {quantity} {t("items")}
             </Text>
             <Text style={{ color: "#000", fontWeight: 600, fontSize: 13 }}>
               ${price}
@@ -200,7 +203,7 @@ const OrderDetail = ({ route, navigation }) => {
     >
       <View>
         <StatusBar></StatusBar>
-        <Pagetitle title={"Order Detail"} navigation={navigation}></Pagetitle>
+        <Pagetitle title={t("OrderDetail")} navigation={navigation}></Pagetitle>
         {/* Thông tin order */}
         {loading ? (
           <ActivityIndicator
@@ -224,16 +227,16 @@ const OrderDetail = ({ route, navigation }) => {
                   <Text
                     style={{ color: "#498553", fontWeight: 800, fontSize: 15 }}
                   >
-                    Order Infomation
+                    {t("OrderInfo")}
                   </Text>
                   {StatusColor(data.order.status)}
                 </View>
                 {/* Text Container */}
                 <View style={{ flexDirection: "row", marginTop: 10, gap: 40 }}>
                   <View style={{ gap: 4 }}>
-                    <Text style={{ color: "#498553" }}>OrderID</Text>
-                    <Text style={{ color: "#498553" }}>Time</Text>
-                    <Text style={{ color: "#498553" }}>Total</Text>
+                    <Text style={{ color: "#498553" }}>{t("OrderID")}</Text>
+                    <Text style={{ color: "#498553" }}>{t("TimeOfOrder")}</Text>
+                    <Text style={{ color: "#498553" }}>{t("total")}</Text>
                   </View>
                   <View style={{ gap: 4 }}>
                     <Text style={{ color: "#498553", fontWeight: 700 }}>
@@ -253,7 +256,7 @@ const OrderDetail = ({ route, navigation }) => {
                 <Text
                   style={{ color: "#498553", fontSize: 15, fontWeight: 700 }}
                 >
-                  Recipient Infomation
+                  {t("RecipientInfo")}
                 </Text>
                 <View style={{ marginTop: 8, gap: 4 }}>
                   <View style={{ flexDirection: "row", gap: 5 }}>
@@ -275,7 +278,7 @@ const OrderDetail = ({ route, navigation }) => {
                   <Text
                     style={{ color: "#498553", fontWeight: 700, fontSize: 15 }}
                   >
-                    Product List
+                    {t("productList")}
                   </Text>
                   <TouchableOpacity
                     style={{
@@ -311,12 +314,12 @@ const OrderDetail = ({ route, navigation }) => {
                 <Text
                   style={{ color: "#498553", fontSize: 15, fontWeight: 700 }}
                 >
-                  Deliverty & Payment
+                  {t("delivery")} & {t("payment")}
                 </Text>
                 <View style={{ marginTop: 4, gap: 30, flexDirection: "row" }}>
                   <View style={{ gap: 5 }}>
-                    <Text style={{ color: "#498553" }}>Delivery Method</Text>
-                    <Text style={{ color: "#498553" }}>Payment Method</Text>
+                    <Text style={{ color: "#498553" }}>{t("DeliveryMethod")}</Text>
+                    <Text style={{ color: "#498553" }}>{t("PaymentMethod")}</Text>
                   </View>
                   <View style={{ gap: 5 }}>
                     <Text style={{ color: "#498553", fontWeight: 700 }}>
@@ -334,13 +337,13 @@ const OrderDetail = ({ route, navigation }) => {
                 <Text
                   style={{ color: "#498553", fontSize: 15, fontWeight: 700 }}
                 >
-                  Summary
+                  {t("Summary")}
                 </Text>
                 <View style={{ marginTop: 4, flexDirection: "row", gap: 55 }}>
                   <View style={{ gap: 4 }}>
-                    <Text style={{ color: "#498553" }}>SubTotal</Text>
-                    <Text style={{ color: "#498553" }}>Delivery Cost</Text>
-                    <Text style={{ color: "#498553" }}>Total</Text>
+                    <Text style={{ color: "#498553" }}>{t("Subtotal")}</Text>
+                    <Text style={{ color: "#498553" }}>{t("DeliveryFee")}</Text>
+                    <Text style={{ color: "#498553" }}>{t("total")}</Text>
                   </View>
                   <View style={{ gap: 4 }}>
                     <Text style={{ color: "#498553", fontWeight: 700 }}>

@@ -161,5 +161,19 @@
   "Reviewed": "Đã đánh giá",
 
   "UserName": "Tên tài khoản",
-  "DateOfRegister": "Ngày đăng ký"
+  "DateOfRegister": "Ngày đăng ký",
+
+  "Chat": "Tin nhắn",
+
+  "SearchForVoucher": "Tìm kiếm khuyến mãi",
+
+  "WishList": "Mục yêu thích",
+
+  "SearchForOrder": "Tìm kiếm đơn hàng",
+  "items": "sản phẩm",
+  "Detail": "Chi tiết",
+  "OrderID": "Mã đơn hàng",
+  "TotalPrice": "Tổng giá trị",
+  "TimeOfOrder": "Ngày hoá đơn",
+  "Status": "Trạng thái"
 }

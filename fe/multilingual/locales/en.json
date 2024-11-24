@@ -161,5 +161,17 @@
   "Reviewed": "Reviewed",
 
   "UserName": "User Name",
-  "DateOfRegister": "Date of Register"
+  "DateOfRegister": "Date of Register",
+
+  "Chat": "Chat",
+
+  "WishList": "Wish List",
+
+  "SearchForOrder": "Search for order",
+  "items": "items",
+  "Detail": "Detail",
+  "OrderID": "Order ID",
+  "TotalPrice": "Total Price",
+  "TimeOfOrder": "Time of order",
+  "Status": "Status"
 }

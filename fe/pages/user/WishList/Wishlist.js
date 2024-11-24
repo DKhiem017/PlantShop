@@ -15,6 +15,7 @@ import { useCallback, useEffect, useState } from "react";
 import wishListAPI from "../../../../Api/WishListApi";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const product_background = require("../../../../assets/images/Background_Plants.png");
 const plant_img = require("../../../../assets/images/Monstera_tran.png");
@@ -78,6 +79,8 @@ const styles = StyleSheet.create({
 });
 
 const Wishlist = ({ navigation }) => {
+  const { t } = useTranslation();
+
   const HandleDetailProduct = (productID) => {
     navigation.navigate("Product Info", {
       id: productID,
@@ -185,10 +188,10 @@ const Wishlist = ({ navigation }) => {
         }}
       >
         <Text style={{ fontSize: 18, fontWeight: 700, color: "#498553" }}>
-          WishList
+          {t("WishList")}
         </Text>
       </View>
-      <Searchbar placeholder="Search for plants..."></Searchbar>
+      <Searchbar placeholder={t("SearchForPlants") + "..."}></Searchbar>
       <View style={styles.gridContainer}>
         {loading ? (
           <ActivityIndicator

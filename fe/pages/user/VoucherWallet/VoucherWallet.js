@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import voucherAPI from "../../../../Api/VoucherApi";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const couponImg = require("../../../../assets/images/gift.png");
 
@@ -60,6 +61,9 @@ const styles = StyleSheet.create({
 });
 
 const VoucherWallet = ({ navigation, route }) => {
+
+  const {t} = useTranslation();
+
   const { ProductList, subTotal } = route.params;
   //apply Voucher
   const handleApplyVoucher = (id, name, value) => {
@@ -142,21 +146,20 @@ const VoucherWallet = ({ navigation, route }) => {
                 {name}
               </Text>
               <Text style={{ fontSize: 11, color: "#6F6A61" }}>
-                Voucher Code:{" "}
+                {t("voucherCode")}:{" "}
                 <Text style={{ color: "#498553", fontWeight: "bold" }}>
                   {id}
                 </Text>
               </Text>
               <Text style={{ fontSize: 11, color: "#6F6A61" }}>
-                Reduce <Text style={{ color: "red" }}>{value}%</Text> for all
-                orders
+                {t("reduce")} <Text style={{ color: "red" }}>{value}%</Text> {t("forAllOrders")}
               </Text>
               <Text style={{ fontSize: 11, color: "#6F6A61" }}>
-                From{" "}
+                {t("from")}{" "}
                 <Text style={{ fontWeight: "bold" }}>
                   {formatDate(dateBegin)}
                 </Text>{" "}
-                to{" "}
+                {t("to")}{" "}
                 <Text style={{ fontWeight: "bold" }}>
                   {formatDate(dateEnd)}
                 </Text>
@@ -165,7 +168,7 @@ const VoucherWallet = ({ navigation, route }) => {
           </View>
           <View style={styles.applyButtonContainer}>
             <TouchableOpacity style={styles.applyBut} onPress={onPress}>
-              <Text style={{ fontSize: 12, color: "#fff" }}>Apply</Text>
+              <Text style={{ fontSize: 12, color: "#fff" }}>{t("Apply")}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -179,9 +182,9 @@ const VoucherWallet = ({ navigation, route }) => {
     >
       <StatusBar></StatusBar>
       <View>
-        <Pagetitle title={"Voucher Wallet"} navigation={navigation}></Pagetitle>
+        <Pagetitle title={t("VoucherWallet")} navigation={navigation}></Pagetitle>
         <Searchbar
-          placeholder="Search for voucher ... "
+          placeholder={t("SearchForVoucher")+'...'}
           onPress={() => HandleSearch()}
         ></Searchbar>
         <View style={{ marginTop: 15, gap: 10 }}>

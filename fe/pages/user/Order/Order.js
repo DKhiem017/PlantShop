@@ -20,6 +20,7 @@ import ButtonMultiselect, {
   ButtonLayout,
 } from "react-native-button-multiselect";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const adjust = require("../../../../assets/images/Adjust.png");
 const plantImg = require("../../../../assets/images/Monstera_tran.png");
@@ -70,17 +71,19 @@ const styles = StyleSheet.create({
 });
 
 const Order = ({ navigation }) => {
+  const { t } = useTranslation();
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchCharacter, setSearchCharacter] = useState("");
   const [statusForm, setStatusForm] = useState(false);
 
   const buttons = [
-    { label: "All", value: 0 },
-    { label: "Pending", value: 1 },
-    { label: "Packaging", value: 2 },
-    { label: "Delivering", value: 3 },
-    { label: "Completed", value: 4 },
+    { label: t("all"), value: 0 },
+    { label: t("pending"), value: 1 },
+    { label: t("packaging"), value: 2 },
+    { label: t("delivering"), value: 3 },
+    { label: t("completed"), value: 4 },
   ];
 
   const [selectedButtons, setSelectedButtons] = useState([]);
@@ -146,14 +149,14 @@ const Order = ({ navigation }) => {
                 {nameProduct}
               </Text>
               <Text style={{ color: "#6F6A61", fontSize: 13 }}>
-                {quantity} items
+                {quantity} {t("items")}
               </Text>
             </View>
             {/* detail button */}
             <TouchableOpacity
               style={{
                 height: 25,
-                width: 60,
+                paddingHorizontal: 5,
                 backgroundColor: "#498553",
                 display: "flex",
                 flexDirection: "row",
@@ -173,7 +176,7 @@ const Order = ({ navigation }) => {
                   marginRight: 5,
                 }}
               >
-                Detail
+                {t("Detail")}
               </Text>
               <Entypo name="chevron-right" size={13} color="#fff" />
             </TouchableOpacity>
@@ -186,7 +189,7 @@ const Order = ({ navigation }) => {
                 justifyContent: "space-between",
               }}
             >
-              <Text style={styles.greyText}>ID Order</Text>
+              <Text style={styles.greyText}>{t("OrderID")}</Text>
               <Text style={{ fontSize: 13, fontWeight: 600, color: "#498553" }}>
                 {orderID}
               </Text>
@@ -197,7 +200,7 @@ const Order = ({ navigation }) => {
                 justifyContent: "space-between",
               }}
             >
-              <Text style={styles.greyText}>Total Price</Text>
+              <Text style={styles.greyText}>{t("TotalPrice")}</Text>
               <Text style={{ fontSize: 13, fontWeight: 600, color: "#000" }}>
                 ${totalPrice}
               </Text>
@@ -208,7 +211,7 @@ const Order = ({ navigation }) => {
                 justifyContent: "space-between",
               }}
             >
-              <Text style={styles.greyText}>Time of Order</Text>
+              <Text style={styles.greyText}>{t("TimeOfOrder")}</Text>
               <Text style={{ fontSize: 13, fontWeight: 700, color: "#000" }}>
                 {formatDate(date)}
               </Text>
@@ -219,7 +222,7 @@ const Order = ({ navigation }) => {
                 justifyContent: "space-between",
               }}
             >
-              <Text style={styles.greyText}>Status</Text>
+              <Text style={styles.greyText}>{t("Status")}</Text>
               {StatusColor(status)}
             </View>
           </View>
@@ -324,7 +327,7 @@ const Order = ({ navigation }) => {
     >
       <View style={{ width: "100%" }}>
         <StatusBar></StatusBar>
-        <Pagetitle title={"My Order"} navigation={navigation}></Pagetitle>
+        <Pagetitle title={t("MyOrder")} navigation={navigation}></Pagetitle>
         {/* search và lọc */}
         <View
           style={{
@@ -340,7 +343,7 @@ const Order = ({ navigation }) => {
             style={{ display: "flex", justifyContent: "center", width: "85%" }}
           >
             <TextInput
-              placeholder="Search for orders..."
+              placeholder={t("SearchForOrder") + "..."}
               style={{
                 backgroundColor: "#fff",
                 height: 40,
@@ -430,7 +433,7 @@ const Order = ({ navigation }) => {
                 fontSize: 16,
               }}
             >
-              Choose status to filter orders
+              {t("ChooseStatusToFillOrder")}
             </Text>
             <ButtonMultiselect
               containerStyle={{
@@ -459,7 +462,7 @@ const Order = ({ navigation }) => {
               onPress={() => HandleSubmit(selectedButtons)}
             >
               <Text style={{ fontSize: 15, fontWeight: 700, color: "white" }}>
-                Submit
+                {t("submit")}
               </Text>
             </TouchableOpacity>
           </View>
