@@ -83,5 +83,37 @@
   "reduce": "Reduce",
   "forAllOrders": "for all orders",
   "from": "From",
-  "to": "to"
+  "to": "to",
+
+  "report": "Report",
+  "revenue": "Revenue",
+  "bills": "Bills",
+  "topDeal": "Top Deal",
+  "products": "products",
+
+  "newAddress": "new address",
+  "Receiver": "Receiver",
+  
+  "MyCart": "My Cart",
+  "AllItems": "All items",
+  "DeleteAll": "Delete all",
+  "Checkout": "Checkout",
+  
+  "SuccessfulyCreateOrder": "Successfully create order",
+  "ThereIsNoOrderChoosen": "There's no order choosen",
+  "RecipientInfo": "Recipient information",
+  "Modify": "Modify",
+  "Recipient": "Recipient",
+  "Note": "Note",
+  "DeliveryMethod": "Delivery Method",
+  "Normal": "Normal",
+  "Express": "Express",
+  "Voucher": "Voucher",
+  "Apply": "Apply",
+  "PaymentMethod": "Payment Method",
+  "Banking": "Banking",
+  "Subtotal": "Subtotal",
+  "DeliveryFee": "Delivery Fee",
+  "ReducedCost": "Reduced Cost",
+  "Accept": "Accept"
 }

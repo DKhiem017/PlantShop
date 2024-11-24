@@ -19,8 +19,11 @@ import { useFocusEffect } from "@react-navigation/native";
 import addressAPI from "../../../../Api/AddressApi";
 import checkoutAPI from "../../../../Api/CheckoutApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const Checkout = ({ navigation, route }) => {
+  const { t } = useTranslation();
+
   const { data, subTotal, voucherID, voucherName, voucherValue } = route.params;
 
   const [recipient, setRecipient] = useState({});
@@ -61,13 +64,13 @@ const Checkout = ({ navigation, route }) => {
           recipient.address,
           selectedItems
         );
-        Alert.alert("Successfully create order");
+        Alert.alert(t("SuccessfulyCreateOrder"));
         navigation.navigate("CartScreen");
       } catch (error) {
         console.log("Không tạo đơn được", error);
       }
     } else {
-      Alert.alert("There's no product choosen");
+      Alert.alert(t("ThereIsNoOrderChoosen"));
       navigation.navigate("CartScreen");
     }
   };
@@ -151,18 +154,18 @@ const Checkout = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <StatusBar></StatusBar>
-        <Pagetitle title={"Checkout"} navigation={navigation} />
+        <Pagetitle title={t("Checkout")} navigation={navigation} />
         {/* Recipient Info */}
         <View style={styles.customerInfo}>
           <View style={styles.customerInfo_grid1}>
             <Text style={{ color: "#498553", fontSize: 14, fontWeight: 500 }}>
-              Recipient Info
+              {t("RecipientInfo")}
             </Text>
             <TouchableOpacity
               style={styles.modifyBut}
               onPress={HandleMyAddress}
             >
-              <Text style={{ fontWeight: 400, color: "#fff" }}>Modify</Text>
+              <Text style={{ fontWeight: 400, color: "#fff" }}>{t("Modify")}</Text>
               <Entypo
                 style={{ position: "absolute", right: 4 }}
                 name="chevron-right"
@@ -173,7 +176,7 @@ const Checkout = ({ navigation, route }) => {
           </View>
           <View style={{ display: "flex", flexDirection: "row", marginTop: 5 }}>
             <Text style={{ fontSize: 12, color: "#498553", fontWeight: 600 }}>
-              Recipient:
+              {t("Recipient")}:
             </Text>
             <Text
               style={{
@@ -188,7 +191,7 @@ const Checkout = ({ navigation, route }) => {
           </View>
           <View style={{ display: "flex", flexDirection: "row", marginTop: 5 }}>
             <Text style={{ fontSize: 12, color: "#498553", fontWeight: 600 }}>
-              Address:
+              {t("address")}:
             </Text>
             <Text
               style={{
@@ -203,7 +206,7 @@ const Checkout = ({ navigation, route }) => {
           </View>
           <View style={{ display: "flex", flexDirection: "row", marginTop: 5 }}>
             <Text style={{ fontSize: 12, color: "#498553", fontWeight: 600 }}>
-              Phone:
+              {t("phoneNumber")}:
             </Text>
             <Text
               style={{
@@ -221,7 +224,7 @@ const Checkout = ({ navigation, route }) => {
         <View style={styles.noteContainer}>
           <TextInput
             style={{ height: "100%", paddingLeft: 15 }}
-            placeholder="Note"
+            placeholder={t("Note")}
             fontSize={13}
             multiline={true}
             value={note}
@@ -232,7 +235,7 @@ const Checkout = ({ navigation, route }) => {
         <View>
           <View style={styles.productListText}>
             <Text style={{ fontSize: 14, fontWeight: 500, color: "#498553" }}>
-              Product List
+              {t("productList")}
             </Text>
             <TouchableOpacity
               style={{ position: "absolute", right: 10 }}
@@ -289,7 +292,7 @@ const Checkout = ({ navigation, route }) => {
         {/* Method Delivery */}
         <View style={styles.deliveryMethod}>
           <Text style={{ fontWeight: 500, color: "#498553", fontSize: 14 }}>
-            Method Delivery
+            {t("DeliveryMethod")}
           </Text>
           <View style={styles.normalAndExpress}>
             <TouchableOpacity
@@ -308,7 +311,7 @@ const Checkout = ({ navigation, route }) => {
                   fontSize: 13,
                 }}
               >
-                Normal
+                {t("Normal")}
               </Text>
               <Text
                 style={{
@@ -338,7 +341,7 @@ const Checkout = ({ navigation, route }) => {
                   fontSize: 13,
                 }}
               >
-                Express
+                {t("Express")}
               </Text>
               <Text
                 style={{
@@ -357,12 +360,12 @@ const Checkout = ({ navigation, route }) => {
         {/* Voucher */}
         <View style={styles.voucherContainer}>
           <View style={styles.customerInfo_grid1}>
-            <Text style={{ color: "#498553", fontWeight: 500 }}>Voucher</Text>
+            <Text style={{ color: "#498553", fontWeight: 500 }}>{t("Voucher")}</Text>
             <TouchableOpacity
               style={styles.applyBut}
               onPress={handleVoucherWalletNavigation}
             >
-              <Text style={{ fontWeight: 400, color: "#fff" }}>Apply</Text>
+              <Text style={{ fontWeight: 400, color: "#fff" }}>{t("Apply")}</Text>
               <Entypo
                 style={{ position: "absolute", right: 4 }}
                 name="chevron-right"
@@ -390,7 +393,7 @@ const Checkout = ({ navigation, route }) => {
         {/* Payment */}
         <View style={styles.deliveryMethod}>
           <Text style={{ fontWeight: "500", color: "#498553", fontSize: 14 }}>
-            Payment
+            {t("PaymentMethod")}
           </Text>
           <View style={styles.paymentContainer}>
             <TouchableOpacity
@@ -409,7 +412,7 @@ const Checkout = ({ navigation, route }) => {
                   fontSize: 13,
                 }}
               >
-                Normal
+                {t("Normal")}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -447,7 +450,7 @@ const Checkout = ({ navigation, route }) => {
                   fontSize: 13,
                 }}
               >
-                Banking
+                {t("Banking")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -456,19 +459,19 @@ const Checkout = ({ navigation, route }) => {
         <View style={styles.SubtotalContainer}>
           <View style={{ display: "flex", flexDirection: "row" }}>
             <Text style={{ color: "#6F6A61", fontWeight: 500, fontSize: 13 }}>
-              Subtotal:
+              {t("Subtotal")}:
             </Text>
             <Text style={styles.subTotalText}>$ {subTotal}</Text>
           </View>
           <View style={{ display: "flex", flexDirection: "row", marginTop: 5 }}>
             <Text style={{ color: "#6F6A61", fontWeight: 500, fontSize: 13 }}>
-              Delivery Fee:
+              {t("DeliveryFee")}:
             </Text>
             <Text style={styles.subTotalText}>$ {deliveryFee}</Text>
           </View>
           <View style={{ display: "flex", flexDirection: "row", marginTop: 5 }}>
             <Text style={{ color: "#6F6A61", fontWeight: 500, fontSize: 13 }}>
-              Reduced Cost:
+              {t("ReducedCost")}:
             </Text>
             <Text style={styles.subTotalText}>$ {reducedcost}</Text>
           </View>
@@ -482,7 +485,7 @@ const Checkout = ({ navigation, route }) => {
             }}
           >
             <Text style={{ color: "#6F6A61", fontWeight: 500, fontSize: 13 }}>
-              Total:
+              {t("total")}:
             </Text>
             <Text style={styles.subTotalText}>$ {total}</Text>
           </View>
@@ -492,7 +495,7 @@ const Checkout = ({ navigation, route }) => {
             style={styles.acceptButton}
             onPress={handleCreateOrder}
           >
-            <Text style={{ color: "#fff", fontWeight: 500 }}>Accept</Text>
+            <Text style={{ color: "#fff", fontWeight: 500 }}>{t("Accept")}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

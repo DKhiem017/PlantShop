@@ -9,6 +9,7 @@ import cartApi from "../../../../Api/CartApi";
 import CheckBox from "../../../components/checkbox";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const backgroundImage = require("../../../../assets/images/Monstera_tran.png");
 
@@ -130,6 +131,7 @@ const styles = StyleSheet.create({
 });
 
 const Cart = ({ navigation }) => {
+  const { t } = useTranslation();
   //chọn số lượng sp
   // Lưu trữ giá trị value cho mỗi mặt hàng
   const [itemValues, setItemValues] = useState({});
@@ -378,13 +380,13 @@ const Cart = ({ navigation }) => {
         <StatusBar></StatusBar>
         <View style={styles.header}>
           <Text style={{ fontSize: 18, fontWeight: 700, color: "#498553" }}>
-            My Cart
+            {t("MyCart")}
           </Text>
         </View>
         <View style={styles.tagContainer}>
           <TouchableOpacity onPress={handleCheckAll}>
             <Text style={{ fontSize: 15, color: "#498553", fontWeight: 600 }}>
-              All Items
+              {t("AllItems")}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -392,7 +394,7 @@ const Cart = ({ navigation }) => {
             onPress={handleDeleteAll}
           >
             <Text style={{ fontSize: 15, color: "#6F6A61", fontWeight: 600 }}>
-              Delete All
+              {t("DeleteAll")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -420,7 +422,7 @@ const Cart = ({ navigation }) => {
         </View>
         <View style={styles.totalBackground}>
           <View style={styles.totalText}>
-            <Text style={{ color: "#6F6A61", fontWeight: 600 }}>Total:</Text>
+            <Text style={{ color: "#6F6A61", fontWeight: 600 }}>{t("total")}:</Text>
             <Text
               style={{
                 color: "#498553",
@@ -433,7 +435,7 @@ const Cart = ({ navigation }) => {
             </Text>
           </View>
           <TouchableOpacity style={styles.checkoutBut} onPress={HandleCheckout}>
-            <Text style={{ color: "#fff", fontWeight: 600 }}>Checkout</Text>
+            <Text style={{ color: "#fff", fontWeight: 600 }}>{t("Checkout")}</Text>
           </TouchableOpacity>
         </View>
       </View>

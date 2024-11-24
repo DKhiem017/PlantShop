@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import customerAPI from "../../../../Api/CustomerApi";
 import addressAPI from "../../../../Api/AddressApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const styles = StyleSheet.create({
   container: {
@@ -55,6 +56,8 @@ const styles = StyleSheet.create({
 });
 
 const AddAddress = ({ navigation, route }) => {
+  const { t } = useTranslation();
+
   const [isValid, setIsValid] = useState(false);
 
   const { ProductList } = route.params;
@@ -97,7 +100,7 @@ const AddAddress = ({ navigation, route }) => {
       <View>
         <StatusBar style="dark"></StatusBar>
         <Pagetitle
-          title={"Add new Address"}
+          title={t("add") + " " + t("newAddress")}
           navigation={navigation}
         ></Pagetitle>
         <View style={{ gap: 10, marginTop: 30 }}>
@@ -116,7 +119,7 @@ const AddAddress = ({ navigation, route }) => {
                 fontWeight: 700,
               }}
             >
-              Receiver
+              {t("Receiver")}
             </Text>
             <TextInput
               style={styles.TextInput}
@@ -132,7 +135,7 @@ const AddAddress = ({ navigation, route }) => {
                 fontWeight: 700,
               }}
             >
-              Phone Number
+              {t("phoneNumber")}
             </Text>
             <TextInput
               style={styles.TextInput}
@@ -148,7 +151,7 @@ const AddAddress = ({ navigation, route }) => {
                 fontWeight: 700,
               }}
             >
-              Address
+              {t("address")}
             </Text>
             <TextInput
               style={styles.TextInput}
@@ -168,7 +171,7 @@ const AddAddress = ({ navigation, route }) => {
                   fontSize: 16,
                 }}
               >
-                Save
+                {t("save")}
               </Text>
             </TouchableOpacity>
           </View>

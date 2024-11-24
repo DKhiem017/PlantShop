@@ -1,5 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import { View, Text, StyleSheet, Image, ScrollView, ActivityIndicator, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  Dimensions,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Entypo } from "@expo/vector-icons";
 import { useCallback, useState } from "react";
@@ -7,6 +15,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import statisticAPI from "../../../../Api/StatisticApi";
 import productAPI from "../../../../Api/ProductApi";
 import { LineChart } from "react-native-chart-kit";
+import { useTranslation } from "react-i18next";
 
 const report = require("../../../../assets/images/Report.png");
 
@@ -89,8 +98,21 @@ const Report = ({ navigation }) => {
   const [topProduct, setTopProduct] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+  const { t } = useTranslation();
+
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   const thisMonth = new Date();
@@ -128,20 +150,17 @@ const Report = ({ navigation }) => {
           setTopProduct(topProductRes);
 
           setLoading(false);
-        }
-        catch (error) {
+        } catch (error) {
           console.log("Error: ", error);
           setLoading(false);
         }
-      }
+      };
 
-      fetchAPI()
+      fetchAPI();
 
-      return () => {
-
-      }
+      return () => {};
     }, [])
-  )
+  );
 
   const separateMonthsAndValues = (data) => {
     let month = [];
@@ -154,7 +173,7 @@ const Report = ({ navigation }) => {
     }
     setMonths(month);
     setValues(value);
-  }
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
       {/* Header Title */}
@@ -168,175 +187,205 @@ const Report = ({ navigation }) => {
           }}
         >
           <Text style={{ fontSize: 18, fontWeight: 700, color: "#498553" }}>
-            Report
+            {t("report")}
           </Text>
         </View>
       </View>
       {/* <View > */}
-      {
-        loading ? <ActivityIndicator size="large"
+      {loading ? (
+        <ActivityIndicator
+          size="large"
           color="#498553"
-          style={{ flex: 1, alignItems: "center", justifyContent: "center" }} />
-          : <ScrollView style={{ paddingHorizontal: 8 }}>
-            {/* Chart */}
-            <LineChart
-              data={{
-                labels: months,
-                datasets: [
-                  {
-                    data: values
-                  }
-                ]
-              }}
-
-              width={Dimensions.get("window").width - 16} // from react-native
-              height={250}
-              yAxisLabel="$"
-              yAxisInterval={1} // optional, defaults to 1
-              chartConfig={{
-                backgroundColor: "#41774a",
-                backgroundGradientFrom: "#3a6b42",
-                backgroundGradientTo: "#7a9f80",
-                decimalPlaces: 2, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                style: {
-                  borderRadius: 16
-                },
-                propsForDots: {
-                  r: "5",
-                  strokeWidth: "2",
-                  stroke: "#41774a"
-                }
-              }}
-              bezier
-              style={{
-                marginVertical: 8,
-                borderRadius: 16,
-              }}
-            />
-            {/* Doanh thu */}
-            <View style={{ marginTop: 10, gap: 7 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <View style={styles.RevenueItem}>
-                  <Image
-                    source={OrangeBackground}
-                    style={styles.backgroundimg}
-                  ></Image>
-                  <View
-                    style={{
-                      justifyContent: "space-between",
-                      paddingVertical: 10,
-                      paddingLeft: 20,
-                    }}
-                  >
-                    <Text style={{ color: "#fff" }}>Revenue</Text>
-                    <Text style={{ fontSize: 17, color: "#fff", fontWeight: 700 }}>
-                      $ {revenueMonth}
-                    </Text>
-                    <Text style={{ color: "#fff", fontSize: 12 }}>{monthName}</Text>
-                  </View>
-                </View>
-                {/* Bill */}
-                <View style={styles.RevenueItem}>
-                  <Image
-                    source={GreenBackground}
-                    style={styles.backgroundimg}
-                  ></Image>
-                  <View
-                    style={{
-                      justifyContent: "space-between",
-                      paddingVertical: 10,
-                      paddingLeft: 20,
-                    }}
-                  >
-                    <Text style={{ color: "#fff" }}>Bills</Text>
-                    <Text style={{ fontSize: 17, color: "#fff", fontWeight: 700 }}>
-                      {bill}
-                    </Text>
-                    <Text style={{ color: "#fff", fontSize: 12 }}>{monthName}</Text>
-                  </View>
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  // gap: 5,
-                }}
-              >
-                <View style={styles.RevenueItem}>
-                  <Image
-                    source={BlueBackground}
-                    style={styles.backgroundimg}
-                  ></Image>
-                  <View
-                    style={{
-                      justifyContent: "space-between",
-                      paddingVertical: 10,
-                      paddingLeft: 20,
-                    }}
-                  >
-                    <Text style={{ color: "#fff" }}>Revenue</Text>
-                    <Text style={{ fontSize: 17, color: "#fff", fontWeight: 700 }}>
-                      $ {revenueToday}
-                    </Text>
-                    <Text style={{ color: "#fff", fontSize: 12 }}>Today</Text>
-                  </View>
-                </View>
-                {/* Top Deal */}
-                <View style={styles.RevenueItem}>
-                  <Image
-                    source={VioletBackground}
-                    style={styles.backgroundimg}
-                  ></Image>
-                  <View
-                    style={{
-                      justifyContent: "space-between",
-                      paddingVertical: 10,
-                      paddingLeft: 20,
-                    }}
-                  >
-                    <Text style={{ color: "#fff" }}>Top Deal</Text>
-                    <Text style={{ fontSize: 17, color: "#fff", fontWeight: 700 }}>
-                      $ {topDeal}
-                    </Text>
-                    <Text style={{ color: "#fff", fontSize: 12 }}>Today</Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-            {/* Top Product */}
-            <View style={styles.topProductContainer}>
-              <View
-                style={{ flexDirection: "row", justifyContent: "space-between" }}
-              >
-                <Text style={{ fontSize: 16, fontWeight: 700 }}>Top 5 Products</Text>
-              </View>
-              <View style={{ flexDirection: "row", marginTop: 10 }}>
-                <Text style={{ fontWeight: 700, color: "#6F6A61" }}>Name</Text>
-                <Text style={{ marginLeft: 115, fontWeight: 700, color: "#6F6A61" }}>Quantity</Text>
-                <Text style={{ position: "absolute", right: 0, fontWeight: 700, color: "#6F6A61" }}>Revenue</Text>
-              </View>
-              <ScrollView style={{ marginTop: 5 }}>
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        />
+      ) : (
+        <ScrollView style={{ paddingHorizontal: 8 }}>
+          {/* Chart */}
+          <LineChart
+            data={{
+              labels: months,
+              datasets: [
                 {
-                  topProduct.map((item) => (
-                    <View style={{ flexDirection: "row", marginBottom: 5 }}>
-                      <Text>{item.productName}</Text>
-                      <Text style={{ position: "absolute", right: 120 }}>{item.sold}</Text>
-                      <Text style={{ position: "absolute", right: 0 }}>$ {item.sold * item.price}</Text>
-                    </View>
-                  ))
-                }
-              </ScrollView>
+                  data: values,
+                },
+              ],
+            }}
+            width={Dimensions.get("window").width - 16} // from react-native
+            height={250}
+            yAxisLabel="$"
+            yAxisInterval={1} // optional, defaults to 1
+            chartConfig={{
+              backgroundColor: "#41774a",
+              backgroundGradientFrom: "#3a6b42",
+              backgroundGradientTo: "#7a9f80",
+              decimalPlaces: 2, // optional, defaults to 2dp
+              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              style: {
+                borderRadius: 16,
+              },
+              propsForDots: {
+                r: "5",
+                strokeWidth: "2",
+                stroke: "#41774a",
+              },
+            }}
+            bezier
+            style={{
+              marginVertical: 8,
+              borderRadius: 16,
+            }}
+          />
+          {/* Doanh thu */}
+          <View style={{ marginTop: 10, gap: 7 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <View style={styles.RevenueItem}>
+                <Image
+                  source={OrangeBackground}
+                  style={styles.backgroundimg}
+                ></Image>
+                <View
+                  style={{
+                    justifyContent: "space-between",
+                    paddingVertical: 10,
+                    paddingLeft: 20,
+                  }}
+                >
+                  <Text style={{ color: "#fff" }}>{t("revenue")}</Text>
+                  <Text
+                    style={{ fontSize: 17, color: "#fff", fontWeight: 700 }}
+                  >
+                    $ {revenueMonth}
+                  </Text>
+                  <Text style={{ color: "#fff", fontSize: 12 }}>
+                    {monthName}
+                  </Text>
+                </View>
+              </View>
+              {/* Bill */}
+              <View style={styles.RevenueItem}>
+                <Image
+                  source={GreenBackground}
+                  style={styles.backgroundimg}
+                ></Image>
+                <View
+                  style={{
+                    justifyContent: "space-between",
+                    paddingVertical: 10,
+                    paddingLeft: 20,
+                  }}
+                >
+                  <Text style={{ color: "#fff" }}>{t("bills")}</Text>
+                  <Text
+                    style={{ fontSize: 17, color: "#fff", fontWeight: 700 }}
+                  >
+                    {bill}
+                  </Text>
+                  <Text style={{ color: "#fff", fontSize: 12 }}>
+                    {monthName}
+                  </Text>
+                </View>
+              </View>
             </View>
-          </ScrollView>
-      }
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                // gap: 5,
+              }}
+            >
+              <View style={styles.RevenueItem}>
+                <Image
+                  source={BlueBackground}
+                  style={styles.backgroundimg}
+                ></Image>
+                <View
+                  style={{
+                    justifyContent: "space-between",
+                    paddingVertical: 10,
+                    paddingLeft: 20,
+                  }}
+                >
+                  <Text style={{ color: "#fff" }}>{t("revenue")}</Text>
+                  <Text
+                    style={{ fontSize: 17, color: "#fff", fontWeight: 700 }}
+                  >
+                    $ {revenueToday}
+                  </Text>
+                  <Text style={{ color: "#fff", fontSize: 12 }}>Today</Text>
+                </View>
+              </View>
+              {/* Top Deal */}
+              <View style={styles.RevenueItem}>
+                <Image
+                  source={VioletBackground}
+                  style={styles.backgroundimg}
+                ></Image>
+                <View
+                  style={{
+                    justifyContent: "space-between",
+                    paddingVertical: 10,
+                    paddingLeft: 20,
+                  }}
+                >
+                  <Text style={{ color: "#fff" }}>{t("topDeal")}</Text>
+                  <Text
+                    style={{ fontSize: 17, color: "#fff", fontWeight: 700 }}
+                  >
+                    $ {topDeal}
+                  </Text>
+                  <Text style={{ color: "#fff", fontSize: 12 }}>Today</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          {/* Top Product */}
+          <View style={styles.topProductContainer}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={{ fontSize: 16, fontWeight: 700 }}>
+                Top 5 {t("products")}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 10,
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontWeight: 700, color: "#6F6A61" }}>
+                {t("name")}
+              </Text>
+              <Text style={{width:'25%',fontWeight: 700, color: "#6F6A61",textAlign:'right' }}>
+                {t("quantity")}
+              </Text>
+              <Text style={{ fontWeight: 700, color: "#6F6A61" }}>
+                {t("revenue")}
+              </Text>
+            </View>
+            <ScrollView style={{ marginTop: 5 }}>
+              {topProduct.map((item) => (
+                <View style={{ flexDirection: "row", marginBottom: 5,justifyContent:'space-between' }}>
+                  <Text>{item.productName}</Text>
+                  <Text>
+                    {item.sold}
+                  </Text>
+                  <Text>
+                    $ {item.sold * item.price}
+                  </Text>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        </ScrollView>
+      )}
       {/* </View> */}
     </SafeAreaView>
   );

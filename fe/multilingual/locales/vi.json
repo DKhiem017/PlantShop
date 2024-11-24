@@ -83,5 +83,37 @@
   "reduce": "Giảm",
   "forAllOrders": "cho tất cả hoá đơn",
   "from": "Từ",
-  "to": "đến"
+  "to": "đến",
+
+  "report": "Thống kê",
+  "revenue": "Doanh thu",
+  "bills": "Hoá đơn",
+  "topDeal": "Đơn hàng giá trị nhất",
+  "products": "sản phẩm",
+
+  "newAddress": "địa chỉ mới",
+  "Receiver": "Người nhận hàng",
+
+  "MyCart": "Giỏ hàng của tôi",
+  "AllItems": "Chọn tất cả",
+  "DeleteAll": "Xoá tất cả",
+  "Checkout": "Thanh toán",
+
+  "SuccessfulyCreateOrder": "Tạo hoá đơn thành công",
+  "ThereIsNoOrderChoosen": "Không hoá đơn nào được chọn",
+  "RecipientInfo": "Thông tin khách hàng",
+  "Recipient": "Khách hàng",
+  "Modify": "Thay đổi",
+  "Note": "Ghi chú",
+  "DeliveryMethod": "Phương thức vận chuyển",
+  "Normal": "Thông thường",
+  "Express": "Hoả tốc",
+  "Voucher": "Khuyến mãi",
+  "Apply": "Áp dụng",
+  "PaymentMethod": "Payment Method",
+  "Banking": "Ngân hàng",
+  "Subtotal": "Tổng giá trị",
+  "DeliveryFee": "Phí vận chuyển",
+  "ReducedCost": "Giảm giá",
+  "Accept": "Chấp nhận"
 }
