@@ -20,10 +20,12 @@ import { Rating } from "react-native-ratings";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const plant_img = require("../../../../assets/images/Monstera_tran.png");
 
 const MyFeedback = ({ navigation }) => {
+  const currentLanguage = i18next.language;
   const { t } = useTranslation();
   //format Date
   const formatDate = (date) => {
@@ -193,7 +195,11 @@ const MyFeedback = ({ navigation }) => {
   const renderItemUnreviewed = ({ item }) => (
     <ItemUnreviewed
       img={item.product.images[0].imageURL}
-      name={item.product.productName}
+      name={
+        currentLanguage === "vi"
+          ? item.product.productNameVie
+          : item.product.productName
+      }
       price={item.product.price}
       orderID={item.orderID}
       productID={item.product.productID}
@@ -202,7 +208,11 @@ const MyFeedback = ({ navigation }) => {
 
   const renderItemReviewed = ({ item }) => (
     <ItemReviewed
-      name={item.product.productName}
+      name={
+        currentLanguage === "vi"
+          ? item.product.productNameVie
+          : item.product.productName
+      }
       comment={item.comment}
       rating={item.point}
       date={formatDate(item.feedbackTime)}

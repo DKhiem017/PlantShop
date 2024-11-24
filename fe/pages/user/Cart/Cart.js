@@ -10,6 +10,7 @@ import CheckBox from "../../../components/checkbox";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const backgroundImage = require("../../../../assets/images/Monstera_tran.png");
 
@@ -131,6 +132,7 @@ const styles = StyleSheet.create({
 });
 
 const Cart = ({ navigation }) => {
+  const currentLanguage = i18next.language;
   const { t } = useTranslation();
   //chọn số lượng sp
   // Lưu trữ giá trị value cho mỗi mặt hàng
@@ -405,7 +407,11 @@ const Cart = ({ navigation }) => {
             data={cart}
             renderItem={({ item }) => (
               <Item
-                name={item.product.productName}
+                name={
+                  currentLanguage === "vi"
+                    ? item.product.productNameVie
+                    : item.product.productName
+                }
                 price={item.product.price}
                 img={item.product.images[0].imageURL}
                 id={item.product.productID}
@@ -422,7 +428,9 @@ const Cart = ({ navigation }) => {
         </View>
         <View style={styles.totalBackground}>
           <View style={styles.totalText}>
-            <Text style={{ color: "#6F6A61", fontWeight: 600 }}>{t("total")}:</Text>
+            <Text style={{ color: "#6F6A61", fontWeight: 600 }}>
+              {t("total")}:
+            </Text>
             <Text
               style={{
                 color: "#498553",
@@ -435,7 +443,9 @@ const Cart = ({ navigation }) => {
             </Text>
           </View>
           <TouchableOpacity style={styles.checkoutBut} onPress={HandleCheckout}>
-            <Text style={{ color: "#fff", fontWeight: 600 }}>{t("Checkout")}</Text>
+            <Text style={{ color: "#fff", fontWeight: 600 }}>
+              {t("Checkout")}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

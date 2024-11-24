@@ -17,8 +17,11 @@ import axios from "axios";
 import productApi from "../../../../../Api/ProductApi";
 import ApiURL from "../../../../../constants/baseURL";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const Result = ({ route, navigation }) => {
+  const currentLanguage = i18next.language;
+
   const { t } = useTranslation();
 
   const { photo, filename, type } = route.params;
@@ -119,7 +122,9 @@ const Result = ({ route, navigation }) => {
                     style={{ justifyContent: "space-between", marginLeft: 10 }}
                   >
                     <Text style={{ color: "#000", fontWeight: 600 }}>
-                      {product.productName}
+                      {currentLanguage === "vi"
+                        ? product.productNameVie
+                        : product.productName}
                     </Text>
                     <Text
                       style={{

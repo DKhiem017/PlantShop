@@ -20,6 +20,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import productApi from "../../../../Api/ProductApi";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const styles = StyleSheet.create({
   imgContainer: {
@@ -100,6 +101,7 @@ const styles = StyleSheet.create({
 
 const ProductList = ({ navigation }) => {
   //get data
+  const currentLanguage = i18next.language;
   const { t } = useTranslation();
 
   const [loading, setLoading] = useState(true);
@@ -235,7 +237,11 @@ const ProductList = ({ navigation }) => {
               data={products}
               renderItem={({ item }) => (
                 <Item
-                  name={item.productName}
+                  name={
+                    currentLanguage === "vi"
+                      ? item.productNameVie
+                      : item.productName
+                  }
                   price={item.price}
                   rating={item.reviewPoint}
                   id={item.productID}

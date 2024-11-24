@@ -16,6 +16,7 @@ import statisticAPI from "../../../../Api/StatisticApi";
 import productAPI from "../../../../Api/ProductApi";
 import { LineChart } from "react-native-chart-kit";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const report = require("../../../../assets/images/Report.png");
 
@@ -90,6 +91,8 @@ const styles = StyleSheet.create({
 });
 
 const Report = ({ navigation }) => {
+  const currentLanguage = i18next.language;
+
   const [revenueYear, setRevenueYear] = useState([]);
   const [revenueMonth, setRevenueMonth] = useState(0);
   const [revenueToday, setRevenueToday] = useState(0);
@@ -363,7 +366,14 @@ const Report = ({ navigation }) => {
               <Text style={{ fontWeight: 700, color: "#6F6A61" }}>
                 {t("name")}
               </Text>
-              <Text style={{width:'25%',fontWeight: 700, color: "#6F6A61",textAlign:'right' }}>
+              <Text
+                style={{
+                  width: "25%",
+                  fontWeight: 700,
+                  color: "#6F6A61",
+                  textAlign: "right",
+                }}
+              >
                 {t("quantity")}
               </Text>
               <Text style={{ fontWeight: 700, color: "#6F6A61" }}>
@@ -372,14 +382,20 @@ const Report = ({ navigation }) => {
             </View>
             <ScrollView style={{ marginTop: 5 }}>
               {topProduct.map((item) => (
-                <View style={{ flexDirection: "row", marginBottom: 5,justifyContent:'space-between' }}>
-                  <Text>{item.productName}</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    marginBottom: 5,
+                    justifyContent: "space-between",
+                  }}
+                >
                   <Text>
-                    {item.sold}
+                    {currentLanguage === "vi"
+                      ? item.productNameVie
+                      : item.productName}
                   </Text>
-                  <Text>
-                    $ {item.sold * item.price}
-                  </Text>
+                  <Text>{item.sold}</Text>
+                  <Text>$ {item.sold * item.price}</Text>
                 </View>
               ))}
             </ScrollView>

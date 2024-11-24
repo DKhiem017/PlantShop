@@ -151,7 +151,7 @@
   "VoucherWallet": "Voucher Wallet",
   "Logout": "Logout",
   "DoUWantToLogout": "Do you want to logout?",
-  "Cancel": "cancel",
+  "Cancel": "Cancel",
   
   "Default": "Default",
   "Delete": "Delete",
@@ -159,6 +159,7 @@
 
   "Unreviewed": "Unreviewed",
   "Reviewed": "Reviewed",
+  "Feedback": "Feedback",
 
   "UserName": "User Name",
   "DateOfRegister": "Date of Register",
@@ -173,5 +174,11 @@
   "OrderID": "Order ID",
   "TotalPrice": "Total Price",
   "TimeOfOrder": "Time of order",
-  "Status": "Status"
+  "Status": "Status",
+
+  "Reviews": "Reviews",
+  "ToCart": "to Cart",
+
+  "OrderDetail": "Order Detail",
+  "OrderInfo": "Order Information"
 }

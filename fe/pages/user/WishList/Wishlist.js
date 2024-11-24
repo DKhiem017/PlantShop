@@ -16,6 +16,7 @@ import wishListAPI from "../../../../Api/WishListApi";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const product_background = require("../../../../assets/images/Background_Plants.png");
 const plant_img = require("../../../../assets/images/Monstera_tran.png");
@@ -79,6 +80,8 @@ const styles = StyleSheet.create({
 });
 
 const Wishlist = ({ navigation }) => {
+  const currentLanguage = i18next.language;
+
   const { t } = useTranslation();
 
   const HandleDetailProduct = (productID) => {
@@ -208,7 +211,11 @@ const Wishlist = ({ navigation }) => {
             renderItem={({ item }) => (
               <Item
                 id={item.product.productID}
-                name={item.product.productName}
+                name={
+                  currentLanguage === "vi"
+                    ? item.product.productNameVie
+                    : item.product.productName
+                }
                 price={item.product.price}
                 reviewPoint={item.product.reviewPoint}
                 image={item.product.images[0].imageURL}

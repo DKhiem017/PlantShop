@@ -15,6 +15,7 @@ import { Entypo } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import orderAPI from "../../../../Api/OrderApi";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const styles = StyleSheet.create({
   container: {
@@ -60,6 +61,7 @@ const styles = StyleSheet.create({
 });
 
 const OrderDetail = ({ route, navigation }) => {
+  const currentLanguage = i18next.language;
   const { t } = useTranslation();
 
   const { id } = route.params;
@@ -301,7 +303,11 @@ const OrderDetail = ({ route, navigation }) => {
                 renderItem={({ item }) => (
                   <ProductItem
                     image={item.product.images[0].imageURL}
-                    name={item.product.productName}
+                    name={
+                      currentLanguage === "vi"
+                        ? item.product.productNameVie
+                        : item.product.productName
+                    }
                     quantity={item.quantity}
                     price={item.quantity * item.product.price}
                   />
@@ -318,8 +324,12 @@ const OrderDetail = ({ route, navigation }) => {
                 </Text>
                 <View style={{ marginTop: 4, gap: 30, flexDirection: "row" }}>
                   <View style={{ gap: 5 }}>
-                    <Text style={{ color: "#498553" }}>{t("DeliveryMethod")}</Text>
-                    <Text style={{ color: "#498553" }}>{t("PaymentMethod")}</Text>
+                    <Text style={{ color: "#498553" }}>
+                      {t("DeliveryMethod")}
+                    </Text>
+                    <Text style={{ color: "#498553" }}>
+                      {t("PaymentMethod")}
+                    </Text>
                   </View>
                   <View style={{ gap: 5 }}>
                     <Text style={{ color: "#498553", fontWeight: 700 }}>

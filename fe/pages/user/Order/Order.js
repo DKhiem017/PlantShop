@@ -21,6 +21,7 @@ import ButtonMultiselect, {
 } from "react-native-button-multiselect";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const adjust = require("../../../../assets/images/Adjust.png");
 const plantImg = require("../../../../assets/images/Monstera_tran.png");
@@ -71,6 +72,7 @@ const styles = StyleSheet.create({
 });
 
 const Order = ({ navigation }) => {
+  const currentLanguage = i18next.language;
   const { t } = useTranslation();
 
   const [data, setData] = useState([]);
@@ -273,25 +275,25 @@ const Order = ({ navigation }) => {
     if (status === "Pending") {
       return (
         <Text style={{ fontSize: 13, fontWeight: 700, color: "#F4CE14" }}>
-          {status}
+          {currentLanguage === "vi" ? "Đang xử lý":status}
         </Text>
       );
     } else if (status === "Packaging") {
       return (
         <Text style={{ fontSize: 13, fontWeight: 700, color: "#2A2A86" }}>
-          {status}
+          {currentLanguage === "vi" ? "Đang đóng gói":status}
         </Text>
       );
     } else if (status === "Delivering") {
       return (
         <Text style={{ fontSize: 13, fontWeight: 700, color: "#AAC9FF" }}>
-          {status}
+          {currentLanguage === "vi" ? "Đang vận chuyển":status}
         </Text>
       );
     } else if (status === "Completed") {
       return (
         <Text style={{ fontSize: 13, fontWeight: 700, color: "#498553" }}>
-          {status}
+          {currentLanguage === "vi" ? "Hoàn thành":status}
         </Text>
       );
     }
@@ -390,7 +392,11 @@ const Order = ({ navigation }) => {
             data={data}
             renderItem={({ item }) => (
               <Item
-                nameProduct={item.firstProduct.productName}
+                nameProduct={
+                  currentLanguage === "vi"
+                    ? item.firstProduct.productNameVie
+                    : item.firstProduct.productName
+                }
                 quantity={item.totalQuantity}
                 image={item.firstProduct.images[0].imageURL}
                 orderID={item.orderID}

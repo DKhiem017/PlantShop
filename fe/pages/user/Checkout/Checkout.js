@@ -20,8 +20,10 @@ import addressAPI from "../../../../Api/AddressApi";
 import checkoutAPI from "../../../../Api/CheckoutApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const Checkout = ({ navigation, route }) => {
+  const currentLanguage = i18next.language;
   const { t } = useTranslation();
 
   const { data, subTotal, voucherID, voucherName, voucherValue } = route.params;
@@ -271,7 +273,9 @@ const Checkout = ({ navigation, route }) => {
                         fontWeight: "bold",
                       }}
                     >
-                      {item.product.productName}
+                      {currentLanguage === "vi"
+                        ? item.product.productNameVie
+                        : item.product.productName}
                     </Text>
                     <Text style={{ fontSize: 13, color: "#498553" }}>
                       $ {item.product.price}

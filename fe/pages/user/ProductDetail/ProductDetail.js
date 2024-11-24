@@ -22,11 +22,16 @@ import { LogBox } from "react-native";
 import cartApi from "../../../../Api/CartApi";
 import wishListAPI from "../../../../Api/WishListApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 LogBox.ignoreAllLogs();
 
 const backgroundImage = require("../../../../assets/images/DetailProductBackground.png");
 
 const ProductDetail = ({ navigation, route }) => {
+  const currentLanguage = i18next.language;
+
+  const { t } = useTranslation();
   //format Date
   const formatDate = (date) => {
     const inputDate = new Date(date);
@@ -138,7 +143,14 @@ const ProductDetail = ({ navigation, route }) => {
   };
 
   const FeedbackItem = ({ avt, name, date, rating, comment, id }) => (
-    <View style={{ flexDirection: "row", marginTop: 5, alignItems:'center', marginRight:10 }}>
+    <View
+      style={{
+        flexDirection: "row",
+        marginTop: 5,
+        alignItems: "center",
+        marginRight: 10,
+      }}
+    >
       <View style={styles.avtContainer}>
         <Image source={{ uri: `${avt}` }} style={styles.avt_girl}></Image>
       </View>
@@ -218,7 +230,9 @@ const ProductDetail = ({ navigation, route }) => {
             <Animated.View style={[styles.sidebar, { width: sidebarWidth }]}>
               {!isCollapsed && (
                 <View style={styles.menuItems}>
-                  <Text style={{ fontSize: 12, color: "#6F6A61" }}>Size</Text>
+                  <Text style={{ fontSize: 12, color: "#6F6A61" }}>
+                    {t("size")}
+                  </Text>
                   <Text
                     style={{
                       fontWeight: "500",
@@ -231,7 +245,7 @@ const ProductDetail = ({ navigation, route }) => {
                   <Text
                     style={{ fontSize: 12, color: "#6F6A61", marginTop: 10 }}
                   >
-                    Height
+                    {t("height")}
                   </Text>
                   <Text
                     style={{
@@ -245,7 +259,7 @@ const ProductDetail = ({ navigation, route }) => {
                   <Text
                     style={{ fontSize: 12, color: "#6F6A61", marginTop: 10 }}
                   >
-                    Temperature
+                    {t("temperature")}
                   </Text>
                   <Text
                     style={{
@@ -269,7 +283,9 @@ const ProductDetail = ({ navigation, route }) => {
                   fontWeight: 500,
                 }}
               >
-                {product.productName}
+                {currentLanguage === "vi"
+                  ? product.productNameVie
+                  : product.productName}
               </Text>
               <View style={styles.addOrMinus}>
                 <TouchableOpacity style={styles.minusBut} onPress={handleMinus}>
@@ -316,11 +332,13 @@ const ProductDetail = ({ navigation, route }) => {
                   width: "100%",
                 }}
               >
-                Description
+                {t("description")}
               </Text>
               <View style={{ width: "100%" }}>
                 <Text style={{ color: "#6F6A61", fontSize: 14 }}>
-                  {product.description}
+                  {currentLanguage === "vi"
+                    ? product.descriptionVie
+                    : product.description}
                 </Text>
               </View>
               <Text
@@ -331,7 +349,7 @@ const ProductDetail = ({ navigation, route }) => {
                   marginTop: 6,
                 }}
               >
-                Reviews
+                {t("Reviews")}
               </Text>
               <View style={styles.flatlistContainer}>
                 <FlatList
@@ -359,7 +377,7 @@ const ProductDetail = ({ navigation, route }) => {
                 <Text
                   style={{ color: "#fff", fontWeight: 500, marginRight: 10 }}
                 >
-                  Add to Cart
+                  {t("add")} {t("ToCart")}
                 </Text>
                 <FontAwesome name="opencart" size={15} color="#fff" />
               </TouchableOpacity>

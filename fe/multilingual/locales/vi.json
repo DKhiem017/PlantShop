@@ -151,7 +151,7 @@
   "VoucherWallet": "Khuyến mãi",
   "Logout": "Đăng xuất",
   "DoUWantToLogout": "Bạn thực sự muốn đăng xuất?",
-  "Cancel": "huỷ",
+  "Cancel": "Huỷ",
 
   "Default": "Mặc định",
   "Delete": "Xoá",
@@ -159,6 +159,7 @@
 
   "Unreviewed": "Chưa đánh giá",
   "Reviewed": "Đã đánh giá",
+  "Feedback": "Đánh giá",
 
   "UserName": "Tên tài khoản",
   "DateOfRegister": "Ngày đăng ký",
@@ -175,5 +176,11 @@
   "OrderID": "Mã đơn hàng",
   "TotalPrice": "Tổng giá trị",
   "TimeOfOrder": "Ngày hoá đơn",
-  "Status": "Trạng thái"
+  "Status": "Trạng thái",
+
+  "Reviews": "Đánh giá",
+  "ToCart": "vào giỏ hàng",
+
+  "OrderDetail": "Chi tiết đơn hàng",
+  "OrderInfo": "Thông tin đơn hàng"
 }

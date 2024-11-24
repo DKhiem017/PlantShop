@@ -21,6 +21,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 import customerAPI from "../../../../Api/CustomerApi";
+import i18next from "i18next";
 
 const avt = require("../../../../assets/images/Monstera.jpg");
 const product_background = require("../../../../assets/images/Background_Plants.png");
@@ -134,6 +135,7 @@ const styles = StyleSheet.create({
 });
 
 const Home = ({ navigation }) => {
+  const currentLanguage = i18next.language;
   const { t } = useTranslation();
 
   const DetailProductNavigation = (productID) => {
@@ -318,7 +320,7 @@ const Home = ({ navigation }) => {
         </View>
         {/* Searchbar */}
         <Searchbar
-          placeholder={t("SearchForPlants") + ("...")}
+          placeholder={t("SearchForPlants") + "..."}
           searchCharacter={param}
           onChangeText={(e) => setParam(e)}
           onPress={HandleSearchProduct}
@@ -336,7 +338,8 @@ const Home = ({ navigation }) => {
                 fontWeight: "700",
               }}
             >
-              {t("Found")} {searchResult.length !== null ? searchResult.length : 0}{" "}
+              {t("Found")}{" "}
+              {searchResult.length !== null ? searchResult.length : 0}{" "}
               {t("results")}
             </Text>
             <FlatList
@@ -345,7 +348,11 @@ const Home = ({ navigation }) => {
               data={searchResult}
               renderItem={({ item }) => (
                 <Item
-                  name={item.productName}
+                  name={
+                    currentLanguage === "vi"
+                      ? item.productNameVie
+                      : item.productName
+                  }
                   price={item.price}
                   rating={item.reviewPoint}
                   id={item.productID}
@@ -449,7 +456,11 @@ const Home = ({ navigation }) => {
               data={products}
               renderItem={({ item }) => (
                 <Item
-                  name={item.productName}
+                  name={
+                    currentLanguage === "vi"
+                      ? item.productNameVie
+                      : item.productName
+                  }
                   price={item.price}
                   rating={item.reviewPoint}
                   id={item.productID}
@@ -475,7 +486,11 @@ const Home = ({ navigation }) => {
               data={recommendProducts}
               renderItem={({ item }) => (
                 <Item
-                  name={item.product.productName}
+                  name={
+                    currentLanguage === "vi"
+                      ? item.product.productNameVie
+                      : item.product.productName
+                  }
                   price={item.product.price}
                   rating={item.product.reviewPoint}
                   id={item.product.productID}
