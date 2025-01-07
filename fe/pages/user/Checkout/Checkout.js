@@ -10,6 +10,7 @@ import {
   Animated,
   LayoutAnimation,
   Alert,
+  Modal,
 } from "react-native";
 import Pagetitle from "../../../components/pagetitle";
 import { Entypo } from "@expo/vector-icons";
@@ -21,8 +22,12 @@ import checkoutAPI from "../../../../Api/CheckoutApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
+// import WebView from 'react-native-webview'
 
 const Checkout = ({ navigation, route }) => {
+  //Link WebView
+  const [uri, setUri] = useState("");
+
   const currentLanguage = i18next.language;
   const { t } = useTranslation();
 
@@ -43,6 +48,9 @@ const Checkout = ({ navigation, route }) => {
   const [note, setNote] = useState("");
 
   //tạo đơn
+
+  //webview
+  const [openModal, setOpenModal] = useState(false);
 
   const hasProducts = data && data.length > 0;
 
@@ -68,7 +76,21 @@ const Checkout = ({ navigation, route }) => {
           recipient.address,
           selectedItems
         );
-        Alert.alert(t("SuccessfulyCreateOrder"));
+        if (paymentType === 2) {
+          try {
+            const getLink = await checkoutAPI.getLink(
+              createOrder.data.orderID,
+              user,
+              total,
+              createOrder.data.timeCreated
+            );
+            console.log("Link", getLink);
+            setUri(getLink.toString());
+            setOpenModal(true);
+          } catch (error) {
+            console.log("test", error);
+          }
+        }
         navigation.navigate("CartScreen");
       } catch (error) {
         console.log("Không tạo đơn được", error);

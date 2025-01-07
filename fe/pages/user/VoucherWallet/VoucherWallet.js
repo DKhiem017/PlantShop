@@ -16,7 +16,12 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 
-const couponImg = require("../../../../assets/images/gift.png");
+const couponImg = {
+  gold: require("../../../../assets/images/gold-gift.jpg"),
+  silver: require("../../../../assets/images/silver-gift.png"),
+  diamond: require("../../../../assets/images/diamond-gift.png"),
+  all: require("../../../../assets/images/bronze-gift.png"),
+};
 
 const styles = StyleSheet.create({
   itembackground: {
@@ -131,14 +136,14 @@ const VoucherWallet = ({ navigation, route }) => {
     return formattedDate;
   };
 
-  const Item = ({ id, name, value, dateBegin, dateEnd, onPress }) => {
+  const Item = ({ id, img,  name, value, dateBegin, dateEnd, onPress }) => {
     return (
       <View style={styles.itembackground}>
         {/* ảnh sp */}
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View style={{ flexDirection: "row" }}>
             <View style={{ height: 70, width: 70 }}>
-              <Image source={couponImg} style={styles.backgroundImg}></Image>
+              <Image source={img} style={styles.backgroundImg}></Image>
             </View>
             <View style={styles.dashLine}></View>
             <View style={styles.voucherInfo}>
@@ -206,6 +211,15 @@ const VoucherWallet = ({ navigation, route }) => {
                 <Item
                   id={item.id}
                   name={item.name}
+                  img={
+                    item.voucherTypeID === 3
+                      ? couponImg.gold
+                      : item.voucherTypeID === 2
+                      ? couponImg.silver
+                      : item.voucherTypeID === 4
+                      ? couponImg.diamond
+                      : couponImg.all
+                  }
                   value={item.value}
                   dateBegin={item.dateBegin}
                   dateEnd={item.dateEnd}

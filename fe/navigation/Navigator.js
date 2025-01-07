@@ -31,7 +31,7 @@ import AddAddress from "../pages/user/AddAddress/AddAddress";
 import ChatBoxAdmin from "../pages/ChatBoxAdmin/ChatBoxAdmin";
 import AdminAccount from "../pages/admin/AdminAccount/AdminAccount";
 import AddPromotion from "../pages/admin/AddPromtion/AddPromotion";
-
+import ChatBot from "../pages/ChatBot/ChatBot";
 
 const Stack = createStackNavigator();
 
@@ -167,6 +167,11 @@ const MyAccountNavigator = () => {
       <Stack.Screen
         name="Chat Room"
         component={ChatRoom}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Chat Bot"
+        component={ChatBot}
         options={{ headerShown: false }}
       />
       <Stack.Screen

@@ -28,6 +28,15 @@ class CheckoutAPI {
       selectedItems,
     });
   };
+  getLink = (orderID, userID, orderTotal, createdDate) => {
+    const url = `OnlinePayment/online-payment/url`;
+    return axiosClient.post(url, {
+      orderID,
+      userID,
+      orderTotal,
+      createdDate,
+    });
+  };
 }
 
 const checkoutAPI = new CheckoutAPI();

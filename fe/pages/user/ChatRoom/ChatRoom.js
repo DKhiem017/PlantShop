@@ -5,7 +5,7 @@ import Pagetitle from "../../../components/pagetitle";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const avt = require("../../../../assets/images/avt_girl.jpg");
-const chatBotImg = require("../../../../assets/images/chatBot.png");
+const chatBotImg = require("../../../../assets/images/greeny.png");
 import { useTranslation } from "react-i18next";
 
 const styles = StyleSheet.create({
@@ -28,6 +28,10 @@ const ChatRoom = ({ navigation }) => {
 
   const ChatNavigator = () => {
     navigation.navigate("ChatBoxScreen", {});
+  };
+
+  const ChatBotNavigator = () => {
+    navigation.navigate("Chat Bot", {});
   };
 
   return (
@@ -55,6 +59,25 @@ const ChatRoom = ({ navigation }) => {
                 }}
               >
                 <Text style={{ fontWeight: 600 }}>Admin</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.chatBackground}
+            onPress={ChatBotNavigator}
+          >
+            <View style={{ flexDirection: "row" }}>
+              {/* avt */}
+              <View style={{ height: 40, width: 40, borderRadius: 50 }}>
+                <Image source={chatBotImg} style={styles.backgroundImg}></Image>
+              </View>
+              <View
+                style={{
+                  marginLeft: 15,
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ fontWeight: 600 }}>Greeny</Text>
               </View>
             </View>
           </TouchableOpacity>

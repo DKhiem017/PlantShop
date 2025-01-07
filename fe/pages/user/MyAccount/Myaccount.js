@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -17,6 +18,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome6 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
+import { Fontisto } from "@expo/vector-icons";
+import customerAPI from "../../../../Api/CustomerApi";
 
 const avt = require("../../../../assets/images/Logo.png");
 
@@ -31,11 +34,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingLeft: 30,
   },
+  changeLanguagebut: {
+    paddingHorizontal: 5,
+    paddingVertical: 5,
+    backgroundColor: "#498553",
+    flexDirection: "row",
+    width: 60,
+    borderRadius: 50,
+    alignItems: "center",
+    gap: 5,
+  },
+  changeLanguagebutContainer: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+  },
 });
 
 const MyAccount = ({ navigation }) => {
+  const gold = require("../../../../assets/images/gold.png");
+  const bronze = require("../../../../assets/images/bronze.png");
+  const silver = require("../../../../assets/images/silver.png");
+  const diamond = require("../../../../assets/images/diamond.png");
 
-  const {t} = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const [userName, setUserName] = useState();
+  const [userType, setUserType] = useState();
+  const [paid, setPaid] = useState();
+  const [typeName, setTypeName] = useState();
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
 
   const UserinfoNavigation = () => {
     navigation.navigate("UserInfo");
@@ -61,25 +92,38 @@ const MyAccount = ({ navigation }) => {
     navigation.navigate("Chat Room");
   };
 
+  useEffect(() => {
+    const fetchAPI = async () => {
+      try {
+        const user = await AsyncStorage.getItem("CustomerID");
+        const response = await customerAPI.getInfo(user);
+        setUserName(response.name);
+        setUserType(response.customerTypeId);
+        setPaid(response.totalPaid);
+        setTypeName(response.customerType.customerTypeName);
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    };
+
+    fetchAPI();
+  }, []);
+
   const HandleLogout = () => {
-    Alert.alert(
-      t("Logout"),
-      t("DoUWantToLogout"),
-      [
-        { text: t("Cancel"), onPress: () => { }, style: "cancel" },
-        {
-          text: t("Logout"),
-          onPress: async () => {
-            AsyncStorage.removeItem("Token");
-            AsyncStorage.removeItem("Role");
-            AsyncStorage.removeItem("CustomerID");
-            navigation.navigate("Home");
-            navigation.navigate("Login");
-          },
+    Alert.alert(t("Logout"), t("DoUWantToLogout"), [
+      { text: t("Cancel"), onPress: () => {}, style: "cancel" },
+      {
+        text: t("Logout"),
+        onPress: async () => {
+          AsyncStorage.removeItem("Token");
+          AsyncStorage.removeItem("Role");
+          AsyncStorage.removeItem("CustomerID");
+          navigation.navigate("Home");
+          navigation.navigate("Login");
         },
-      ]
-    );
-  }
+      },
+    ]);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -122,6 +166,66 @@ const MyAccount = ({ navigation }) => {
                   resizeMode: "cover",
                 }}
               ></Image>
+            </View>
+            <View style={{ marginTop: 10, gap: 5, flexDirection: "column" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontWeight: 600, color: "#498553" }}>
+                  {userName}
+                </Text>
+                <View
+                  style={{
+                    width: 25,
+                    height: 25,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginLeft: 5,
+                  }}
+                >
+                  <Image
+                    source={
+                      userType === 1
+                        ? bronze
+                        : userType === 2
+                        ? silver
+                        : userType === 3
+                        ? gold
+                        : userType === 4
+                        ? diamond
+                        : silver
+                    }
+                    style={{
+                      resizeMode: "cover",
+                      height: "100%",
+                      width: "100%",
+                    }}
+                  ></Image>
+                </View>
+                <Text> {typeName}</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text>{t("TotalPaid")}: </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: "#498553",
+                  }}
+                >
+                  {paid}$
+                </Text>
+              </View>
             </View>
           </View>
           {/* User Information */}
@@ -314,6 +418,17 @@ const MyAccount = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </ScrollView>
+        <View style={styles.changeLanguagebutContainer}>
+          <TouchableOpacity
+            style={styles.changeLanguagebut}
+            onPress={() => changeLanguage(i18n.language === "en" ? "vi" : "en")}
+          >
+            <Fontisto name="world-o" size={24} color="white" />
+            <Text style={{ color: "#fff" }}>
+              {i18n.language === "en" ? "EN" : "VI"}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );

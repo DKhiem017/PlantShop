@@ -77,6 +77,8 @@
   "cannotDeleteVoucher": "Không thể xoá khuyến mãi này",
   "promotionDetail": "Thông tin khuyến mãi",
   "edit": "Chỉnh sửa",
+  "AppliedCustomer": "Khách hàng áp dụng",
+  "selectType": "Chọn loại khách hàng",
 
   "promotionList": "Danh sách khuyến mãi",
   "voucherCode": "Mã khuyến mãi",
@@ -115,7 +117,7 @@
   "Subtotal": "Tổng giá trị",
   "DeliveryFee": "Phí vận chuyển",
   "ReducedCost": "Giảm giá",
-  "Accept": "Chấp nhận",
+  "Accept": "Xác nhận",
 
   "ChangesHaveBeenSaved": "Thay đổi đã được lưu",
   "CannotMakeChanges": "Không thể thay đổi thông tin, vui lòng thử lại",
@@ -182,5 +184,8 @@
   "ToCart": "vào giỏ hàng",
 
   "OrderDetail": "Chi tiết đơn hàng",
-  "OrderInfo": "Thông tin đơn hàng"
+  "OrderInfo": "Thông tin đơn hàng",
+
+  "CustomerType": "Loại KH",
+  "TotalPaid": "Tổng chi"
 }

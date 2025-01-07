@@ -1,2 +1,2 @@
-const ApiURL = `https://3538-2402-800-6310-dc26-b053-e663-ae10-d856.ngrok-free.app`;
+const ApiURL = `https://e34e-2402-800-6310-b883-70ae-347c-cf56-be53.ngrok-free.app`;
 export default ApiURL;

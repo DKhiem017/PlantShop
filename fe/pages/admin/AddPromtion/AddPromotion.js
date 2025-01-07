@@ -24,6 +24,9 @@ import { useTranslation } from "react-i18next";
 const avt = require("../../../../assets/images/Logo.png");
 
 const AddPromotion = ({ navigation }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedType, setSelectedType] = useState("");
+
   const { t } = useTranslation();
 
   const [voucher, setVoucher] = useState({});
@@ -69,8 +72,18 @@ const AddPromotion = ({ navigation }) => {
   };
 
   const HandleUpdate = async () => {
+    const customerType =
+      selectedType === "All"
+        ? 1
+        : selectedType === "Silver"
+        ? 2
+        : selectedType === "Gold"
+        ? 3
+        : selectedType === "Diamond"
+        ? 4
+        : 1;
     return await voucherAPI
-      .newVoucher(name, dateBegin, dateEnd, value)
+      .newVoucher(name, dateBegin, dateEnd, value, customerType)
       .then((res) => {
         navigation.navigate("PromotionAdmin");
         Alert.alert("Add voucher successfully");
@@ -232,6 +245,59 @@ const AddPromotion = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
+        {/* vị trí này */}
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginTop: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 15,
+              color: "#498553",
+              fontWeight: 700,
+            }}
+          >
+            {t("AppliedCustomer")}
+          </Text>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <TextInput
+              style={{
+                marginTop: 5,
+                height: 55,
+                backgroundColor: "#fff",
+                borderRadius: 5,
+                borderWidth: 1,
+                borderColor: "#498553",
+                paddingStart: 10,
+                paddingEnd: 50,
+                fontSize: 15,
+                color: "#498553",
+                width: "100%",
+              }}
+              value={selectedType} // Hiển thị giá trị đã chọn
+              editable={false}
+            />
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                right: 10,
+              }}
+              onPress={() => setModalVisible(true)} // Hiển thị modal
+            >
+              <Text style={{ color: "#498553", fontWeight: 600 }}>Chọn</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         <View
           style={{
             display: "flex",
@@ -298,6 +364,83 @@ const AddPromotion = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      {/* Modal */}
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "#fff",
+              width: "80%",
+              padding: 20,
+              borderRadius: 10,
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                color: "#498553",
+                fontSize: 18,
+                fontWeight: "bold",
+                marginBottom: 15,
+              }}
+            >
+              {t("selectType")}
+            </Text>
+            {["All", "Silver", "Gold", "Diamond"].map((type) => (
+              <TouchableOpacity
+                key={type}
+                style={{
+                  padding: 10,
+                  marginVertical: 5,
+                  backgroundColor: "#fff",
+                  borderColor: selectedType === type ? "#498553" : "#000", // Thay đổi borderColor
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  width: "100%",
+                  alignItems: "center",
+                }}
+                onPress={() => setSelectedType(type)} // Cập nhật loại chọn
+              >
+                <Text
+                  style={{
+                    color: selectedType === type ? "#498553" : "#000",
+                    fontWeight: "600",
+                  }}
+                >
+                  {type}
+                </Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity
+              style={{
+                marginTop: 15,
+                padding: 10,
+                backgroundColor: "#498553",
+                borderRadius: 5,
+                width: "100%",
+                alignItems: "center",
+              }}
+              onPress={() => setModalVisible(false)} // Đóng modal
+            >
+              <Text style={{ color: "#fff", fontWeight: "600" }}>
+                {t("submit")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       {showDP && (
         <RNDateTimePicker
           mode={mode}

@@ -19,7 +19,12 @@ import { useFocusEffect } from "@react-navigation/native";
 import voucherAPI from "../../../../Api/VoucherApi";
 import { useTranslation } from "react-i18next";
 
-const couponImg = require("../../../../assets/images/gift.png");
+const couponImg = {
+  gold: require("../../../../assets/images/gold-gift.jpg"),
+  silver: require("../../../../assets/images/silver-gift.png"),
+  diamond: require("../../../../assets/images/diamond-gift.png"),
+  all: require("../../../../assets/images/bronze-gift.png"),
+};
 
 const styles = StyleSheet.create({
   itembackground: {
@@ -124,13 +129,13 @@ const PromotionList = ({ navigation }) => {
     });
   };
 
-  const Item = ({ id, name, value, dateBegin, dateEnd, onPress }) => {
+  const Item = ({ id, img, name, value, dateBegin, dateEnd, onPress }) => {
     return (
       <TouchableOpacity style={styles.itembackground} onPress={onPress}>
         {/* ảnh sp */}
         <View style={{ flexDirection: "row" }}>
           <View style={{ height: 70, width: 70 }}>
-            <Image source={couponImg} style={styles.backgroundImg}></Image>
+            <Image source={img} style={styles.backgroundImg}></Image>
           </View>
           <View
             style={{
@@ -155,7 +160,8 @@ const PromotionList = ({ navigation }) => {
               <Text style={{ color: "#498553", fontWeight: "bold" }}>{id}</Text>
             </Text>
             <Text style={{ fontSize: 11, color: "#6F6A61" }}>
-              {t("reduce")} <Text style={{ color: "red" }}>{value}%</Text> {t("forAllOrders")}
+              {t("reduce")} <Text style={{ color: "red" }}>{value}%</Text>{" "}
+              {t("forAllOrders")}
             </Text>
             <Text style={{ fontSize: 11, color: "#6F6A61" }}>
               {t("from")}{" "}
@@ -181,7 +187,7 @@ const PromotionList = ({ navigation }) => {
         paddingHorizontal: 15,
       }}
     >
-      <View>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <StatusBar />
         {/* Tiêu đề với search */}
         <View
@@ -255,6 +261,15 @@ const PromotionList = ({ navigation }) => {
                 <Item
                   id={item.id}
                   name={item.name}
+                  img={
+                    item.voucherType.voucherTypeName === "Gold"
+                      ? couponImg.gold
+                      : item.voucherType.voucherTypeName === "Silver"
+                      ? couponImg.silver
+                      : item.voucherType.voucherTypeName === "Diamond"
+                      ? couponImg.diamond
+                      : couponImg.all
+                  }
                   value={item.value}
                   dateBegin={item.dateBegin}
                   dateEnd={item.dateEnd}
@@ -266,7 +281,7 @@ const PromotionList = ({ navigation }) => {
             />
           )}
         </View>
-      </View>
+      </ScrollView>
       <TouchableOpacity
         style={{
           position: "absolute",

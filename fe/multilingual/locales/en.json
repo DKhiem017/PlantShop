@@ -77,6 +77,8 @@
   "cannotDeleteVoucher": "Can't delete this product",
   "promotionDetail": "Promotion Detail",
   "edit": "Edit",
+  "AppliedCustomer": "Customer Type",
+  "selectType":"Select Customer Type",
 
   "promotionList": "Promotion List",
   "voucherCode": "Voucher Code",
@@ -180,5 +182,8 @@
   "ToCart": "to Cart",
 
   "OrderDetail": "Order Detail",
-  "OrderInfo": "Order Information"
+  "OrderInfo": "Order Information",
+
+  "CustomerType": "Customer Type",
+  "TotalPaid": "Total Paid"
 }
